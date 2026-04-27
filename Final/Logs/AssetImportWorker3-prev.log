@@ -1,11 +1,11 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.4/staging' branch; Version is '6000.4.1f1 (8535861f39e1) revision 8729990'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 11  (10.0.26200) ProfessionalWorkstation' Language: 'ru' Physical Memory: 16119 MB
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-ruha" at "2026-04-27T11:43:54.546493Z"
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
 System  architecture: x64
 Process architecture: x64
-Date: 2026-04-26T15:15:09Z
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-ruha" at "2026-04-26T15:15:09.0965667Z"
+Date: 2026-04-27T11:43:54Z
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.4.1f1\Editor\Unity.exe
@@ -19,7 +19,7 @@ C:/Users/ruha/Game-Dev/Final
 -logFile
 Logs/AssetImportWorker3.log
 -srvPort
-61460
+61653
 -licensingIpc
 LicenseClient-ruha
 -force-d3d12
@@ -68,14 +68,14 @@ C:/Users/ruha/Game-Dev/Final
     "memorysetup-job-temp-allocator-block-size=2097152"
     "memorysetup-job-temp-allocator-block-size-background=1048576"
     "memorysetup-job-temp-allocator-reduction-small-platforms=262144"
-Player connection [22024]  Target information:
+Player connection [3944]  Target information:
 
-Player connection [22024]  * "[IP] 26.243.5.47 [Port] 0 [Flags] 2 [Guid] 1254023353 [EditorId] 1254023353 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-BO6VV5B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [3944]  * "[IP] 26.243.5.47 [Port] 0 [Flags] 2 [Guid] 1298143453 [EditorId] 1298143453 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-BO6VV5B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [22024]  * "[IP] 192.168.0.142 [Port] 0 [Flags] 2 [Guid] 1254023353 [EditorId] 1254023353 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-BO6VV5B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [3944]  * "[IP] 10.211.100.1 [Port] 0 [Flags] 2 [Guid] 1298143453 [EditorId] 1298143453 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-BO6VV5B) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [22024] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [22024] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [3944] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [3944] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 7
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
@@ -87,7 +87,7 @@ Library Redirect Path: Library/
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 23.52 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 9.81 ms, found 4 plugins.
 Initialize engine version: 6000.4.1f1 (8535861f39e1)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Resources/UnitySubsystems
 [Subsystems] Discovering subsystems at path C:/Users/ruha/Game-Dev/Final/Assets
@@ -105,18 +105,18 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56308
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56464
 CodeReloadManager initialized
 Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.006495 seconds.
 [Licensing::Client] Error: HandshakeResponse reported an error:
 	ResponseCode: 505
 	ResponseStatus: Unsupported protocol version '1.18.1'.
 [Licensing::Module] Error: Failed to handshake to channel: "LicenseClient-ruha"
 [Licensing::IpcConnector] LicenseClient-ruha channel disconnected successfully.
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-ruha-6000.4.1" at "2026-04-26T15:15:11.1287295Z"
-Registering precompiled unity dll's ...
-Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.4.1f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
-Registered in 0.003870 seconds.
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-ruha-6000.4.1" at "2026-04-27T11:43:57.5144568Z"
 Native extension for WindowsStandalone target not found
 Package Manager log level set to [2]
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
@@ -124,23 +124,23 @@ Package Manager log level set to [2]
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.641 seconds
-Domain Reload Profiling: 1392ms
-	BeginReloadAssembly (219ms)
-	RebuildCommonClasses (52ms)
-	RebuildNativeTypeToScriptingClass (19ms)
-	initialDomainReloadingComplete (120ms)
-	LoadAllAssembliesAndSetupDomain (339ms)
-		LoadAssemblies (212ms)
-		AnalyzeDomain (322ms)
-			TypeCache.Refresh (319ms)
-				TypeCache.ScanAssembly (295ms)
-	FinalizeReload (643ms)
+- Finished resetting the current domain, in  1.168 seconds
+Domain Reload Profiling: 2464ms
+	BeginReloadAssembly (375ms)
+	RebuildCommonClasses (120ms)
+	RebuildNativeTypeToScriptingClass (32ms)
+	initialDomainReloadingComplete (188ms)
+	LoadAllAssembliesAndSetupDomain (579ms)
+		LoadAssemblies (360ms)
+		AnalyzeDomain (559ms)
+			TypeCache.Refresh (556ms)
+				TypeCache.ScanAssembly (523ms)
+	FinalizeReload (1171ms)
 		SetupLoadedEditorAssemblies (0ms)
-			InitializePlatformSupportModulesInManaged (79ms)
-			BeforeProcessingInitializeOnLoad (144ms)
-			ProcessInitializeOnLoadAttributes (184ms)
-			ProcessInitializeOnLoadMethodAttributes (120ms)
+			InitializePlatformSupportModulesInManaged (132ms)
+			BeforeProcessingInitializeOnLoad (248ms)
+			ProcessInitializeOnLoadAttributes (337ms)
+			ProcessInitializeOnLoadMethodAttributes (248ms)
 ========================================================================
 Worker process is ready to serve import requests
 Import Worker Mode flag is 0x00
@@ -148,14 +148,14 @@ Begin MonoManager ReloadAssembly
 [Licensing::Module] Licensing is not yet initialized.
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.18.1+9fbee8e
-  Session Id:              3394c7b528964fbfa633fc3581af828e
-  Correlation Id:          e6874d2edca92859fecb5020330aefa3
-  External correlation Id: 8191921751414365971
+  Session Id:              68f5d169a8c74fd8a0ef7b2f360ea66e
+  Correlation Id:          51f84b24dfc143c17b7662873f4f6063
+  External correlation Id: 5410450885631059632
   Machine Id:              Uz/CTuwisktXHE4r6AKo/0WYfk4=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-ruha-6000.4.1" (connect: 0.00s, validation: 0.00s, handshake: 1.79s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-ruha-6000.4.1-notifications" at "2026-04-26T15:15:12.9195706Z"
-[Licensing::Module] Licensing Background thread has ended after 3.82s
-[Licensing::Module] Licensing is initialized (took 0.10s).
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-ruha-6000.4.1" (connect: 0.00s, validation: 0.00s, handshake: 2.69s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-ruha-6000.4.1-notifications" at "2026-04-27T11:44:00.211319Z"
+[Licensing::Module] Licensing Background thread has ended after 5.67s
+[Licensing::Module] Licensing is initialized (took 0.02s).
 [Licensing::Client] Successfully resolved entitlement details
 [Licensing::Module] License group:
   Id: 18968367855896-UnityPersXXXX
@@ -191,7 +191,7 @@ Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor
 Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
 Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
 Symbol file LoadedFromMemory is not a mono symbol file
-Refreshing native plugins compatible for Editor in 3.34 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 5.41 ms, found 4 plugins.
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
@@ -201,35 +201,987 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  2.404 seconds
-Domain Reload Profiling: 3727ms
-	BeginReloadAssembly (369ms)
-		DisableScriptedObjects (10ms)
-		CreateAndSetChildDomain (41ms)
-	RebuildCommonClasses (59ms)
-	RebuildNativeTypeToScriptingClass (16ms)
-	initialDomainReloadingComplete (120ms)
-	LoadAllAssembliesAndSetupDomain (758ms)
-		LoadAssemblies (586ms)
-		AnalyzeDomain (318ms)
-			TypeCache.Refresh (238ms)
-				TypeCache.ScanAssembly (216ms)
-			BuildScriptInfoCaches (70ms)
-			ResolveRequiredComponents (8ms)
-	FinalizeReload (2404ms)
+- Finished resetting the current domain, in  4.221 seconds
+Domain Reload Profiling: 6246ms
+	BeginReloadAssembly (469ms)
+		DisableScriptedObjects (12ms)
+		CreateAndSetChildDomain (73ms)
+	RebuildCommonClasses (106ms)
+	RebuildNativeTypeToScriptingClass (29ms)
+	initialDomainReloadingComplete (182ms)
+	LoadAllAssembliesAndSetupDomain (1238ms)
+		LoadAssemblies (912ms)
+		AnalyzeDomain (584ms)
+			TypeCache.Refresh (428ms)
+				TypeCache.ScanAssembly (388ms)
+			BuildScriptInfoCaches (133ms)
+			ResolveRequiredComponents (18ms)
+	FinalizeReload (4222ms)
 		SetupLoadedEditorAssemblies (0ms)
-			InitializePlatformSupportModulesInManaged (3ms)
-			BeforeProcessingInitializeOnLoad (239ms)
-			ProcessInitializeOnLoadAttributes (1812ms)
-			ProcessInitializeOnLoadMethodAttributes (117ms)
-			AfterProcessingInitializeOnLoad (14ms)
-		AwakeInstancesAfterBackupRestoration (12ms)
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
-Refreshing native plugins compatible for Editor in 3.13 ms, found 4 plugins.
+			InitializePlatformSupportModulesInManaged (5ms)
+			BeforeProcessingInitializeOnLoad (405ms)
+			ProcessInitializeOnLoadAttributes (3235ms)
+			ProcessInitializeOnLoadMethodAttributes (184ms)
+			AfterProcessingInitializeOnLoad (25ms)
+		AwakeInstancesAfterBackupRestoration (16ms)
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.03 seconds
+Refreshing native plugins compatible for Editor in 5.52 ms, found 4 plugins.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 5281 unused Assets / (2.4 MB). Loaded Objects now: 5882.
-Memory consumption went from 108.7 MB to 106.3 MB.
-Total: 15.855000 ms (FindLiveObjects: 1.098300 ms CreateObjectMapping: 1.315300 ms MarkObjects: 10.508100 ms  DeleteObjects: 2.929400 ms)
+Unloading 5285 unused Assets / (1.9 MB). Loaded Objects now: 5887.
+Memory consumption went from 108.2 MB to 106.3 MB.
+Total: 15.852300 ms (FindLiveObjects: 0.852100 ms CreateObjectMapping: 1.040000 ms MarkObjects: 10.989800 ms  DeleteObjects: 2.964900 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 339.355104 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Phone/Phone.mat
+  importAddress: Guid(2a1f536ac7ba5804eba5efa1753fa61c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Phone/Phone.mat using Guid(2a1f536ac7ba5804eba5efa1753fa61c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '28d8b9e7ec454dc9b09d01e1f348c295') in 0.2254628 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=27e36b8f75d68c6a976048fd618dfca2 DependenciesID=41b783e35513a2d15a86897ba75dbd11 StaticDependenciesID=f9d38b8c76713b045c9cfc0df16f455a 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000049 seconds.
+  path: Assets/JustPlay/Сomputer devices/Prefabs/Phone.prefab
+  importAddress: Guid(1ba97b0f75cdd9448a6b632977154599) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Prefabs/Phone.prefab using Guid(1ba97b0f75cdd9448a6b632977154599) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'a92dbeec509c7915dbf039fee837792b') in 0.0701168 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b21143765058fcc443663f0fdd8ee773 DependenciesID=a86fe5a0d24752c22d7c632efea079fb StaticDependenciesID=191a30468d5d15c4b286c0fb648e6688 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 21
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000058 seconds.
+  path: Assets/JustPlay/Сomputer devices/Prefabs/Mouse.prefab
+  importAddress: Guid(98816223f7f24fc47ab1ac9c8efdb1ff) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Prefabs/Mouse.prefab using Guid(98816223f7f24fc47ab1ac9c8efdb1ff) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '65d07dfeb4be272522fdfe2e28e072fa') in 0.0259953 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f6426ec3ad93e17f5956ea80d512a5b5 DependenciesID=8c4a4211fb8d540739e6bc3ba555293d StaticDependenciesID=59d744e3853897d6475cbbe3038f7678 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 26
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Router/textures/Roughtness.png
+  importAddress: Guid(2ed7745648cbcdd4d9b1b463af95e615) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Router/textures/Roughtness.png using Guid(2ed7745648cbcdd4d9b1b463af95e615) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'b96159b10e3169c29195fa0166113468') in 0.085246 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a24459bf9fed3834480866691f9bf8d5 DependenciesID=72553e579bda07a9fbf16ee76671c9a4 StaticDependenciesID=62b7d3ff3d97c8b26c2ad47012c9985a 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000100 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Keyboard/Textures/Normal.png
+  importAddress: Guid(cebfbf6f6fe980848922eeeb957d357d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Keyboard/Textures/Normal.png using Guid(cebfbf6f6fe980848922eeeb957d357d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'fd3ab992dbbfbc27aeccb1b6fc5f840d') in 0.0223421 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6aa4e091187b2e6b83184e795966a2b5 DependenciesID=7780fc9265e8c023f224a1d7589a00e7 StaticDependenciesID=c1daaf3f4e9a990129a8e71dd20a1a01 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000110 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Mouse from pc/Textures/Albedo.png
+  importAddress: Guid(2a3f1fb872c554b4ebb1b3000c0d0f90) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Mouse from pc/Textures/Albedo.png using Guid(2a3f1fb872c554b4ebb1b3000c0d0f90) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '993a0810e7f9adcc1429e0d3da760aaa') in 0.035289 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6b2047676dcc2fe5f42089a041b1bc5e DependenciesID=6b14b25fa1851ca94f4c958e1cf0bedd StaticDependenciesID=6250aed88578cb6278ee1ff0326e24f6 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000266 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Speakers/Textures/Albedo.png
+  importAddress: Guid(507bfa3a5e5460449b32068a4966df0f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Speakers/Textures/Albedo.png using Guid(507bfa3a5e5460449b32068a4966df0f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'b6a37d4ba8e5fed89b4a49d37547fabc') in 0.0178452 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=14ca05d3c88133df77ecf93415bd46bc DependenciesID=8e0a2c63b3aba0149adf8e29e6821958 StaticDependenciesID=17c3e50f1e27eca51f1eddf6b876b175 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000068 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Wall/Wall 2 Half.prefab
+  importAddress: Guid(dea43198b8686a948bb3630fc5fe44d6) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Wall/Wall 2 Half.prefab using Guid(dea43198b8686a948bb3630fc5fe44d6) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'a0e402dfff281de0907dd64aa35ed837') in 0.0608994 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1a433f6ea0d04c922024f0e2534f8457 DependenciesID=e8fd5279183e8a3d8b6946744847dc56 StaticDependenciesID=cb11e66fbd58d5cfc4de5f12c5144e3d 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 9
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000042 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Mouse from pc/Mouse.fbx
+  importAddress: Guid(7b7a8deb43cef4e42b2cf0f8f24f8209) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Mouse from pc/Mouse.fbx using Guid(7b7a8deb43cef4e42b2cf0f8f24f8209) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '5a8c7e3e813068301121d5d5fe31fdbc') in 0.0622357 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=58a26ac9f06dc97a2ac9d0742e2ddae9 DependenciesID=7e963672c2ed7c33685835ee4dc84d3e StaticDependenciesID=04c932bcdb3a4edfe166c67a911cfbd2 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 25
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000042 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Materials/Techware/Keyboard props.mat
+  importAddress: Guid(1ac16eaf410f8614dbbc5093e2ea56fc) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Materials/Techware/Keyboard props.mat using Guid(1ac16eaf410f8614dbbc5093e2ea56fc) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '50b392c4eef6ab3d8e255adca065a7ec') in 0.0667317 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=67ab4f2a9863dce0850d76bf692a1e60 DependenciesID=86fdfb56fcb482b24ebba84900923e67 StaticDependenciesID=878caa85dd91a78ea20a7bbefbdb4b25 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Interactables and Doors/Mechanical arms/Mechanical arms_Height.png
+  importAddress: Guid(07dfb7e31c1fdf0489c2232a0a9a48d7) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Interactables and Doors/Mechanical arms/Mechanical arms_Height.png using Guid(07dfb7e31c1fdf0489c2232a0a9a48d7) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '18dd9d3c6ba28f9c7b7b330cea9c6aa2') in 0.0230936 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c49b531ed33481c9cb2140fc1ceb1505 DependenciesID=1862f12407caf6e8b156b3ecaaca5bd0 StaticDependenciesID=efa502f72eb0933182d1fd39d11bc62b 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000047 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Interactables and Doors/Doors/Door 1_Emission.png
+  importAddress: Guid(ce16c1c1af98fe74ba93ff747f3f0025) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Interactables and Doors/Doors/Door 1_Emission.png using Guid(ce16c1c1af98fe74ba93ff747f3f0025) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '6da6e72d903019b4cfe8c5b7bc111cf6') in 0.021687 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1cbd627818e95998a411a141b6448364 DependenciesID=23bf6f32f47442249f0ea6b8c12538e7 StaticDependenciesID=88d5a1daa433a2300ee165d801b346c1 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000038 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 3/Table texture set 3_Diffuse.png
+  importAddress: Guid(428be05d34abfe54a8c051a2c09f3619) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 3/Table texture set 3_Diffuse.png using Guid(428be05d34abfe54a8c051a2c09f3619) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '76c1f7659ebc8421012ce656525ba0fb') in 0.0239037 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4a2ba353f76769e255d5f8be3ea795ea DependenciesID=f758e0ffaad735adce962ba65f5d70f1 StaticDependenciesID=dea084db2ee689436bffa589ec9d9a9d 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000122 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Office Interior/Drawer 2.FBX
+  importAddress: Guid(b3836257230618646b509f14e35dca6e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Office Interior/Drawer 2.FBX using Guid(b3836257230618646b509f14e35dca6e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '5aa47d331fd0e158dabc5e67aee85f2c') in 0.0313679 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dd4ea6444c5228a6abad263a1a0f9a4c DependenciesID=1c953a3ec089b12d0aa2327970bf9bcb StaticDependenciesID=07fda2a6a96b8e626e6ed58e58df356c 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 29
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Monitor 2/Monitor 2.mat
+  importAddress: Guid(672fda30967125f4f94bf0e3b15fa6b7) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Monitor 2/Monitor 2.mat using Guid(672fda30967125f4f94bf0e3b15fa6b7) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '436b5ffe67f1f90b143e7ae36bc0ca97') in 0.0462539 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=96ce2c537da1add2951cb1d300ead7ad DependenciesID=97b186fd953b78ef8680e88305bd94d5 StaticDependenciesID=069a71a0f2290d06a3b9a32bf9a2a0c1 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000049 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Router/Router.mat
+  importAddress: Guid(06fa551476d39ff4f9c99e17ef9ed5cb) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Router/Router.mat using Guid(06fa551476d39ff4f9c99e17ef9ed5cb) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '6a90f27e2ff87e72a80bf9a839123287') in 0.0376441 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e02b42304bd271eeb75bb86aa85fe01e DependenciesID=9282fe212bb2f1509451aab7315f5e1c StaticDependenciesID=399f59175fba8c2a506cabd907d9d3d5 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 6
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Tech Accessories/Mechanical arm 2.prefab
+  importAddress: Guid(cac581442f0ff4e429749ff81932fe8a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Tech Accessories/Mechanical arm 2.prefab using Guid(cac581442f0ff4e429749ff81932fe8a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '5e682a64eb1964a1870b2e82e99d42ee') in 0.0206777 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b984fe773bd4b09c5ad57e70c2a40ae5 DependenciesID=f29573df8af2d2d487edaa39caa5ebbf StaticDependenciesID=5b848db7a7dfa7ef1809776f2263814a 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 127
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000038 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Tables/Dark Oak/Table Dark Oak.prefab
+  importAddress: Guid(10f9753d65559ea4cbd0c4930521130e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Tables/Dark Oak/Table Dark Oak.prefab using Guid(10f9753d65559ea4cbd0c4930521130e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'ad1478bc4907407750e349f3f90da315') in 0.0263709 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=23fc1860786880fdd106f5618e646e4d DependenciesID=d07fbad3b46abc0dcf6e464b567deebf StaticDependenciesID=895e053598c790d885827c87ef1b7e55 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 14
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 8.FBX
+  importAddress: Guid(9c356ccbadb302f4c99fbe7879889240) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 8.FBX using Guid(9c356ccbadb302f4c99fbe7879889240) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'b33c02662f4bd248d42d8d0168d0ae59') in 0.0434244 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3b8a782a55be4250df84e2fe0d1617b1 DependenciesID=1c3dc90f2ab02af70eba2ff6dbaf2492 StaticDependenciesID=e3a2c953faab5ed56bdbbeadd5125116 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Metallic.png
+  importAddress: Guid(8f99f4b1e01b00d40bcdf199ce700295) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Metallic.png using Guid(8f99f4b1e01b00d40bcdf199ce700295) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '13bc2a7646dc3f4d2c58e659170e775f') in 0.0395814 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=11f71cfe7db02cc830f2e255c265f218 DependenciesID=9f2b11c2e312692368dea3d2acd4b369 StaticDependenciesID=34333b1a1d7d4aa48916fa1678c72d80 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000102 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Normal.png
+  importAddress: Guid(fd091fb69c5b4214e913de95c8aa33e0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Lights/Ceiling_lights_lo_Normal.png using Guid(fd091fb69c5b4214e913de95c8aa33e0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '79d11ecc1de74657864a54a7ff5b65d6') in 0.0325615 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=bfcc1fcde0791f4059276d26506a628b DependenciesID=a524b70de597409fe6e522e5cd148bcb StaticDependenciesID=5b976df4449019314d46fb77fbc26853 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set
+  importAddress: Guid(74db323cd41b497449a5965b4b718496) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set using Guid(74db323cd41b497449a5965b4b718496) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'c8e58c6b05b6a99ab1e02277c8a49086') in 0.0083229 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c8195b718a68615645bd88287bf9c65b DependenciesID=704e37255d8619f01603624a932f0dd4 StaticDependenciesID=c3491fa7c63d45c8c2d3131815a3150b 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000120 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 5.FBX
+  importAddress: Guid(3815c0f68c7c19f4c9f6edb1bc4f41f1) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 5.FBX using Guid(3815c0f68c7c19f4c9f6edb1bc4f41f1) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '4c8ca44964548e7ffea4d4bec2a50f3f') in 0.0267477 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c227f54ef3e8a4b6a345a93d3a81ea7e DependenciesID=e833467026182cf41f227380423de9f6 StaticDependenciesID=537dd617856848312af18ddc9fa7c6c9 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Maskmap.png
+  importAddress: Guid(8cf8823cf44a1524fb31d207065264d8) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Maskmap.png using Guid(8cf8823cf44a1524fb31d207065264d8) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '1750e64af75a1e3bae34cc47e8388f23') in 0.0666436 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=35a5e9863e9b3fb3f46d50a2cbbb58f0 DependenciesID=c6330c815c8a301971baa0cb16459187 StaticDependenciesID=b8e9d5387c112374343b642efd6c7ea4 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000102 seconds.
+  path: Assets/JustPlay/Сomputer devices/Prefabs/Monitor 2.prefab
+  importAddress: Guid(a7c8d5abfd365bc49914ef428ffdc098) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Prefabs/Monitor 2.prefab using Guid(a7c8d5abfd365bc49914ef428ffdc098) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '9bda79402b9f4f5ba8a3941dbf472902') in 0.0189298 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3ad6ce7ec8e88e123b4711a1f83178e8 DependenciesID=8c7ea99f052e8bfd95ffb353229171ae StaticDependenciesID=320dac5dbb6113b1c9f09e7da0af7d6a 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 26
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/ScifiOfficeLite/Scene/Demo/Lightmap-3_comp_light.exr
+  importAddress: Guid(0d345d9669cf0ee4ab097a2871d2a360) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Scene/Demo/Lightmap-3_comp_light.exr using Guid(0d345d9669cf0ee4ab097a2871d2a360) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'c6b79967b1bb0d294f4180b45abd7116') in 0.0190746 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=efc7d47ac02c391db80127ce682a316e DependenciesID=b25be7aacffe1c25ea46740912a23f34 StaticDependenciesID=9834727224b3427736dab9e1b964afae 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000148 seconds.
+  path: Assets/ScifiOfficeLite/Scene/Demo/Lightmap-0_comp_shadowmask.png
+  importAddress: Guid(dafbb33ff9aa98f45aea50842b0092b5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Scene/Demo/Lightmap-0_comp_shadowmask.png using Guid(dafbb33ff9aa98f45aea50842b0092b5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '7253655c71a7bc1dbaf7de9b27f9f567') in 0.0214999 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dc1ce7a9dd9f33323492a7b75efcdcc5 DependenciesID=28d15dcea075d8f9b648bd7effdc1f7d StaticDependenciesID=b6744aa58272fe8ba2a6762b7f41b875 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000065 seconds.
+  path: Assets/ScifiOfficeLite/Scene/Demo/Lightmap-2_comp_dir.png
+  importAddress: Guid(f31541c398376504cb81e355e497d0aa) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Scene/Demo/Lightmap-2_comp_dir.png using Guid(f31541c398376504cb81e355e497d0aa) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'aa117284ea11b80988fefb12f76a16fa') in 0.0210195 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dde79f07ff1daee63764a425ed7721c7 DependenciesID=c412b08db48ec3591572b6ea5b238d03 StaticDependenciesID=d879b603f1ba5c921b4f848df6a0914b 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000039 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Shelf with Crates.prefab
+  importAddress: Guid(f355da60777d10946920a8b633e6b316) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Shelf with Crates.prefab using Guid(f355da60777d10946920a8b633e6b316) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '1c0fc021224b5cb27c125b82735a2ac4') in 0.0189801 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=90f6014f1768a5177231997ce8c768b6 DependenciesID=61d60a873599c086379eed509aa1454e StaticDependenciesID=2c7191555365d3d3a25f2a2dab975a9a 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 46
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000038 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Tables/Metal
+  importAddress: Guid(172a7682d8cad3747ad347eb18a5a867) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Tables/Metal using Guid(172a7682d8cad3747ad347eb18a5a867) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'c26c2321bdf6558adc53c8b4600f8fed') in 0.0084245 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6c120d099c73d5bd1fbdb0a58f3fa362 DependenciesID=d89c63c83a932707d054b0a0c37faeb4 StaticDependenciesID=8cd3a8d9a1513bb9cdef785822ce14a8 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000067 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Wall/Wall Top Piece.prefab
+  importAddress: Guid(8f5eff0dc5bed3f4ab0d6b39678e66d5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Wall/Wall Top Piece.prefab using Guid(8f5eff0dc5bed3f4ab0d6b39678e66d5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '2179c25a8bc949b2649c0847eef62a06') in 0.0309407 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e87876554fb9dca8f3a36079c20d84a0 DependenciesID=70dd88df4eb9c52c6a0950d5d559ac0b StaticDependenciesID=c24d9368933ceb6e7409899fc931d8e2 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 9
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Lighting
+  importAddress: Guid(b876242c9588755499b2edb9d2ff2381) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Lighting using Guid(b876242c9588755499b2edb9d2ff2381) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '2ea38b1fd7458c2173ed828bd2639928') in 0.0096683 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1dee761528897b9819307d2c59ff1c1a DependenciesID=d7b74d8043ee4fd680bc159beeefc1fb StaticDependenciesID=413f983bfee67f0c10bfe09ded00edae 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2/Wall_Multiset_2_Height.png
+  importAddress: Guid(c0d0176d5e5f5644ea2401ed724ef8c9) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2/Wall_Multiset_2_Height.png using Guid(c0d0176d5e5f5644ea2401ed724ef8c9) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'a3ba28e63dc0199f089d706a854f07d2') in 0.0235244 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8035b97db765986639278438789189de DependenciesID=122c0ee7ef165722978177c401be70fe StaticDependenciesID=dadf20b8dbf528e9c1b9608250a568bf 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Sci-Fi Environment/SciFiDoor.FBX
+  importAddress: Guid(0be2d09ff087c6240b1805135c8628bd) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Sci-Fi Environment/SciFiDoor.FBX using Guid(0be2d09ff087c6240b1805135c8628bd) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'd3c6185a7f99ad25de3f807e445a1ee0') in 0.0282931 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8476b95e4a4ee57f9d5ff0193a70f124 DependenciesID=a82845ecc8a9ab29a0a56e19f7102ca5 StaticDependenciesID=f2906a76f129c17e8d1a706485e3fb9e 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 19
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Chairs and Stools/Office Chair Variant.prefab
+  importAddress: Guid(e302621f2616c4042b0c4be3f63ea422) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Chairs and Stools/Office Chair Variant.prefab using Guid(e302621f2616c4042b0c4be3f63ea422) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '81f0252e1089ceddf52c27612a03ab9c') in 0.0215607 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5926f85a27125fb7e9db9e16cedb2a02 DependenciesID=8e31eb63762d0ee4aa0d9e2fe1c374de StaticDependenciesID=ff2753d323362ee4464e517d9f4109fc 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 16
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000053 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Diffuse.png
+  importAddress: Guid(d06e81a068524944790b02d6598f0013) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Diffuse.png using Guid(d06e81a068524944790b02d6598f0013) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '7c7d03be6f7fa369a50c025af2afeddd') in 0.0352255 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b614b5c7bf793dd1fd7b6a684c0e9090 DependenciesID=29584104bceb8093bac0687cbb6825ef StaticDependenciesID=2c67f36694dd7b0d7625ed1c6405eb52 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000095 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Tables/Dark Oak/Drawer Table Long Dark Oak.prefab
+  importAddress: Guid(d9ed09438f7ef114dbd1922e839b6837) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Tables/Dark Oak/Drawer Table Long Dark Oak.prefab using Guid(d9ed09438f7ef114dbd1922e839b6837) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'c808c0cd72fe3006c59f72c31a796163') in 0.0140251 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=791acc3333aaf75c90e19bc72dc18a35 DependenciesID=1eb0f54e5d0cd10a9ca17412d266b57f StaticDependenciesID=201e2e84889f170855290b0eb409e881 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 45
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000035 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Drawers/Drawer 2.prefab
+  importAddress: Guid(c492efe3e037d4447923edc38633bd5b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Drawers/Drawer 2.prefab using Guid(c492efe3e037d4447923edc38633bd5b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '88f9910d2cfd9d12625c90010a6dfa35') in 0.0275675 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c7feafa880684f57fc2cac608409ce33 DependenciesID=722664b0b6a09d3c82c6838dcc49e4a0 StaticDependenciesID=a04f253cc373ccbadba16561ad759d64 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 34
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Interactables and Doors/Doors/Door 1_Diffuse.png
+  importAddress: Guid(35ffd15d30d96e345af52ff165b4d66c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Interactables and Doors/Doors/Door 1_Diffuse.png using Guid(35ffd15d30d96e345af52ff165b4d66c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'd9292b0a34b8ec29d8dc5c566bd530ac') in 0.0259309 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3944eeca8b365e2de8e88c223034c292 DependenciesID=ddf1ef20a9df08c091cea8ec4691858f StaticDependenciesID=d5fba5eadbb71fbd42449590d07d2de5 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000058 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Office Interior/Tables/Table Set 1.FBX
+  importAddress: Guid(4d7a1f2d72196e24bb9a9eefb40859c3) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Office Interior/Tables/Table Set 1.FBX using Guid(4d7a1f2d72196e24bb9a9eefb40859c3) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '5d29e56e78f4f4f92fb2e4c73853e8a5') in 0.0925681 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=430d6442d7ac1517bf1ca16acb9ded87 DependenciesID=bb3e1155eed9a7962391a96c63cf0b9b StaticDependenciesID=30225cd0bd321060648b0f0a63fc9d03 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 82
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Materials/Chair set/Chair set.mat
+  importAddress: Guid(b1cc28be108c49a4bb62461e67a3bc75) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Materials/Chair set/Chair set.mat using Guid(b1cc28be108c49a4bb62461e67a3bc75) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '1d6aa3d73ea05067cb5f43ff9d053e79') in 0.0626109 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=86ced884becbc9f7dfc76c140d4e441b DependenciesID=7288ff9b1f0b23f868f6f853e8fbb886 StaticDependenciesID=08af378f8f91056d9126f807b8b70e0f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000051 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Tables/Table Set 1 Grey Wood Variant.prefab
+  importAddress: Guid(827062553953ace449df65073bc88caa) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Tables/Table Set 1 Grey Wood Variant.prefab using Guid(827062553953ace449df65073bc88caa) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '11f5cd31ca0b5198c66b6855e9d0b7a0') in 0.0271368 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7ba3d3b18c3f562d6d5e4afeba45468b DependenciesID=a942b4ae01ae15b72681d6378cbc3a9d StaticDependenciesID=a19b37458543f3aa84a7dc08538dcac1 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 124
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000057 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Set Glass/Table Glass_Diffuse.png
+  importAddress: Guid(306a88abae0890849890ec9e7428de94) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Set Glass/Table Glass_Diffuse.png using Guid(306a88abae0890849890ec9e7428de94) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '878a1682038a013caff72501d30a245d') in 0.0270649 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7e057e6e7f5ab5a15984727490d1274e DependenciesID=5c6bfe44ead017c55bf33afb5deb9eaa StaticDependenciesID=044fe457bb216d8be098844b4c9d8740 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000146 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Materials/Techware/Techware.mat
+  importAddress: Guid(5666f87358c9a75449f82ea12d7deef4) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Materials/Techware/Techware.mat using Guid(5666f87358c9a75449f82ea12d7deef4) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'd820b202ec0cf58c58470eea0585e702') in 0.0644662 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3430ec6d193f27a60abc0cb58f165633 DependenciesID=1712130b57dac2452e529d0181c04376 StaticDependenciesID=e8ef41f34fff2126ef8a2c14b0307a8a 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000135 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Sci-Fi Environment/Server Rack.FBX
+  importAddress: Guid(a60140d8f404d6b4982b90bfdc858298) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Sci-Fi Environment/Server Rack.FBX using Guid(a60140d8f404d6b4982b90bfdc858298) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'b7b1b7af95da2b1e42a1c5686808752f') in 0.045563 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7cd6c613c158ad3911eeee2afae46a46 DependenciesID=74d9cdae19aeb9c992698fabcb681a27 StaticDependenciesID=5cd8540597ec8c2459b3ff1f9f007d7f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 44
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000040 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Chair set/Chair Set _Diffuse.png
+  importAddress: Guid(4d27daab1eca26945924e29db7972f87) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Chair set/Chair Set _Diffuse.png using Guid(4d27daab1eca26945924e29db7972f87) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '3023f923c259db468da1dc46fa7980bc') in 0.0278332 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=71d9203f1b44cda58b203634ae76fbd4 DependenciesID=bafdb0b196013712d5b1c0cb65fce54a StaticDependenciesID=0b2d7c4b7397b8349fd349433249ffcf 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000116 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Wall/Door Wall Opaque.prefab
+  importAddress: Guid(e73c1c658aeddd042bc049a907126289) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Wall/Door Wall Opaque.prefab using Guid(e73c1c658aeddd042bc049a907126289) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '031885d3cbbc174f9bd11cde2a99591b') in 0.0253408 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=185c89e3d06ef4e3a3ff5d6d72b0c059 DependenciesID=33d41bf0a7a50be16c82c875d3c8669f StaticDependenciesID=9306cee094d2e6ab03057a672526b346 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 23
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000059 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Office Interior/Radio.FBX
+  importAddress: Guid(2bb8e74e51bc707479666db31fc93b4d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Office Interior/Radio.FBX using Guid(2bb8e74e51bc707479666db31fc93b4d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '50eaf8da9bacd34175def391b244cbfb') in 0.02878 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=da8b79367ff4fcec17246724fdb40bd8 DependenciesID=9b4ff6b2e7874b6ef824e02139156684 StaticDependenciesID=9656924fcdc336b80ada4568196d13c0 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000054 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Techware_Diffuse.png
+  importAddress: Guid(d42ed7b358012eb4cadcee751c2039f8) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Techware_Diffuse.png using Guid(d42ed7b358012eb4cadcee751c2039f8) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'ff01377b375be2e23c01436aba2cd5dd') in 0.0276834 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b77bd329b075d050ee743b9ddf7b0fef DependenciesID=058a84c641249f76a10f48d0c1576c7f StaticDependenciesID=ec56b3482c006aa165b47f97b1314fe5 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000094 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Keyboard props texture
+  importAddress: Guid(7a971046f25d6ab4d9dd995dc9457786) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Keyboard props texture using Guid(7a971046f25d6ab4d9dd995dc9457786) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '448cd8d5578b60548969f8ce32ca1cfa') in 0.0123564 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=851b4e62c3370aba35b7e6097b8d4e7c DependenciesID=4e1a5d96dda67ca6b627f4576965db1e StaticDependenciesID=d7bc82a9594e47c9fcb96920f89ee65f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000087 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Materials/Interactables and Doors/Server, Control, Security panel/Glass.mat
+  importAddress: Guid(a8110a263a9aa234690b7fdb5703417a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Materials/Interactables and Doors/Server, Control, Security panel/Glass.mat using Guid(a8110a263a9aa234690b7fdb5703417a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '35c8f7c8db1a0454257c528662178e1d') in 0.0274745 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=16ce8b5bc8d6d9dcfba72c21770031ae DependenciesID=ee468db335e606b31df7fa9045b5b2d5 StaticDependenciesID=d7ba6c1f5d2a7ebe41790a6d751e9f8f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000211 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Materials/Chair set
+  importAddress: Guid(5e681572bd68ae643a86211473405927) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Materials/Chair set using Guid(5e681572bd68ae643a86211473405927) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'b4013a15f043f16f462b15c1a6ddffd3') in 0.0160358 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c29611969e5aa374963033d1eec7d666 DependenciesID=c63d750fce0ec15296ab27616f8b8e53 StaticDependenciesID=267d1d2ab37f4d623c469dd69142f9ce 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000121 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Techware_Height.png
+  importAddress: Guid(975e257f44c497d479c69e023fbb5c13) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Techware_Height.png using Guid(975e257f44c497d479c69e023fbb5c13) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '0426b6ea70ec17752f37bf077ecb0ee1') in 0.052664 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9f25768d70d0567163f9719be1abce64 DependenciesID=67737847e678fbc6d2a68f3c6d28d931 StaticDependenciesID=3fd3e560f7f255b2ac4ecf36043c9a79 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000160 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Maskmap.png
+  importAddress: Guid(df16961d24522094d883fac3271a5879) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Maskmap.png using Guid(df16961d24522094d883fac3271a5879) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '752e21d35aec0fdb37fde9f1bdbda05a') in 0.1096766 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c9b15291a970076d5bc4c5d292f7a7a5 DependenciesID=0360c3ef4c95979eed97c6a9c8807427 StaticDependenciesID=04ac34427c6ccef0562faf563592637f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000054 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2
+  importAddress: Guid(6f97043e3d881a54e94aa1a04c082f9a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/Wall set 2 using Guid(6f97043e3d881a54e94aa1a04c082f9a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'fbb2250e65ff2bff6bd34cc080ca3e33') in 0.0184119 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8c5219603c0572c045110d2af96e18a1 DependenciesID=8849b47c113ac83d0fa6c50db29dec9e StaticDependenciesID=83316ccd4ee79b290709c5f44c69f98f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000070 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Keyboard props texture/Keyboard Props_Normal.png
+  importAddress: Guid(ec75dfe1d08f0e845b031ed1962c38bf) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Keyboard props texture/Keyboard Props_Normal.png using Guid(ec75dfe1d08f0e845b031ed1962c38bf) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '4c4cc8ffc0568b6b25c4e3e6caef4cf0') in 0.0441929 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=79e3446f817b251bde861ad90c892e92 DependenciesID=3faf5fd3a8a90438c5b6d2733c5980a5 StaticDependenciesID=eab5abbad2056ecef0a654cec87095f9 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000120 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1
+  importAddress: Guid(14ddfdaab9118da47b22b3a8e00f624a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1 using Guid(14ddfdaab9118da47b22b3a8e00f624a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'd0c439a4aff7f05cf8ae5072edccb551') in 0.0115974 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=405aad50e508fb2c1ec75438931370db DependenciesID=1c7c20e97b021ec970f1c93caa883246 StaticDependenciesID=e6298e681b5692561538d9c030fe3347 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000127 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 8.prefab
+  importAddress: Guid(ee96ae14708602d469d22f53342f354e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 8.prefab using Guid(ee96ae14708602d469d22f53342f354e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '38818d1b19ec26d0cede12c8ad7ae8f3') in 0.026691 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=fc7a1ba6984ec0fe3c68cc04b5b1dbb7 DependenciesID=3e1ce592cdd9175bc8cc70efbd6d9a85 StaticDependenciesID=d35d9195b90cc1ce6b3c503584b0d168 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 9
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/TVs
+  importAddress: Guid(980198049a5d1ff45b95b1643908cef3) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/TVs using Guid(980198049a5d1ff45b95b1643908cef3) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '95df6306a66d2190f66501345e439ae8') in 0.0128821 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=89425e6c0c4d27e17fac5ba22253886d DependenciesID=436c7e39e0051e9d8e396eaf3c462edf StaticDependenciesID=85336027a98afac6d598e7853a03c449 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000050 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Height.png
+  importAddress: Guid(2bf75c18fdf5eb04faf6b8a131a649a6) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Door Mat_Height.png using Guid(2bf75c18fdf5eb04faf6b8a131a649a6) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'f8d089e6eff26e67442b2e5f7c3968f1') in 0.0452754 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9d35606d81f0af9dce7fc7759335e2f0 DependenciesID=53f6b07e7aa4c4e8c228c1415772e38a StaticDependenciesID=eaa5985d0a8a52fd24a0962862f59813 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000171 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Walls/Wall 2.FBX
+  importAddress: Guid(b30484f622ab5774f98c23785e2be964) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Walls/Wall 2.FBX using Guid(b30484f622ab5774f98c23785e2be964) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '363c289b0193f913b2825da83b92099a') in 0.029762 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6af2536fc2b97f946d92c17efad6138a DependenciesID=b2f8f7492952177904d7e4211ffb3c3d StaticDependenciesID=83ef3285d40d2568081224d11110ea6f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 5/Table texture set 5 brown_Diffuse.png
+  importAddress: Guid(8fc1776a014b83d48abfe5221d986e93) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 5/Table texture set 5 brown_Diffuse.png using Guid(8fc1776a014b83d48abfe5221d986e93) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'ef32650536aac871cbd3e735c7793f0b') in 0.0227894 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8c5f71dd0c8b5c828dc084510f60a65e DependenciesID=79b98f0ba9f673b91d0a4a6a60747e4d StaticDependenciesID=fffc53226afc5f089a90ba76ae53e4f6 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000196 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Doors
+  importAddress: Guid(dc22d4dc82d9b1e4a9e40980fe64d365) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Doors using Guid(dc22d4dc82d9b1e4a9e40980fe64d365) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'aada22263703c14aac81f0c08a1f3989') in 0.0121026 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=ac878cd903bf5958c95e19bdf63d6a38 DependenciesID=ebeb3fec04e581c925199ed4d2b495de StaticDependenciesID=120f2a8e53d83a919fdb10b08587e801 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000045 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Drawers
+  importAddress: Guid(87cbe5d7953095e42bfee2a1411c100f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Drawers using Guid(87cbe5d7953095e42bfee2a1411c100f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '414c6e63fb457d9519e35105cf02ed5c') in 0.010439 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=84ad4d75c33c3b5a57c6dd4c0ff3d2a5 DependenciesID=c5439fb5b1c30a4c6bc125839a410c3e StaticDependenciesID=2e3f775919a67189e32ab9df8e803c2f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000124 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Tech Accessories
+  importAddress: Guid(471d7a51e48b6f444809f36497e0ba67) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Tech Accessories using Guid(471d7a51e48b6f444809f36497e0ba67) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '630b9853206ca2c9f0fce7de1ba4cd6c') in 0.0075049 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=fe7e43269409e525f3d985e389bee797 DependenciesID=157f5eb023663d7118c9beb55673df3e StaticDependenciesID=00b7907e8bf46ceb316f7a0317a9175c 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000092 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Normal.png
+  importAddress: Guid(2c84b1a3a88a01d4393c64fb393b3a08) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Normal.png using Guid(2c84b1a3a88a01d4393c64fb393b3a08) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '6192c30cf3b0464a2510cfa335c8f5bf') in 0.0449863 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1b8fa4b87e0ecf656a622f06f00c3a5c DependenciesID=b73fe62d1147d5fa176d51874c5ffc99 StaticDependenciesID=b8fd98b0b9a44022236513445c719c88 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000101 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 4/Table texture set 4_Normal.png
+  importAddress: Guid(c027d43eb0d92f74789368a43676fec4) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 4/Table texture set 4_Normal.png using Guid(c027d43eb0d92f74789368a43676fec4) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'c55f29d7abc3aff003da2fd9f7d8c578') in 0.0329763 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a9c0ac1c3d1516876cfda0de5e9c14a7 DependenciesID=cdb10ebfeb7fcbc0c1dedce860288cf1 StaticDependenciesID=04ebc1337d63aac404209f0999357a50 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000038 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Chair set/Type 2/Chair Set T2_Normal.png
+  importAddress: Guid(837d1e880ba7c194fb6455c2e623be88) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Chair set/Type 2/Chair Set T2_Normal.png using Guid(837d1e880ba7c194fb6455c2e623be88) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'ef8ef4b1c9aefb8584264a4e9cf9ba3d') in 0.0330348 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=efe68d106acf84fd71fe30c14d6c088e DependenciesID=4303be0cdc3ef0e8f70fe95c89b76de6 StaticDependenciesID=19700ff42e41393f3e5dddaf7f7d2f6f 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000088 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Materials
+  importAddress: Guid(eca3c37a78f8a8a479cafd4a87f3dfbe) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Materials using Guid(eca3c37a78f8a8a479cafd4a87f3dfbe) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '7b31611ad7fa55fccd09c8e16726b90b') in 0.0124819 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a6b43d5c9fc7a68e651a5b9f22ca1f17 DependenciesID=c4cb335ab33a89a92a40e5806b8d3f27 StaticDependenciesID=bfc84da3b57fa59a65a64d93a72ff175 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000100 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Height.png
+  importAddress: Guid(5fd74c36cc1c439458fb45767b20a36d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Height.png using Guid(5fd74c36cc1c439458fb45767b20a36d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'bc392d514807705f9eae654e29cd36bf') in 0.0413559 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0b2500c19018803a40e7444c0732a6a0 DependenciesID=18e5bc1cc1375be6dec60b379f7036f3 StaticDependenciesID=e5dc1c86ba97330c8ddf243d7de2ccfe 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000083 seconds.
+  path: Assets/ScifiOfficeLite/Scene/Demo/Lightmap-1_comp_shadowmask.png
+  importAddress: Guid(3d156b3f147ccc64184d59ab1ea838d0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Scene/Demo/Lightmap-1_comp_shadowmask.png using Guid(3d156b3f147ccc64184d59ab1ea838d0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'a51b230be31b277767b4b9fbb5d34e10') in 0.0305157 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=800d671e06b52c61fba512c3d953822a DependenciesID=64b4e79f4e07cf6c20a3cac749e1f654 StaticDependenciesID=2e6f73e80ee4035a40ba4a681def4662 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000040 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Phone/Textures/Normal.png
+  importAddress: Guid(d4b08b5c2d94ac94babde82e19cbf170) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Phone/Textures/Normal.png using Guid(d4b08b5c2d94ac94babde82e19cbf170) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '16e67da9965991d8d45333381e9aaefb') in 0.0231538 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9294986b29dd7ee64dd66e754a5cb780 DependenciesID=f6e0fdef02ff80dceb13f1ee9ad039cd StaticDependenciesID=703632b6ae5cd76d7afa657481a4a6c6 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000053 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Monitor 2/Textures/Albedo.png
+  importAddress: Guid(2952389183eedcd4f8788999a15c9386) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Monitor 2/Textures/Albedo.png using Guid(2952389183eedcd4f8788999a15c9386) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'ff29ae7f8e762ff1f17921e6224bef68') in 0.026583 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=60624bcd21cd7ad06f834c8fcf9f9b73 DependenciesID=750b37928f0553b39748bcf5e54d2519 StaticDependenciesID=b3c5c29b9b97129134e26ae39d762ab4 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000122 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Vase/vase_grey_AlbedoTransparency.png
+  importAddress: Guid(f5983fce40514a744bf90c9a4cbdfab5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Vase/vase_grey_AlbedoTransparency.png using Guid(f5983fce40514a744bf90c9a4cbdfab5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'cb49f1d536ea6998946781f2c24fd0fb') in 0.0198881 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6da6b1a0c51dea18ce2282523e60c6d9 DependenciesID=1b3d353b0eaf32df7b6c49b7ff32ac80 StaticDependenciesID=23858123f8e3a53b5e2d185e190f0693 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000076 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/tray_1001_Normal.png
+  importAddress: Guid(0bdf20db475ca944b8ad8382e82a02f5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/tray_1001_Normal.png using Guid(0bdf20db475ca944b8ad8382e82a02f5) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '78ff1a6b8f29c40fcfa531dc2f08c810') in 0.018676 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=339537edec8f1bb1a4b21d14b132fbc5 DependenciesID=17286573f6ee8d22742920164bf8bf8f StaticDependenciesID=bbb5c7b15f6945ba9a8095b03bb26702 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000063 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 12.FBX
+  importAddress: Guid(24e5172242125aa45925cd25104a5d1a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Office Interior/Carpet/Carpet 12.FBX using Guid(24e5172242125aa45925cd25104a5d1a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'af588b29ced5cc702c8ef134596f48e6') in 0.0298318 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=63a83d129a94741adbb62303663ce776 DependenciesID=e116b1eb35a81daf58c4b282e5af0efb StaticDependenciesID=a8d1761623f3281562e00fe0ab723b1e 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000032 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Height.png
+  importAddress: Guid(d1046898117c80b4eaa921847b7a6331) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Ground/Carpet/Carpet 2_Height.png using Guid(d1046898117c80b4eaa921847b7a6331) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '7e2aea1d2d1e65460adc8c51b8c639b7') in 0.0233946 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=65c3d4656c7e7d88e79e00c23f251815 DependenciesID=3da9138892eba3fe3856546b7d8d9d69 StaticDependenciesID=20cab1d799952b4a6fc7e1f47d208b35 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000123 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 1/Table texture set 1_Diffuse.png
+  importAddress: Guid(1b42c5ebe64ae0547a8a4bc2dfa26f68) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 1/Table texture set 1_Diffuse.png using Guid(1b42c5ebe64ae0547a8a4bc2dfa26f68) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '7c99764261df152113298345e53d7263') in 0.0397617 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e16af9a8bfb9651694ac7766fa2702d0 DependenciesID=a5c607957155a0788ff25c93114ecdd0 StaticDependenciesID=e069bd8ad5b9e5d6b9b4994a9460e42b 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000195 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Tech Accessories/PC 2.prefab
+  importAddress: Guid(f9a1a5c1a73edba4e8a191866f65123e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Tech Accessories/PC 2.prefab using Guid(f9a1a5c1a73edba4e8a191866f65123e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '49cf346b764a8d16a32272f524d0edc1') in 0.0245435 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1b497608c32e8f4751a61af5122f1516 DependenciesID=43b51fd305da551abe711858d38af49f StaticDependenciesID=c5cbc617f3916e63888dc0dd4b8f2e97 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 9
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Chairs and Stools
+  importAddress: Guid(59e77c7ff6c7c9e47ae54363176204bf) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Chairs and Stools using Guid(59e77c7ff6c7c9e47ae54363176204bf) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '96bed4ec222ca89b05b1bf0ce98037e0') in 0.0075569 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4974156993afd7a786101d261feab689 DependenciesID=1bd8278458d30e40f72aac9b95fc7192 StaticDependenciesID=aa1dd49d475dede32bd11193ca447208 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000099 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Normal.png
+  importAddress: Guid(4a23aba143be8f642aee7b62a5c8ce7d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Wall texture/wall set 1/Wall multiset_Normal.png using Guid(4a23aba143be8f642aee7b62a5c8ce7d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '44688e630d93687196e35dc9d61ba5e6') in 0.0593832 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c235b2ee7db1f26e13b42ddb3cc0145a DependenciesID=ce24355c06b95e7f0fb3ead39da2b356 StaticDependenciesID=f7b7138d38aad7cbfb38fb1db22600dd 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000106 seconds.
+  path: Assets/Screenshots
+  importAddress: Guid(bc6d41c8866a23b4680e39922ecae47c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Screenshots using Guid(bc6d41c8866a23b4680e39922ecae47c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'a677c025f35494c279b2da11d535eb30') in 0.0091698 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=00a95ed6b92b04e36b579717c67b2ed3 DependenciesID=016ac3fd7fc9a02863035a3016aac0df StaticDependenciesID=afec68e90c2418805ec5e45bddc22453 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000073 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Retro_Bedroom_Carpet_02.fbx
+  importAddress: Guid(af766c305f419184bb18fc0ebaf0eeef) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Retro_Bedroom_Carpet_02.fbx using Guid(af766c305f419184bb18fc0ebaf0eeef) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '5009a93578836fa756bcc95f96a3a92b') in 0.024231 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0239e46964ffbc7f25e7b7763ccc6919 DependenciesID=48d33e973eb67b266e74082185e5be72 StaticDependenciesID=c1a56c6b08ebcb550ec69133fec89258 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000027 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Retro_Bedroom_Flower_01.fbx
+  importAddress: Guid(492f6edfbfaf9244b93eb43beb425a1b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Retro_Bedroom_Flower_01.fbx using Guid(492f6edfbfaf9244b93eb43beb425a1b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '9f2413e1bd76871e4f46d6abc0a0af7c') in 0.0246721 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9b226cbcf13321af152e7e0a6d6d228a DependenciesID=1bb2d502d9bd68e26429e3fa2a372500 StaticDependenciesID=18f4e62a909a9ff801236b5d385f4e23 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 1/Table texture set 1_Maskmap.png
+  importAddress: Guid(73bd44cb9023e4e43b95f96f01d472b0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 1/Table texture set 1_Maskmap.png using Guid(73bd44cb9023e4e43b95f96f01d472b0) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '079f9a9c6d37674c49c3a76c7c64befb') in 0.0306475 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=10bdc681ef288a53a3ddc4da61d4356d DependenciesID=f1355547e0d8a2c85c314a677d010daa StaticDependenciesID=9eae6fe0273d5a25aad9817e51260aac 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Colliders/Retro_Bedroom_Flower_01_C.fbx
+  importAddress: Guid(850401fd65736094298fc37cf609b004) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Colliders/Retro_Bedroom_Flower_01_C.fbx using Guid(850401fd65736094298fc37cf609b004) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '15235e05b729e77306a24ff5a6845265') in 0.0324391 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5bb16ca0e2cffb91398a70aee112d2db DependenciesID=17f51063295a9bf26cc704218b7fb6a7 StaticDependenciesID=64e9659ebe0e15dfa9865488a245b594 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Sci-Fi Environment/Mechanical Claw.fbx
+  importAddress: Guid(8e804f97ba971474581b166a0778476b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Sci-Fi Environment/Mechanical Claw.fbx using Guid(8e804f97ba971474581b166a0778476b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'af8221f18b3bd7d14343375f3819657f') in 0.025475 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=cc9637f5ad1dcf2312b1dc7a6cad6228 DependenciesID=4839b1b91e8a825c3e14599890e032ec StaticDependenciesID=b10934fa976d3d007921a3cf3d8d2dce 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 29
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000034 seconds.
+  path: Assets/Materials/PcBody.mat
+  importAddress: Guid(31b3b7ba737bdd64d96f644104295763) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/PcBody.mat using Guid(31b3b7ba737bdd64d96f644104295763) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '31a86aba8821cb6f9d59b8992e300e1d') in 0.011844 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dbef6e43544bce1436a7c4437b9000c3 DependenciesID=e0a7d88161ba631c38f45d378862d03c StaticDependenciesID=1b5cc8a3dcab0784be082006256848d5 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000031 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Colliders/Retro_Bedroom_Desk_01_C.fbx
+  importAddress: Guid(6a7ae3d11f8dddd4593a37aea11b23af) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Colliders/Retro_Bedroom_Desk_01_C.fbx using Guid(6a7ae3d11f8dddd4593a37aea11b23af) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '43488d3cb0445801c684bf948ba0ab69') in 0.0212298 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=881c1755d7d4963db82673c95c1b5d9d DependenciesID=b71e47006723c9873172c529eba3876a StaticDependenciesID=d7f11bdef74d226da36ec7e3af39aa47 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/DemoScene
+  importAddress: Guid(307df13a7c58b274eb2813c69943267b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/DemoScene using Guid(307df13a7c58b274eb2813c69943267b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '537f531e7e5e7b81992a0a9d8101b229') in 0.0070399 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=0b88e3b98c3a473c5d656851633c2665 DependenciesID=6c085647223b61c14230ba7fe2c2105d StaticDependenciesID=4e0a9faf06312400df360d0ba1ed24c6 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000096 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Textures/Cosmic_Retro_Bedroom_Albedo.png
+  importAddress: Guid(3dc2f584b7bc8be4ba81bd274f61c28f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Textures/Cosmic_Retro_Bedroom_Albedo.png using Guid(3dc2f584b7bc8be4ba81bd274f61c28f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '75f4505e2816cd8027eda2d473b5768b') in 0.0176512 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a0542022739abc9dede57d46b24678aa DependenciesID=5e8865f64a03c7966bccfd7d2e61af03 StaticDependenciesID=243c364ecea1c0e484086a0270e7abb6 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000107 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/shelf.png
+  importAddress: Guid(508ec11bfb22a3f45b5b45dfe43de7a2) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/shelf.png using Guid(508ec11bfb22a3f45b5b45dfe43de7a2) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '982808f966fe7775de999e47ef29d975') in 0.0238002 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=76e5934d2553d1bb312d63b1d00a4ed9 DependenciesID=86d9cfdfb06503d504bf8f5f32f20106 StaticDependenciesID=c7fd82ecbb97789defa2b06e4a6270b0 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000092 seconds.
+  path: Assets/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 10.prefab
+  importAddress: Guid(95c12aea438e34b41ab9fb7a62aea92f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Prefabs/Carpets and Floors/Carpet 10.prefab using Guid(95c12aea438e34b41ab9fb7a62aea92f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '338b2a291e1a3899b6345a56e1f46c61') in 0.0229144 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=9fd342a5042ee5ea555c84ba2d3db27e DependenciesID=69d51f5943d48771e1645d39e8ccbfcc StaticDependenciesID=e829bce53a7e941d6b92e62a04b9628d 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 9
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Retro_Bedroom_Laptop_02.fbx
+  importAddress: Guid(ff240ee1dfe604347a427b455b664681) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Models/Retro_Bedroom_Laptop_02.fbx using Guid(ff240ee1dfe604347a427b455b664681) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'c088670bf8deb3c9174873032f68a411') in 0.0347138 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=7d640a3ad1791af01fe98dfd20d16642 DependenciesID=34ea0ccf6605c0363a23b81c4da9f120 StaticDependenciesID=7f8ecf7079b79d118e5d6e66c77032f6 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 13
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000035 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Models
+  importAddress: Guid(f5fe7a06af2357844bdfdbf0faf98038) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Models using Guid(f5fe7a06af2357844bdfdbf0faf98038) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '5870aa61ef3fe3d08b310f64c5bc71a7') in 0.0093704 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=3828cf6e1d889d27d8bb6bdf538b8c98 DependenciesID=afa4815d9dbcc7265caafcd1b3c7684a StaticDependenciesID=e7f95c6680106aa1ced37c3ec3185b7a 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000120 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 4
+  importAddress: Guid(5f426edfed0536b41a389f4e00207097) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture Set 4 using Guid(5f426edfed0536b41a389f4e00207097) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '54010da86b1c15528d0d283b01824e44') in 0.0084613 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a773f18fb0e9c7a0ff169ba0553ff801 DependenciesID=fe189553c88b07a668db294175043d70 StaticDependenciesID=b898cbbc1d8b428bf488919b51115d51 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000159 seconds.
+  path: Assets/Materials/DeskDark.mat
+  importAddress: Guid(ac40c2048bc34b447a8f040440957b35) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/DeskDark.mat using Guid(ac40c2048bc34b447a8f040440957b35) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '96fee6ac556bac10f68bc515fed3287d') in 0.0138845 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=8e2930283e88008a8f949b6bd10a6930 DependenciesID=9376626f2f8a21792b27b4d9c97ff872 StaticDependenciesID=df3a71359d915ce84bb64ae3a53b62b3 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000097 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 3
+  importAddress: Guid(c399d0ccbe0ff5d47ab0f08d79257a53) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Texture set 3 using Guid(c399d0ccbe0ff5d47ab0f08d79257a53) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '36905aa3b9b3f3f2ce5610d0c8a74727') in 0.008995 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b9990ef23e9dc5437ca7c56bc9bd4312 DependenciesID=4a1de20ab3441e31f54df1334a5d7000 StaticDependenciesID=de5dff4668bd64d6a88bcf06e151ac7e 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000069 seconds.
+  path: Assets/room/Cosmic_Retro_Bedroom_Demo/Materials
+  importAddress: Guid(c639df7c75ef4784d8972fbd839d6bc9) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/room/Cosmic_Retro_Bedroom_Demo/Materials using Guid(c639df7c75ef4784d8972fbd839d6bc9) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '528197ed9cd71f840e8c559437144cb2') in 0.0089023 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=6a67ac8aa9f1e3888666e6a97ca9eb2f DependenciesID=9ca86be830085f7115b56670fd9f625a StaticDependenciesID=045df601fef6536edcd7f832c331491c 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000064 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Materials/Chair set/Chair set T2.mat
+  importAddress: Guid(703745f75560124488d90b7ffe522f57) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Materials/Chair set/Chair set T2.mat using Guid(703745f75560124488d90b7ffe522f57) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '3d4f0734b08f0207339c28f30f51fd44') in 0.0381882 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=30d73cf277cb09c588dbcffca60248c5 DependenciesID=cc2c87cbbc9d0584c84f941de5377ff1 StaticDependenciesID=9aa69604ab6b2a517060a2f8535e9d62 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 5
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000040 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Keyboard props texture/Keyboard Props_Diffuse.png
+  importAddress: Guid(6bca6da117a646144a04476fbc898b92) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Techware/Keyboard props texture/Keyboard Props_Diffuse.png using Guid(6bca6da117a646144a04476fbc898b92) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '3d286e0ed95d63403a8f07b242a5d877') in 0.0169118 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e12a384516168c9e839b29fff537dc11 DependenciesID=a41de290b68955085adb18e1dc4688c4 StaticDependenciesID=2cc660d251f45367a6faf863baafcf4b 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000123 seconds.
+  path: Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/shelf_1001_MetallicSmoothness.png
+  importAddress: Guid(7d7c4dbd6dba8be408a8bd90fb5bdd4d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/ScifiOfficeLite/Meshes/Textures/Environment/Table texture set/Table Props/shelf_1001_MetallicSmoothness.png using Guid(7d7c4dbd6dba8be408a8bd90fb5bdd4d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '3036eeb4227ad752f0f02ce2f0a12402') in 0.0200114 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e16fa523aacd9dcb5c2310d25a9c03da DependenciesID=5dc306019c317caa0e12a4e6b9c2c39d StaticDependenciesID=f5dd657230ccd8e3d256f4789f6ca091 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000037 seconds.
+  path: Assets/Scripts
+  importAddress: Guid(6877243d535569840a8126731338e24b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Scripts using Guid(6877243d535569840a8126731338e24b) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'd473eda3e3cd38cfb0e1c98a28138461') in 0.0081524 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=72722a2bb430477d85013cff2e240912 DependenciesID=72dfc0ad4a5b9649a16610b49fe7c5e7 StaticDependenciesID=7c11ecf4007682003925c31f48bc77f3 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000131 seconds.
+  path: Assets/Materials/AeroWallDark.mat
+  importAddress: Guid(f07ed08f52973064581e09426561fabf) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/AeroWallDark.mat using Guid(f07ed08f52973064581e09426561fabf) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '72dc8ab715e5c18ef0bee7964e64e453') in 0.0116577 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b1d12efd5f537e41cc8175af33f15e68 DependenciesID=14d861b69f22a2baabc6e9de92bf5218 StaticDependenciesID=483070ded509a92472c57ae7b73067ae 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000122 seconds.
+  path: Assets/Materials/BootScene_WallAccentPanel.mat
+  importAddress: Guid(3ec74307de3ecba439eccbbdde746831) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/BootScene_WallAccentPanel.mat using Guid(3ec74307de3ecba439eccbbdde746831) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '4c1982fe0f3b49bfc9e6f4bf8bfe03a8') in 0.0161688 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=1dc6d3c5be70b42aaca9c870f0350b4c DependenciesID=07ee67ee9b56f555ee01bacbfa742c4e StaticDependenciesID=08a3db3ca3fabfe65171d28af15a93aa 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/Textures/BootScene/wall_panel_noise.png
+  importAddress: Guid(3e5e96cba082670469afd0e2d047db8a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Textures/BootScene/wall_panel_noise.png using Guid(3e5e96cba082670469afd0e2d047db8a) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'a1a8e1e68f57bf50a81d2e64c26e5b5c') in 0.0263923 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=280f196ba132454ad563f88626286566 DependenciesID=145ed649719b481fad02c5f2d706abce StaticDependenciesID=e6d91ab64f1bc28ac27bbb18b31c2410 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/Materials/BootScene_DarkFloor.mat
+  importAddress: Guid(a1df55f3a8f815446959bb9d55dd5108) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/BootScene_DarkFloor.mat using Guid(a1df55f3a8f815446959bb9d55dd5108) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'b9e4ba9e9465c21cde5cbcafe1e3146d') in 0.0203063 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=a46e2f11d06aa27a2b38252d8c97dd13 DependenciesID=7b98c9425c604b9152eedde3a852f017 StaticDependenciesID=7aee4234e3d0720b206017735a23f4cf 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000041 seconds.
+  path: Assets/Materials/BootScene_BlackTrim.mat
+  importAddress: Guid(8c4238558f74ed24aa84c3b6818f241e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/BootScene_BlackTrim.mat using Guid(8c4238558f74ed24aa84c3b6818f241e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '1149e0d94a82006fdc506f0fda012a86') in 0.0139346 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=93d46bd0e0584b97cbf5e587bbe85de8 DependenciesID=899240a8f09f3f1a364fc9fb794c0081 StaticDependenciesID=06628c69f6315d5c405641cb8ed78836 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/Materials/AeroDesktop_CyanGlass.mat
+  importAddress: Guid(b63183677a2dc934a8c5ce8207eefdc1) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/AeroDesktop_CyanGlass.mat using Guid(b63183677a2dc934a8c5ce8207eefdc1) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'b840432460479a468b661f81e4627fa3') in 0.0110131 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=921f682f1ea843ec2e113fd7c1b504d2 DependenciesID=711217983427770231b838a7f063c785 StaticDependenciesID=58614c2f70d653d6345a27ccb091ef96 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000112 seconds.
+  path: Assets/Materials/BootScene_DarkWall.mat
+  importAddress: Guid(12077979810f0f64a8b4cc34ff35315e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/BootScene_DarkWall.mat using Guid(12077979810f0f64a8b4cc34ff35315e) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '13d3f8c50596196826b76deee09d7fb6') in 0.0145724 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=b7118e036495e4d7cc634589195ea375 DependenciesID=d9d7ae58efd8b08d08983cfb23ac6ab8 StaticDependenciesID=68f7e6e8197489adb20c346a3cd63a5e 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/Scenes/AeroDesktopScene.unity
+  importAddress: Guid(5c7159d57560f6f4282f6fe66de320e9) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Scenes/AeroDesktopScene.unity using Guid(5c7159d57560f6f4282f6fe66de320e9) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '1920a6ff69bf673874fc9decdb18fafd') in 0.0140306 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=fcb2ac0a9429ef4de0b47e8462495607 DependenciesID=8b2119bd8e295e9fa06ae90b33ce70d6 StaticDependenciesID=04cb7955a7ae4e3474adab20ddf2d351 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000086 seconds.
+  path: Assets/Scripts/BootScreenController.cs
+  importAddress: Guid(ab101f49b0c00af4d94eb062186d5ac4) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Scripts/BootScreenController.cs using Guid(ab101f49b0c00af4d94eb062186d5ac4) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '44d2d3079193a577d22e5e17e13061e2') in 0.0083865 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=d0a621aae389e4f7ce26c5eb8933654f DependenciesID=ecb3f61512f772f8ece6c4b94d4594d3 StaticDependenciesID=944615f5bfbacd1d22a88f508b524e3b 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000419 seconds.
+  path: Assets/Materials/BootScene_AlmostBlack.mat
+  importAddress: Guid(472c82e7d5714b7488dbdb38a511e005) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/BootScene_AlmostBlack.mat using Guid(472c82e7d5714b7488dbdb38a511e005) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '7a3948f6399e789ddbe3167208799d5b') in 0.0118124 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=dd1daf8db3913d4ea85f3d69f6fb57c3 DependenciesID=4f12df0898bc71d248c03295264615b1 StaticDependenciesID=3226df21da9a0ddb2ab0860bbaf511e6 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000129 seconds.
+  path: Assets/Textures/BootScene/floor_tile_worn.png
+  importAddress: Guid(8887ee758326cf94dae8fcfdb952a894) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Textures/BootScene/floor_tile_worn.png using Guid(8887ee758326cf94dae8fcfdb952a894) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '6590c321c0bfdb43a44dcf897cc41bcd') in 0.0291021 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=e20b3ff40857d1be9fab208d296f8df9 DependenciesID=bc4ffd96765928e04b4529a86e9b7e7f StaticDependenciesID=10b71dca7b267babbb6e555d8c92ab95 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000042 seconds.
+  path: Assets/Materials/BootScene_StrangePresence.mat
+  importAddress: Guid(2a57ad629ab878141ab01eb32184386d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/BootScene_StrangePresence.mat using Guid(2a57ad629ab878141ab01eb32184386d) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: 'f196b59e51cd98fa6fe9cada3db83175') in 0.0128695 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=5b8c762598895050b86a9b5e3e1866c5 DependenciesID=093c68d2f20ca2d4da035b8e0e68846e StaticDependenciesID=82e6b42307b6ccf36ec438f060d33b22 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000114 seconds.
+  path: Assets/Scripts/MonitorFlicker.cs
+  importAddress: Guid(9f4de6df64c99434197039cceb3a627f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Scripts/MonitorFlicker.cs using Guid(9f4de6df64c99434197039cceb3a627f) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '712caf6132e5d5068bb24be8c1b01d29') in 0.0098902 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=f01ab958700ed7e9cd8770c4ee703718 DependenciesID=fb9cfaea1f84dbaba262577e59d88d58 StaticDependenciesID=63fe1f11c0b08cdf058fbae4c27625da 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000116 seconds.
+  path: Assets/Materials/BootScene_CarpetBlue.mat
+  importAddress: Guid(e80f0a464887bab4c80a94a055f7bb01) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Materials/BootScene_CarpetBlue.mat using Guid(e80f0a464887bab4c80a94a055f7bb01) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '07789c3d8670d2367fc1e28c88dd7cbc') in 0.0181156 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=4980b8696f7f8853c0eee4b7ae6e7727 DependenciesID=613788f9d65b647f02d97465e615184f StaticDependenciesID=39a0b62ee3614f97485a06f8ac8c5488 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 2
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000039 seconds.
+  path: Assets/Textures/Presence_Glow.png
+  importAddress: Guid(3023aa951854b4b49b26f710c2717b2c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/Textures/Presence_Glow.png using Guid(3023aa951854b4b49b26f710c2717b2c) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '1817986ba9ebec070dcef3c7f7b4e8de') in 0.0196757 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=94bc101b7f44e0be9d44cc86d014e3b4 DependenciesID=0d32f4519b505c19dd33d6f547a9267d StaticDependenciesID=4aa1e33fb5dc90701fab45a7714c4788 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 3
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/JustPlay/Сomputer devices/Objects/Keyboard/Textures/AO.png
+  importAddress: Guid(44292e34ea9377b4e928720f1b76f0c7) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d)
+Start importing Assets/JustPlay/Сomputer devices/Objects/Keyboard/Textures/AO.png using Guid(44292e34ea9377b4e928720f1b76f0c7) Importer(2089858483,b0f066a214c2f5e87bad3c948f4d605d) (ScriptedImporter) -> (Import Result ID: '7b7d6d5e543c38ba54d4032aec94a9d6') in 0.0163801 seconds [static and dynamic dependencies]. Details - ImportResultOutputID=c0233b331ac866789d40228431a1a187 DependenciesID=9e2c715109ca793626b7572da3f867b7 StaticDependenciesID=9af2d973231df8cc38679b053eb2e7bc 
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 
 ========================================================================
 Received Prepare
@@ -263,7 +1215,7 @@ Assembly UnityEditor.UI.Common.Tests.dll at Library/ScriptAssemblies/UnityEditor
 Assembly UnityEditor.UI.EditorTests.dll at Library/ScriptAssemblies/UnityEditor.UI.EditorTests.dll not valid. Loading of assembly skipped.
 Assembly UnityEngine.UI.Tests.dll at Library/ScriptAssemblies/UnityEngine.UI.Tests.dll not valid. Loading of assembly skipped.
 Symbol file LoadedFromMemory is not a mono symbol file
-Refreshing native plugins compatible for Editor in 2.39 ms, found 4 plugins.
+Refreshing native plugins compatible for Editor in 7.98 ms, found 4 plugins.
 Native extension for WindowsStandalone target not found
 [Package Manager] Failed to launch server process. Reason: Unity was launched with the -noUpm command-line argument
 [Package Manager] Unable to send message (not connected to server process).
@@ -273,33 +1225,33 @@ Native extension for WindowsStandalone target not found
 [Package Manager] Cannot connect to Unity Package Manager local server
 ScheduleIndexationOnStartup MainProcess:False IndexOnStartup:True
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  2.520 seconds
-Domain Reload Profiling: 3722ms
-	BeginReloadAssembly (342ms)
-		DisableScriptedObjects (17ms)
-		CreateAndSetChildDomain (95ms)
-	RebuildCommonClasses (68ms)
-	RebuildNativeTypeToScriptingClass (15ms)
-	initialDomainReloadingComplete (112ms)
-	LoadAllAssembliesAndSetupDomain (665ms)
-		LoadAssemblies (552ms)
-		AnalyzeDomain (253ms)
-			TypeCache.Refresh (10ms)
-			BuildScriptInfoCaches (231ms)
-			ResolveRequiredComponents (9ms)
-	FinalizeReload (2520ms)
+- Finished resetting the current domain, in  4.370 seconds
+Domain Reload Profiling: 6304ms
+	BeginReloadAssembly (550ms)
+		DisableScriptedObjects (32ms)
+		CreateAndSetChildDomain (140ms)
+	RebuildCommonClasses (88ms)
+	RebuildNativeTypeToScriptingClass (33ms)
+	initialDomainReloadingComplete (170ms)
+	LoadAllAssembliesAndSetupDomain (1093ms)
+		LoadAssemblies (931ms)
+		AnalyzeDomain (422ms)
+			TypeCache.Refresh (15ms)
+			BuildScriptInfoCaches (384ms)
+			ResolveRequiredComponents (18ms)
+	FinalizeReload (4371ms)
 		SetupLoadedEditorAssemblies (0ms)
-			InitializePlatformSupportModulesInManaged (3ms)
-			BeforeProcessingInitializeOnLoad (257ms)
-			ProcessInitializeOnLoadAttributes (1867ms)
-			ProcessInitializeOnLoadMethodAttributes (117ms)
-			AfterProcessingInitializeOnLoad (16ms)
-		AwakeInstancesAfterBackupRestoration (13ms)
-Refreshing native plugins compatible for Editor in 2.90 ms, found 4 plugins.
+			InitializePlatformSupportModulesInManaged (4ms)
+			BeforeProcessingInitializeOnLoad (425ms)
+			ProcessInitializeOnLoadAttributes (3274ms)
+			ProcessInitializeOnLoadMethodAttributes (203ms)
+			AfterProcessingInitializeOnLoad (24ms)
+		AwakeInstancesAfterBackupRestoration (21ms)
+Refreshing native plugins compatible for Editor in 6.18 ms, found 4 plugins.
 Unloading 0 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 5279 unused Assets / (2.3 MB). Loaded Objects now: 5887.
-Memory consumption went from 109.3 MB to 107.0 MB.
-Total: 10.197400 ms (FindLiveObjects: 0.721600 ms CreateObjectMapping: 0.661000 ms MarkObjects: 6.418700 ms  DeleteObjects: 2.394600 ms)
+Unloading 5284 unused Assets / (2.1 MB). Loaded Objects now: 5894.
+Memory consumption went from 113.1 MB to 111.0 MB.
+Total: 21.146700 ms (FindLiveObjects: 1.573300 ms CreateObjectMapping: 1.007100 ms MarkObjects: 14.423700 ms  DeleteObjects: 4.140200 ms)
 
 Prepare: number of updated asset objects reloaded= 0
 Editor requested this worker to shutdown with reason: Scaling down because of idle timeout
