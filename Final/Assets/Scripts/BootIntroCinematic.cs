@@ -53,6 +53,7 @@ public class BootIntroCinematic : MonoBehaviour
     private Light monitorGlowLight;
     private Light[] otherLights;
     private float[] otherLightsOriginalIntensity;
+    private Vector3 monitorWorldPosition;
     
     // Камеры
     private Transform[] cameraPositions;
@@ -113,6 +114,10 @@ public class BootIntroCinematic : MonoBehaviour
         otherLightsOriginalIntensity = new float[otherLights.Length];
         for (int i = 0; i < otherLights.Length; i++)
             otherLightsOriginalIntensity[i] = otherLights[i].intensity;
+        
+        // Находим реальную позицию монитора (экран, не родительский объект)
+        GameObject screenSurface = GameObject.Find("Boot Screen Surface");
+        monitorWorldPosition = screenSurface != null ? screenSurface.transform.position : new Vector3(0f, 1.35f, 2.24f);
         
         // Создаём камеры
         CreateCameraPositions();
@@ -252,7 +257,7 @@ public class BootIntroCinematic : MonoBehaviour
         );
         
         // Камера постепенно центрируется на мониторе
-        Vector3 monitorPos = screenController != null ? screenController.transform.position : new Vector3(0f, 1.35f, 2.24f);
+        Vector3 monitorPos = monitorWorldPosition;
         // Начинаем смотреть чуть в сторону, плавно переходим к центру экрана
         Vector3 lookOffset = Vector3.Lerp(
             new Vector3(-0.5f, 0f, -1f),  // слегка смещённый взгляд
@@ -424,21 +429,21 @@ public class BootIntroCinematic : MonoBehaviour
         GameObject parent = new GameObject("🎬 Scene Cameras");
         parent.transform.SetParent(GameObject.Find("BootScene_Setup")?.transform);
         
-        // Дверной проём примерно на z=-2.9, центр комнаты ~ z=0
-        // 0: Снаружи комнаты (коридор/тамбур) — далеко от двери
-        cameraPositions[0] = CreateCameraPoint(parent.transform, "Outside", new Vector3(0f, 1.5f, -8f), new Vector3(0f, 0f, 0f));
+        // Реальная геометрия: дверь z=-2.92, монитор z=2.24, задняя стена z=3.05
+        // 0: Снаружи комнаты (коридор) — перед дверью
+        cameraPositions[0] = CreateCameraPoint(parent.transform, "Outside", new Vector3(0f, 1.5f, -7f), new Vector3(0f, 0f, 0f));
         
-        // 1: У двери — камера медленно входит через дверной проём
-        cameraPositions[1] = CreateCameraPoint(parent.transform, "Doorway", new Vector3(0f, 1.5f, -3f), new Vector3(0f, 0f, 0f));
+        // 1: Дверной проём — камера входит в комнату
+        cameraPositions[1] = CreateCameraPoint(parent.transform, "Doorway", new Vector3(0f, 1.5f, -2.5f), new Vector3(0f, 0f, 0f));
         
-        // 2: Внутри комнаты — компьютер вдалеке
-        cameraPositions[2] = CreateCameraPoint(parent.transform, "Computer", new Vector3(0.5f, 1.4f, 0.5f), new Vector3(0f, -5f, 0f));
+        // 2: Середина комнаты — монитор виден впереди у дальней стены
+        cameraPositions[2] = CreateCameraPoint(parent.transform, "Computer", new Vector3(0f, 1.4f, 0.5f), new Vector3(0f, 0f, 0f));
         
-        // 3: Близко к экрану
-        cameraPositions[3] = CreateCameraPoint(parent.transform, "Close", new Vector3(0f, 1.3f, -0.3f), Vector3.zero);
+        // 3: Близко к монитору — перед столом
+        cameraPositions[3] = CreateCameraPoint(parent.transform, "Close", new Vector3(0f, 1.3f, 1.5f), new Vector3(0f, 0f, 0f));
         
         // 4: Внутри экрана (Player POV)
-        cameraPositions[4] = CreateCameraPoint(parent.transform, "PlayerEyes", new Vector3(0f, 1.3f, 0.2f), new Vector3(0f, 180f, 0f));
+        cameraPositions[4] = CreateCameraPoint(parent.transform, "PlayerEyes", new Vector3(0f, 1.3f, 2.5f), new Vector3(0f, 180f, 0f));
     }
 
     Transform CreateCameraPoint(Transform parent, string name, Vector3 pos, Vector3 rot)
