@@ -32,7 +32,7 @@ public class CinematicIntroController : MonoBehaviour
     public CinematicAudioController audioController;
     
     [Header("Settings")]
-    public string nextScene = "AeroDesktopScene";
+    public string nextScene = "SystemBootScene";
     
     private Vector3[] cameraPath;
     private float[] pathDistances;
