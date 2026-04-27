@@ -302,8 +302,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "MCP For Unity\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1060
-    y: 79.200005
+    x: 1061
+    y: 24
     width: 475
     height: 834.8
   m_SerializedDataModeController:
@@ -341,7 +341,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 43.2
+    y: 0
     width: 1536
     height: 36
   m_SerializedDataModeController:
@@ -681,7 +681,7 @@ MonoBehaviour:
       height: 898.44867
     m_MinimalGUI: 1
   m_defaultScale: 0.4674479
-  m_LastWindowPixelSize: {x: 897.5, y: 630.5}
+  m_LastWindowPixelSize: {x: 718, y: 504.40002}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000100000100
@@ -710,7 +710,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 79.200005
+    y: 24
     width: 339
     height: 504.40002
   m_SerializedDataModeController:
@@ -729,10 +729,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs:
-      - m_Data: -1576
+      m_SelectedIDs: []
       m_LastClickedID:
-        m_Data: -1576
+        m_Data: 0
       m_ExpandedIDs:
       - m_Data: -1392
       - m_Data: 45032
@@ -785,8 +784,8 @@ MonoBehaviour:
     m_TextWithWhitespace: "Scene\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 340
-    y: 79.200005
+    x: 341
+    y: 24
     width: 718
     height: 504.40002
   m_SerializedDataModeController:
@@ -1410,7 +1409,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.07955016, y: -0.06971371, z: 0.0054464103, w: -0.9945326}
     speed: 2
-    m_Value: {x: -0.07953771, y: -0.069702804, z: 0.005445558, w: -0.99437696}
+    m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
     m_Target: 1.3584572
     speed: 2
@@ -1418,7 +1417,7 @@ MonoBehaviour:
   m_Ortho:
     m_Target: 0
     speed: 2
-    m_Value: 0
+    m_Value: 1
   m_CameraSettings:
     m_Speed: 1
     m_SpeedNormalized: 0.5
@@ -1559,7 +1558,7 @@ MonoBehaviour:
       m_Data: 43766
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 45650
+    - m_Data: 43536
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1593,7 +1592,7 @@ MonoBehaviour:
       m_Data: 0
     m_ExpandedIDs:
     - m_Data: 0
-    - m_Data: 45650
+    - m_Data: 43536
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1678,7 +1677,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 609.60004
+    y: 554.4
     width: 1059
     height: 304.39996
   m_SerializedDataModeController:
