@@ -1,0 +1,15 @@
+{
+    "asset": "49551c31f5c1d8f4690e252ce424a4fc",
+    "fileName": "019e2346-582a-7dfe-88eb-7f62803488a8.wav",
+    "prompt": "low frequency digital hum, corrupted static, psychological horror ambiance, very clean and cinematic",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

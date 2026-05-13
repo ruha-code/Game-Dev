@@ -6,12 +6,16 @@
         <aero:AeroSwoosh class="swoosh-overlay" />
 
         <ui:VisualElement name="header" class="header">
-            <ui:Label text="AeroOS" name="title" class="title" />
+            <ui:Label text="AeroOS" name="title" class="title">
+                <ui:VisualElement name="eye-left" class="logo-eye" style="left: 630px;" />
+                <ui:VisualElement name="eye-right" class="logo-eye" style="left: 890px;" />
+            </ui:Label>
             <ui:Label text="BEYOND THE SCREEN" name="subtitle" class="subtitle" />
         </ui:VisualElement>
 
         <ui:VisualElement name="menu" class="menu-box">
-            <ui:VisualElement name="new-game-item" class="menu-item menu-item-active">
+            <ui:VisualElement name="glass-reflection" class="ghost-reflection" />
+<ui:VisualElement name="new-game-item" class="menu-item menu-item-active">
                 <aero:AeroActiveBackground style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
                 <ui:VisualElement class="menu-item-content">
                     <ui:VisualElement class="menu-icon" style="background-image: url('project://database/Assets/UI/Icons/play.svg');" />
@@ -61,8 +65,11 @@
                     <ui:Label text="Prepare to log in to AeroOS." class="user-subtext" />
                 </ui:VisualElement>
             </ui:VisualElement>
-            <ui:Label text="v 1.0.0" class="version-text" />
-        </ui:VisualElement>
+            <ui:VisualElement class="footer-right" style="align-items: flex-end;">
+                <ui:Label name="clock-text" text="00:00" class="clock-text" />
+                <ui:Label text="v 1.0.0" class="version-text" />
+            </ui:VisualElement>
+            </ui:VisualElement>
 
         <ui:VisualElement name="settings-panel" class="panel-overlay">
             <ui:VisualElement class="panel-content">
@@ -88,8 +95,22 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <ui:VisualElement name="anomaly-container" picking-mode="Ignore" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;">
+            <ui:VisualElement name="player-shadow" class="anomaly-shadow" />
+            <ui:VisualElement name="digital-ghost" class="anomaly-ghost" />
+            <ui:VisualElement name="system-popup" class="anomaly-popup">
+                <ui:Label name="popup-text" text="Scanning..." />
+            </ui:VisualElement>
+            <ui:VisualElement name="fake-load" class="anomaly-load">
+                <ui:Label text="Synchronizing..." class="load-text" />
+                <ui:VisualElement class="load-bar-bg">
+                    <ui:VisualElement name="load-bar-fill" class="load-bar-fill" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <ui:VisualElement name="fade-overlay" class="fade-overlay" picking-mode="Ignore">
-            <ui:VisualElement name="loading-container" class="loading-container">
+<ui:VisualElement name="loading-container" class="loading-container">
                 <ui:Label text="AeroOS" name="loading-logo" class="loading-logo" />
                 <ui:VisualElement class="loading-spinner" />
                 <ui:Label text="INITIALIZING AeroOS..." class="loading-text" />

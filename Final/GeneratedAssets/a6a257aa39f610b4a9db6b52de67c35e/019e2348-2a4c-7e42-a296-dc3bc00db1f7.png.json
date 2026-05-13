@@ -1,0 +1,28 @@
+{
+    "asset": "a6a257aa39f610b4a9db6b52de67c35e",
+    "fileName": "019e2348-2a4c-7e42-a296-dc3bc00db1f7.png",
+    "prompt": "a dark bedroom at night, a single retro computer monitor glowing with blue light on a desk, cinematic lighting, realistic but slightly eerie, psychological horror atmosphere, 16:9 aspect ratio",
+    "negativePrompt": "",
+    "model": "gpt-image-1",
+    "modelName": "GPT Image 1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

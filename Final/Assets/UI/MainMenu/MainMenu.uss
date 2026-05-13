@@ -186,10 +186,13 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
     margin: 0;
 }
 
-.version-text {
-    font-size: 14px;
-    color: var(--color-text);
-    opacity: 0.4;
+.clock-text {
+    font-size: 28px;
+    color: var(--color-primary);
+    -unity-font-style: bold;
+    letter-spacing: 2px;
+    opacity: 0.6;
+    margin-bottom: 5px;
 }
 
 .panel-overlay {
@@ -230,13 +233,92 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
     transition-duration: 0.8s;
 }
 
-.loading-logo {
-    font-size: 80px;
-    -unity-font-style: bold;
-    color: #008eb0;
-    margin-bottom: 30px;
+.anomaly-shadow {
+    position: absolute;
+    left: -200px;
+    bottom: 0;
+    width: 400px;
+    height: 800px;
+    background-color: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    -unity-background-image-tint-color: black;
+}
+
+.anomaly-ghost {
+    position: absolute;
+    right: 15%;
+    top: 20%;
+    width: 300px;
+    height: 500px;
+    background-color: rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    display: none;
+}
+
+.anomaly-popup {
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    translate: -50% 0;
+    background-color: rgba(0, 20, 40, 0.85);
+    border-width: 1px;
+    border-color: #00d2ff;
+    padding: 15px 30px;
+    opacity: 0;
+    display: none;
+    align-items: center;
+}
+
+.anomaly-popup Label {
+    color: #00d2ff;
+    font-size: 18px;
+    letter-spacing: 2px;
+}
+
+.anomaly-load {
+    position: absolute;
+    bottom: 150px;
+    left: 50%;
+    translate: -50% 0;
+    width: 400px;
+    opacity: 0;
+    display: none;
+}
+
+.load-text {
+    color: #a3e0ff;
+    font-size: 14px;
+    margin-bottom: 8px;
     -unity-text-align: middle-center;
-    letter-spacing: 5px;
+}
+
+.load-bar-bg {
+    height: 4px;
+    background-color: rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+}
+
+.load-bar-fill {
+    width: 0;
+    height: 100%;
+    background-color: #00d2ff;
+}
+
+.logo-eye {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    width: 60px;
+    height: 80px;
+    background-color: white;
+    border-radius: 30px;
+    opacity: 0;
+    display: none;
+}
+
+.logo-eye-blink {
+    background-color: #00d2ff;
+    scale: 1 0.1;
 }
 
 .loading-text {

@@ -95,29 +95,33 @@ namespace AeroOS.UI
         public float anomalyShift = 0f;
         private bool isRunning = true;
 
-        // Optimized shared objects to eliminate GC spikes
-        private static readonly Gradient waterGrad = new Gradient();
-        private static readonly Gradient rayGrad = new Gradient();
-        private static readonly Gradient pGrad = new Gradient();
-        private static readonly GradientColorKey[] colorKeys = new GradientColorKey[3];
-        private static readonly GradientAlphaKey[] alphaKeys = new GradientAlphaKey[3];
-        private static readonly GradientColorKey[] pcKeys = new GradientColorKey[2];
-        private static readonly GradientAlphaKey[] paKeys = new GradientAlphaKey[2];
+        // Non-static to avoid race conditions
+        private readonly Gradient waterGrad = new Gradient();
+        private readonly Gradient rayGrad = new Gradient();
+        private readonly Gradient pGrad = new Gradient();
+        private readonly GradientColorKey[] colorKeys = new GradientColorKey[3];
+        private readonly GradientAlphaKey[] alphaKeys = new GradientAlphaKey[3];
+        private readonly GradientColorKey[] pcKeys = new GradientColorKey[2];
+        private readonly GradientAlphaKey[] paKeys = new GradientAlphaKey[2];
 
         public AeroAtmosphere()
         {
             generateVisualContent += OnGenerateVisualContent;
             pickingMode = PickingMode.Ignore;
             
-            for (int i = 0; i < 40; i++) bgParticles.Add(new Particle { pos = new Vector2(Random.value, Random.value), size = Random.Range(0.5f, 1.5f), speed = Random.Range(0.002f, 0.005f), color = new Color(1, 1, 1, 0.15f) });
-            for (int i = 0; i < 30; i++) midParticles.Add(new Particle { pos = new Vector2(Random.value, Random.value), size = Random.Range(1.5f, 2.5f), speed = Random.Range(0.005f, 0.012f), color = new Color(0.8f, 0.95f, 1, 0.3f) });
-            for (int i = 0; i < 15; i++) fgParticles.Add(new Particle { pos = new Vector2(Random.value, Random.value), size = Random.Range(4f, 8f), speed = Random.Range(0.015f, 0.03f), color = new Color(1, 1, 1, 0.1f) });
+            // Further reduced particle counts for performance (35 -> 22 total)
+            for (int i = 0; i < 12; i++) bgParticles.Add(new Particle { pos = new Vector2(Random.value, Random.value), size = Random.Range(0.5f, 1.5f), speed = Random.Range(0.002f, 0.005f), color = new Color(1, 1, 1, 0.15f) });
+            for (int i = 0; i < 6; i++) midParticles.Add(new Particle { pos = new Vector2(Random.value, Random.value), size = Random.Range(1.5f, 2.5f), speed = Random.Range(0.005f, 0.012f), color = new Color(0.8f, 0.95f, 1, 0.3f) });
+            for (int i = 0; i < 4; i++) fgParticles.Add(new Particle { pos = new Vector2(Random.value, Random.value), size = Random.Range(4f, 8f), speed = Random.Range(0.015f, 0.03f), color = new Color(1, 1, 1, 0.1f) });
 
-            schedule.Execute(() => {
-                if (!isRunning) return;
-                time += 0.016f;
-                MarkDirtyRepaint();
-            }).Every(16);
+            schedule.Execute(OnScheduledUpdate).Every(32);
+        }
+
+        private void OnScheduledUpdate()
+        {
+            if (!isRunning || panel == null) return;
+            time += 0.032f; 
+            MarkDirtyRepaint();
         }
 
         public void StopAtmosphere() 
@@ -151,8 +155,7 @@ namespace AeroOS.UI
             painter.Fill();
 
             // Light Rays
-            float rayInt = (0.06f + Mathf.PingPong(time * 0.2f, 0.04f)) + brightnessBoost;
-            rayInt = Mathf.Clamp01(rayInt);
+            float rayInt = Mathf.Clamp01((0.06f + Mathf.PingPong(time * 0.2f, 0.04f)) + brightnessBoost);
             colorKeys[0] = new GradientColorKey(new Color(0.9f, 0.98f, 1f, rayInt), 0f); 
             colorKeys[1] = new GradientColorKey(new Color(0.9f, 0.98f, 1f, rayInt * 0.4f), 0.3f);
             colorKeys[2] = new GradientColorKey(new Color(0.9f, 0.98f, 1f, 0f), 1f);
@@ -166,6 +169,7 @@ namespace AeroOS.UI
             painter.MoveTo(Vector2.zero); painter.LineTo(new Vector2(w, 0)); painter.LineTo(new Vector2(w, h)); painter.LineTo(new Vector2(0, h)); painter.ClosePath();
             painter.Fill();
 
+            // Draw particles with solid colors for massive performance gain
             DrawLayer(painter, bgParticles, w, h, 1.0f);
             DrawLayer(painter, midParticles, w, h, 1.2f);
             DrawLayer(painter, fgParticles, w, h, 1.5f);
@@ -179,18 +183,11 @@ namespace AeroOS.UI
                 float px = ((p.pos.x + time * p.speed * speedMult * dir) % 1.0f) * w;
                 float py = ((p.pos.y + Mathf.Sin(time * 0.5f + p.pos.x * 5) * 0.01f) % 1.0f) * h;
                 
-                // Minimal gradient setup for particles using cached objects
-                pcKeys[0] = new GradientColorKey(p.color, 0f);
-                pcKeys[1] = new GradientColorKey(new Color(p.color.r, p.color.g, p.color.b, 0f), 1f);
-                paKeys[0] = new GradientAlphaKey(p.color.a, 0f);
-                paKeys[1] = new GradientAlphaKey(0f, 1f);
-                pGrad.SetKeys(pcKeys, paKeys);
-
                 Vector2 center = new Vector2(px + (p.anomaly ? anomalyShift : 0), py);
-                painter.fillGradient = FillGradient.MakeRadialGradient(pGrad, center, p.size, center, AddressMode.Clamp);
                 
+                painter.fillColor = p.color;
                 painter.BeginPath();
-                painter.Arc(center, p.size, Angle.Degrees(0), Angle.Degrees(360), ArcDirection.Clockwise);
+                painter.Arc(center, p.size, Angle.Degrees(0), Angle.Degrees(360));
                 painter.Fill();
             }
         }
@@ -200,7 +197,7 @@ namespace AeroOS.UI
             if (fgParticles.Count > 0) fgParticles[Random.Range(0, fgParticles.Count)].anomaly = true;
             schedule.Execute(() => { foreach(var p in fgParticles) p.anomaly = false; }).StartingIn(2000);
         }
-        }
+    }
 
     [UxmlElement]
     public partial class AeroLogo : VisualElement
@@ -209,18 +206,25 @@ namespace AeroOS.UI
         private float time;
         private float sweepX = -0.5f;
 
-        private static readonly Gradient sweepGrad = new Gradient();
-        private static readonly GradientColorKey[] cKeys = new GradientColorKey[3];
-        private static readonly GradientAlphaKey[] aKeys = new GradientAlphaKey[3];
+        private readonly Gradient sweepGrad = new Gradient();
+        private readonly GradientColorKey[] cKeys = new GradientColorKey[3];
+        private readonly GradientAlphaKey[] aKeys = new GradientAlphaKey[3];
 
         public AeroLogo()
         {
             generateVisualContent += OnGenerateVisualContent;
-            schedule.Execute(() => {
-                time += 0.016f;
+            schedule.Execute(OnScheduledUpdate).Every(16);
+        }
+
+        private void OnScheduledUpdate()
+        {
+            if (panel == null) return;
+            time += 0.016f;
+            if (sweepX < 1.3f)
+            {
                 sweepX += 0.002f;
                 MarkDirtyRepaint();
-            }).Every(16);
+            }
         }
 
         public void ResetSweep() => sweepX = -0.2f;
@@ -247,20 +251,36 @@ namespace AeroOS.UI
                 painter.Fill();
             }
         }
-    }
+        }
 
-    [UxmlElement]
-    public partial class AeroHighlightSweep : VisualElement
-    {
+        [UxmlElement]
+        public partial class AeroHighlightSweep : VisualElement
+        {
         public new class UxmlFactory : UxmlFactory<AeroHighlightSweep, UxmlTraits> { }
         private float offset = -1.0f;
+        private bool isAnimating = false;
 
-        private static readonly Gradient highlightGrad = new Gradient();
-        private static readonly GradientColorKey[] cKeys = new GradientColorKey[3];
-        private static readonly GradientAlphaKey[] aKeys = new GradientAlphaKey[3];
+        private readonly Gradient highlightGrad = new Gradient();
+        private readonly GradientColorKey[] cKeys = new GradientColorKey[3];
+        private readonly GradientAlphaKey[] aKeys = new GradientAlphaKey[3];
 
         public AeroHighlightSweep() { generateVisualContent += OnGenerateVisualContent; pickingMode = PickingMode.Ignore; }
-        public void Animate() { offset = -1.0f; schedule.Execute(() => { offset += 0.05f; MarkDirtyRepaint(); if (offset > 2.0f) return; }).Every(16).Until(() => offset > 2.0f); }
+        
+        public void Animate() 
+        { 
+            if (isAnimating) return; 
+            isAnimating = true;
+            offset = -1.0f; 
+            schedule.Execute(OnAnimateStep).Every(16).Until(() => !isAnimating); 
+        }
+
+        private void OnAnimateStep()
+        {
+            offset += 0.05f; 
+            MarkDirtyRepaint(); 
+            if (offset > 2.0f) isAnimating = false;
+        }
+
         void OnGenerateVisualContent(MeshGenerationContext ctx)
         {
             float w = contentRect.width; float h = contentRect.height;

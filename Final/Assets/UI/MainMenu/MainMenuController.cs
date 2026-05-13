@@ -17,16 +17,46 @@ public class MainMenuController : MonoBehaviour
     private AeroAtmosphere atmosphere;
     private List<VisualElement> menuItems = new List<VisualElement>();
 
+    // Anomaly elements
+    private VisualElement shadowElement;
+    private VisualElement ghostElement;
+    private VisualElement popupElement;
+    private Label popupLabel;
+    private VisualElement loadElement;
+    private VisualElement loadFill;
+    private Label clockLabel;
+    private VisualElement eyeLeft;
+    private VisualElement eyeRight;
+    private VisualElement reflectionElement;
+
     [Header("Audio")]
     public AudioClip ambientMusic;
     public AudioClip hoverTick;
     public AudioClip clickGlass;
+    public AudioClip anomalyHum;
+    public AudioClip anomalyWhisper;
     private AudioSource audioSource;
     private AudioSource sfxSource;
+    private AudioSource anomalySource;
+
+    [Header("Anomaly Assets")]
+    public Texture2D ghostTexture;
+    public Texture2D shadowTexture;
+    public Texture2D bedroomTexture;
+    public Texture2D normalBackground;
 
     private float inactivityTime;
-    private float anomalyCooldown;
+    private float anomalyTimer;
     private bool isTransitioning;
+    private int lastAnomalyIndex = -1;
+    private bool anomaliesEnabled = false;
+
+    private struct AnomalyWeight
+    {
+        public int index;
+        public int weight;
+    }
+    private List<AnomalyWeight> anomalyWeights = new List<AnomalyWeight>();
 
     private void OnEnable()
     {
@@ -41,28 +71,65 @@ public class MainMenuController : MonoBehaviour
         activeBackground = root.Q<AeroActiveBackground>();
         atmosphere = root.Q<AeroAtmosphere>();
 
+        // Find anomaly elements
+        shadowElement = root.Q<VisualElement>("player-shadow");
+        ghostElement = root.Q<VisualElement>("digital-ghost");
+        popupElement = root.Q<VisualElement>("system-popup");
+        popupLabel = root.Q<Label>("popup-text");
+        loadElement = root.Q<VisualElement>("fake-load");
+        loadFill = root.Q<VisualElement>("load-bar-fill");
+        clockLabel = root.Q<Label>("clock-text");
+        eyeLeft = root.Q<VisualElement>("eye-left");
+        eyeRight = root.Q<VisualElement>("eye-right");
+        reflectionElement = root.Q<VisualElement>("glass-reflection");
+
+        if (ghostTexture != null) ghostElement.style.backgroundImage = ghostTexture;
+        if (shadowTexture != null) shadowElement.style.backgroundImage = shadowTexture;
+
         SetupAudio();
         SetupMenu();
         SetupOverlays();
+        SetupAnomalyWeights();
         CheckSave();
         
+        StopAllCoroutines();
         StartCoroutine(TitleGlowBreathing());
-        anomalyCooldown = Random.Range(20f, 40f);
+        StartCoroutine(ClockUpdate());
+        
+        anomalyTimer = 4f; 
+        CancelInvoke("EnableAnomalies");
+        Invoke("EnableAnomalies", 4f); 
     }
 
-    private void SetupAudio()
+    private void OnDisable()
     {
-        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-        audioSource.clip = ambientMusic;
-        audioSource.loop = true;
-        audioSource.volume = 0.35f;
-        if (!audioSource.isPlaying) audioSource.Play();
-
-        if (sfxSource == null) sfxSource = gameObject.AddComponent<AudioSource>();
+        StopAllCoroutines();
+        CancelInvoke();
+        UnregisterMenuCallbacks();
     }
+
+    private void UnregisterMenuCallbacks()
+    {
+        var menuBox = root?.Q<VisualElement>("menu");
+        if (menuBox != null)
+        {
+            foreach (var item in menuBox.Children())
+            {
+                item.UnregisterCallback<ClickEvent>(OnMenuItemClickedEvent);
+                item.UnregisterCallback<MouseEnterEvent>(OnHoverEvent);
+            }
+        }
+        var newGameBtn = root?.Q<VisualElement>("new-game-item");
+        newGameBtn?.UnregisterCallback<ClickEvent>(OnStartNewGameEvent);
+    }
+
+    private void OnMenuItemClickedEvent(ClickEvent evt) => OnMenuItemClicked(evt.currentTarget as VisualElement);
+    private void OnHoverEvent(MouseEnterEvent evt) => OnHover(evt.currentTarget as VisualElement);
+    private void OnStartNewGameEvent(ClickEvent evt) => StartNewGame();
 
     private void SetupMenu()
     {
+        menuItems.Clear();
         var menuBox = root.Q<VisualElement>("menu");
         if (menuBox != null)
         {
@@ -71,35 +138,371 @@ public class MainMenuController : MonoBehaviour
                 if (item.ClassListContains("menu-item"))
                 {
                     menuItems.Add(item);
-                    item.RegisterCallback<ClickEvent>(evt => OnMenuItemClicked(item));
-                    item.RegisterCallback<MouseEnterEvent>(evt => OnHover(item));
+                    item.RegisterCallback<ClickEvent>(OnMenuItemClickedEvent);
+                    item.RegisterCallback<MouseEnterEvent>(OnHoverEvent);
                 }
             }
         }
-
         var newGameBtn = root.Q<VisualElement>("new-game-item");
-        if (newGameBtn != null) newGameBtn.RegisterCallback<ClickEvent>(evt => StartNewGame());
+        if (newGameBtn != null) newGameBtn.RegisterCallback<ClickEvent>(OnStartNewGameEvent);
     }
+
+    private void SetupAnomalyWeights()
+    {
+        anomalyWeights.Clear();
+        // Rebalanced weights: prioritize visible and audible distortions
+        int[] weights = { 10, 10, 10, 15, 12, 12, 8, 8, 10, 15, 10, 10, 8, 15, 25, 12, 25, 12, 12, 25 };
+        for (int i = 0; i < weights.Length; i++)
+        {
+            anomalyWeights.Add(new AnomalyWeight { index = i, weight = weights[i] });
+        }
+    }
+
+    private void SetupAudio()
+    {
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        audioSource.clip = ambientMusic; audioSource.loop = true; audioSource.volume = 0.35f;
+        if (!audioSource.isPlaying) audioSource.Play();
+        if (sfxSource == null) sfxSource = gameObject.AddComponent<AudioSource>();
+        if (anomalySource == null) anomalySource = gameObject.AddComponent<AudioSource>();
+        anomalySource.volume = 0.9f;
+    }
+
+    private void EnableAnomalies()
+    {
+        anomaliesEnabled = true;
+        // Force the very first anomaly to be a highly visible one (System Message)
+        TriggerAnomalySpecific(14); 
+    }
+
+    private void TriggerAnomalySpecific(int index)
+    {
+        if (isTransitioning) return;
+        lastAnomalyIndex = index;
+        Debug.Log($"[AeroOS] Forced Initial Anomaly: Index {index}");
+        StartCoroutine(GetAnomalyCoroutine(index));
+        anomalyTimer = Random.Range(4f, 10f);
+    }
+
+    private void Update()
+    {
+        if (isTransitioning) return;
+
+        inactivityTime += Time.unscaledDeltaTime;
+        
+        if (anomaliesEnabled)
+        {
+            anomalyTimer -= Time.unscaledDeltaTime;
+            if (anomalyTimer <= 0)
+            {
+                TriggerRandomAnomaly();
+                anomalyTimer = Random.Range(4f, 10f); // Frequency: every 4-10 seconds
+            }
+        }
+
+        if (Keyboard.current != null && (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f))
+            inactivityTime = 0;
+    }
+
+    private void TriggerRandomAnomaly()
+    {
+        if (anomalyWeights.Count == 0) return;
+        
+        int totalWeight = 0;
+        foreach (var aw in anomalyWeights) totalWeight += aw.weight;
+
+        int rnd = Random.Range(0, totalWeight);
+        int current = 0;
+        int selectedIndex = -1;
+
+        foreach (var aw in anomalyWeights)
+        {
+            current += aw.weight;
+            if (rnd < current)
+            {
+                selectedIndex = aw.index;
+                break;
+            }
+        }
+
+        if (selectedIndex == lastAnomalyIndex && anomalyWeights.Count > 1)
+        {
+            // Avoid recursion, just pick next one
+            selectedIndex = (selectedIndex + 1) % anomalyWeights.Count;
+        }
+
+        lastAnomalyIndex = selectedIndex;
+        Debug.Log($"[AeroOS] System Anomaly Triggered: Index {selectedIndex}");
+        StartCoroutine(GetAnomalyCoroutine(selectedIndex));
+    }
+
+    private IEnumerator GetAnomalyCoroutine(int index)
+    {
+        switch (index)
+        {
+            case 0: yield return Anomaly_ContinueExists(); break;
+            case 1: yield return Anomaly_QuitChanges(); break;
+            case 2: yield return Anomaly_NewGameChanges(); break;
+            case 3: yield return Anomaly_CursorPossession(); break;
+            case 4: yield return Anomaly_CursorClicks(); break;
+            case 5: yield return Anomaly_ButtonGhostPress(); break;
+            case 6: yield return Anomaly_GhostBehindPanel(); break;
+            case 7: yield return Anomaly_GhostInWater(); break;
+            case 8: yield return Anomaly_RoomAppears(); break;
+            case 9: yield return Anomaly_LogoEyes(); break;
+            case 10: yield return Anomaly_ScreenFreeze(); break;
+            case 11: yield return Anomaly_ClockError(); break;
+            case 12: yield return Anomaly_GlassReflection(); break;
+            case 13: yield return Anomaly_PlayerShadow(); break;
+            case 14: yield return Anomaly_SystemMessage(); break;
+            case 15: yield return Anomaly_ScreenBreathing(); break;
+            case 16: yield return Anomaly_AudioWhisper(); break;
+            case 17: yield return Anomaly_FalseLoad(); break;
+            case 18: yield return Anomaly_SkyCorruption(); break;
+            case 19: yield return Anomaly_SystemKnows(); break;
+        }
+    }
+
+    #region Anomalies Implementation
+
+    private IEnumerator Anomaly_ContinueExists()
+    {
+        var continueBtn = root.Q<VisualElement>("continue-item");
+        if (continueBtn == null || PlayerPrefs.HasKey("SaveExists")) yield break;
+        continueBtn.SetEnabled(true);
+        var label = continueBtn.Q<Label>();
+        string original = label.text;
+        label.text = "Resume Session";
+        continueBtn.RemoveFromClassList("menu-item-disabled");
+        yield return new WaitForSecondsRealtime(2f);
+        if (anomalyHum != null) PlaySFX(anomalyHum);
+        label.text = original;
+        continueBtn.SetEnabled(false);
+        continueBtn.AddToClassList("menu-item-disabled");
+    }
+
+    private IEnumerator Anomaly_QuitChanges()
+    {
+        var btn = root.Q<VisualElement>("quit-item");
+        var label = btn?.Q<Label>();
+        if (label == null) yield break;
+        string original = label.text;
+        label.text = "Leave?";
+        yield return new WaitForSecondsRealtime(2f);
+        label.text = original;
+    }
+
+    private IEnumerator Anomaly_NewGameChanges()
+    {
+        var btn = root.Q<VisualElement>("new-game-item");
+        var label = btn?.Q<Label>();
+        if (label == null) yield break;
+        string original = label.text;
+        label.text = "Start Again";
+        yield return new WaitForSecondsRealtime(2f);
+        label.text = original;
+    }
+
+    private IEnumerator Anomaly_CursorPossession()
+    {
+        Vector2 startPos = Mouse.current.position.ReadValue();
+        Vector2 offset = new Vector2(Random.Range(-150, 150), Random.Range(-150, 150));
+        float t = 0;
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime * 0.4f;
+            Vector2 currentPos = Vector2.Lerp(startPos, startPos + offset, t);
+            Mouse.current.WarpCursorPosition(currentPos);
+            yield return null;
+        }
+    }
+
+    private IEnumerator Anomaly_CursorClicks()
+    {
+        if (menuItems.Count == 0) yield break;
+        var target = menuItems[Random.Range(0, menuItems.Count)];
+        Vector2 startPos = Mouse.current.position.ReadValue();
+        Vector2 targetPos = target.worldBound.center;
+        float t = 0;
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime * 1.2f;
+            Mouse.current.WarpCursorPosition(Vector2.Lerp(startPos, targetPos, t));
+            yield return null;
+        }
+        yield return new WaitForSecondsRealtime(0.3f);
+        target.AddToClassList("menu-item-active");
+        if (clickGlass != null) PlaySFX(clickGlass);
+        yield return new WaitForSecondsRealtime(0.5f);
+        target.RemoveFromClassList("menu-item-active");
+        t = 0;
+        while (t < 1f)
+        {
+            t += Time.unscaledDeltaTime * 1.2f;
+            Mouse.current.WarpCursorPosition(Vector2.Lerp(targetPos, startPos, t));
+            yield return null;
+        }
+    }
+
+    private IEnumerator Anomaly_ButtonGhostPress()
+    {
+        if (menuItems.Count == 0) yield break;
+        var target = menuItems[Random.Range(0, menuItems.Count)];
+        target.AddToClassList("menu-item-active");
+        if (clickGlass != null) PlaySFX(clickGlass);
+        yield return new WaitForSecondsRealtime(0.5f);
+        target.RemoveFromClassList("menu-item-active");
+    }
+
+    private IEnumerator Anomaly_GhostBehindPanel()
+    {
+        if (ghostElement == null) yield break;
+        ghostElement.style.display = DisplayStyle.Flex;
+        ghostElement.style.opacity = 0;
+        float t = 0;
+        while (t < 1f) { t += Time.unscaledDeltaTime; ghostElement.style.opacity = t * 0.5f; yield return null; }
+        yield return new WaitForSecondsRealtime(1.5f);
+        ghostElement.style.display = DisplayStyle.None;
+    }
+
+    private IEnumerator Anomaly_GhostInWater()
+    {
+        if (activeBackground == null) yield break;
+        activeBackground.style.unityBackgroundImageTintColor = new Color(0.6f, 0.9f, 1f, 0.5f);
+        yield return new WaitForSecondsRealtime(1.5f);
+        activeBackground.style.unityBackgroundImageTintColor = Color.white;
+    }
+
+    private IEnumerator Anomaly_RoomAppears()
+    {
+        if (container == null || bedroomTexture == null) yield break;
+        var original = container.style.backgroundImage;
+        container.style.backgroundImage = bedroomTexture;
+        if (anomalyHum != null) PlaySFX(anomalyHum);
+        yield return new WaitForSecondsRealtime(2f);
+        container.style.backgroundImage = original;
+    }
+
+    private IEnumerator Anomaly_LogoEyes()
+    {
+        if (eyeLeft == null || eyeRight == null) yield break;
+        eyeLeft.style.display = DisplayStyle.Flex;
+        eyeRight.style.display = DisplayStyle.Flex;
+        eyeLeft.style.opacity = 1; eyeRight.style.opacity = 1;
+        yield return new WaitForSecondsRealtime(1.2f);
+        eyeLeft.AddToClassList("logo-eye-blink"); eyeRight.AddToClassList("logo-eye-blink");
+        yield return new WaitForSecondsRealtime(0.15f);
+        eyeLeft.RemoveFromClassList("logo-eye-blink"); eyeRight.RemoveFromClassList("logo-eye-blink");
+        yield return new WaitForSecondsRealtime(0.8f);
+        eyeLeft.style.display = DisplayStyle.None; eyeRight.style.display = DisplayStyle.None;
+    }
+
+    private IEnumerator Anomaly_ScreenFreeze()
+    {
+        float originalScale = Time.timeScale;
+        Time.timeScale = 0;
+        yield return new WaitForSecondsRealtime(2.5f);
+        Time.timeScale = originalScale;
+        if (anomalyHum != null) PlaySFX(anomalyHum);
+    }
+
+    private IEnumerator Anomaly_ClockError()
+    {
+        if (clockLabel == null) yield break;
+        string original = clockLabel.text;
+        clockLabel.text = "21:11";
+        clockLabel.style.color = new Color(1, 0.2f, 0.2f, 1);
+        yield return new WaitForSecondsRealtime(2f);
+        clockLabel.text = original;
+        clockLabel.style.color = new StyleColor(StyleKeyword.Null);
+    }
+
+    private IEnumerator Anomaly_GlassReflection()
+    {
+        if (reflectionElement == null) yield break;
+        reflectionElement.style.opacity = 0.4f;
+        yield return new WaitForSecondsRealtime(1f);
+        reflectionElement.style.opacity = 0f;
+    }
+
+    private IEnumerator Anomaly_PlayerShadow()
+    {
+        if (shadowElement == null) yield break;
+        shadowElement.style.left = -400f;
+        shadowElement.style.opacity = 0.5f;
+        float t = 0;
+        while (t < 1.5f) { t += Time.unscaledDeltaTime; shadowElement.style.left = -400f + (t / 1.5f) * 2800f; yield return null; }
+        shadowElement.style.opacity = 0f;
+    }
+
+    private IEnumerator Anomaly_SystemMessage()
+    {
+        if (popupElement == null) yield break;
+        popupLabel.text = Random.value > 0.5f ? "Scanning..." : "Memory restored...";
+        popupElement.style.display = DisplayStyle.Flex; popupElement.style.opacity = 1;
+        yield return new WaitForSecondsRealtime(2.5f);
+        popupElement.style.display = DisplayStyle.None;
+    }
+
+    private IEnumerator Anomaly_ScreenBreathing()
+    {
+        float t = 0;
+        while (t < 3f) { t += Time.unscaledDeltaTime; float s = 1f + Mathf.Sin(t * Mathf.PI / 1.5f) * 0.04f; container.style.scale = new Scale(new Vector2(s, s)); yield return null; }
+        container.style.scale = new Scale(Vector2.one);
+    }
+
+    private IEnumerator Anomaly_AudioWhisper()
+    {
+        if (anomalyWhisper != null && anomalySource != null)
+        {
+            anomalySource.panStereo = -1f;
+            anomalySource.volume = 0.9f;
+            anomalySource.PlayOneShot(anomalyWhisper);
+            float t = 0;
+            while (t < 1.2f) { t += Time.unscaledDeltaTime * 0.6f; anomalySource.panStereo = Mathf.Lerp(-1f, 1f, t); yield return null; }
+        }
+    }
+
+    private IEnumerator Anomaly_FalseLoad()
+    {
+        if (loadElement == null) yield break;
+        loadElement.style.display = DisplayStyle.Flex; loadElement.style.opacity = 1;
+        float p = 0;
+        while (p < 1f) { p += Time.unscaledDeltaTime * 0.3f; loadFill.style.width = Length.Percent(p * 100f); yield return null; }
+        yield return new WaitForSecondsRealtime(0.7f);
+        loadElement.style.display = DisplayStyle.None;
+    }
+
+    private IEnumerator Anomaly_SkyCorruption()
+    {
+        if (atmosphere != null) { atmosphere.brightnessBoost = 3f; yield return new WaitForSecondsRealtime(1.2f); atmosphere.brightnessBoost = 0f; }
+    }
+
+    private IEnumerator Anomaly_SystemKnows()
+    {
+        if (popupElement == null) yield break;
+        popupLabel.text = Random.value > 0.5f ? "User detected." : "Connection established.";
+        popupElement.style.display = DisplayStyle.Flex; popupElement.style.opacity = 1;
+        yield return new WaitForSecondsRealtime(2.5f);
+        popupElement.style.display = DisplayStyle.None;
+    }
+
+    #endregion
 
     private void SetupOverlays()
     {
         var settingsPanel = root.Q<VisualElement>("settings-panel");
         var settingsItem = root.Q<VisualElement>("settings-item");
         if (settingsItem != null) settingsItem.RegisterCallback<ClickEvent>(evt => ShowPanel(settingsPanel));
-        
         var settingsClose = root.Q<Button>("settings-close");
         if (settingsClose != null) settingsClose.clicked += () => HidePanel(settingsPanel);
-
         var creditsPanel = root.Q<VisualElement>("credits-panel");
         var creditsItem = root.Q<VisualElement>("credits-item");
         if (creditsItem != null) creditsItem.RegisterCallback<ClickEvent>(evt => ShowPanel(creditsPanel));
-        
         var creditsClose = root.Q<Button>("credits-close");
         if (creditsClose != null) creditsClose.clicked += () => HidePanel(creditsPanel);
-
         var masterSlider = root.Q<Slider>("master-vol");
         if (masterSlider != null) masterSlider.RegisterValueChangedCallback(evt => AudioListener.volume = evt.newValue);
-        
         var fsToggle = root.Q<Toggle>("fullscreen-toggle");
         if (fsToggle != null) fsToggle.RegisterValueChangedCallback(evt => Screen.fullScreen = evt.newValue);
     }
@@ -116,30 +519,20 @@ public class MainMenuController : MonoBehaviour
         }
     }
 
-    private void Update()
+    private IEnumerator ClockUpdate()
     {
-        if (isTransitioning) return;
-
-        inactivityTime += Time.deltaTime;
-        anomalyCooldown -= Time.deltaTime;
-
-        if (Keyboard.current.anyKey.wasPressedThisFrame || Mouse.current.delta.ReadValue().sqrMagnitude > 0.01f)
-            inactivityTime = 0;
-
-        if (anomalyCooldown <= 0)
+        while (true)
         {
-            TriggerAnomaly();
-            anomalyCooldown = Random.Range(30f, 60f);
+            if (clockLabel != null) clockLabel.text = System.DateTime.Now.ToString("HH:mm");
+            yield return new WaitForSecondsRealtime(30f);
         }
     }
 
     private void OnHover(VisualElement item)
     {
         if (isTransitioning) return;
-        inactivityTime = 0;
-        PlaySFX(hoverTick);
-        var sweep = item.Q<AeroHighlightSweep>();
-        if (sweep != null) sweep.Animate();
+        inactivityTime = 0; PlaySFX(hoverTick);
+        var sweep = item.Q<AeroHighlightSweep>(); if (sweep != null) sweep.Animate();
     }
 
     private void OnMenuItemClicked(VisualElement clickedItem)
@@ -147,7 +540,6 @@ public class MainMenuController : MonoBehaviour
         if (isTransitioning) return;
         PlaySFX(clickGlass);
         if (activeBackground != null) clickedItem.Insert(0, activeBackground);
-
         foreach (var item in menuItems)
         {
             item.RemoveFromClassList("menu-item-active");
@@ -176,111 +568,130 @@ public class MainMenuController : MonoBehaviour
     private void StartNewGame()
     {
         if (isTransitioning) return;
-        
-        // Immediate state change to prevent double-clicks
-        isTransitioning = true;
-        
-        // Block all UI input immediately
+        isTransitioning = true; anomaliesEnabled = false;
         root.pickingMode = PickingMode.Ignore;
-        
-        // Kill background processes to free up performance
         StopAllCoroutines(); 
         StartCoroutine(TransitionSequence());
     }
 
     private IEnumerator TransitionSequence()
     {
-        // STEP 1: Preparation
         if (atmosphere != null) atmosphere.StopAtmosphere();
-        PlaySFX(clickGlass);
-
-        // STEP 2: Cinematic Fade-In (White) + Fade-Out (Menu)
-        float elapsed = 0;
-        float duration = 1.2f;
+        if (anomalyHum != null) PlaySFX(anomalyHum);
         
-        if (fadeOverlay != null)
-        {
-            fadeOverlay.style.display = DisplayStyle.Flex;
+        float elapsed = 0; float duration = 2.2f;
+        if (fadeOverlay != null) { 
+            fadeOverlay.style.display = DisplayStyle.Flex; 
             fadeOverlay.pickingMode = PickingMode.Position;
+            fadeOverlay.style.backgroundColor = Color.black; 
         }
-
-        // Get elements for sub-animations
+        
         var loadingContainer = fadeOverlay?.Q<VisualElement>("loading-container");
         var loadingLogo = fadeOverlay?.Q<VisualElement>("loading-logo");
         var loadingSpinner = fadeOverlay?.Q<VisualElement>(className: "loading-spinner");
-        
-        // If we have a title/logo, let's use it for the loading screen too
-        if (loadingLogo != null && title != null)
-        {
-            loadingLogo.style.unityBackgroundImageTintColor = new Color(0, 0.55f, 0.7f, 1f); // Professional cyan
-            // Use the title's font/style if it's a label, or just assign background if it's a sprite
-        }
 
-        while (elapsed < duration)
+        // Phase 1: Sudden Glitch & Audio Spike
+        float glitchTimer = 0;
+        if (clickGlass != null) PlaySFX(clickGlass);
+        
+        while (glitchTimer < 0.7f)
         {
-            elapsed += Time.unscaledDeltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            
-            // Ease-In-Out Quadratic for smoother feel
-            float easedT = t < 0.5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
-            
-            // Fade white overlay in
-            if (fadeOverlay != null) fadeOverlay.style.opacity = easedT;
-            
-            // Fade menu and background out
+            glitchTimer += Time.unscaledDeltaTime;
             if (container != null)
             {
-                container.style.opacity = 1f - easedT;
-                // Subtle scale up effect for "cinematic" feel
-                container.style.scale = new Scale(new Vector2(1f + easedT * 0.05f, 1f + easedT * 0.05f));
+                // Jitter
+                float intensity = glitchTimer * 40f;
+                container.style.translate = new Translate(Random.Range(-intensity, intensity), Random.Range(-intensity/2, intensity/2), 0);
+                
+                // Color Distortion (Abberation feel)
+                if (Random.value > 0.8f)
+                    container.style.unityBackgroundImageTintColor = new Color(1f, 0.4f, 0.4f, 0.9f);
+                else if (Random.value > 0.8f)
+                    container.style.unityBackgroundImageTintColor = new Color(0.4f, 1f, 1f, 0.9f);
+                else
+                    container.style.unityBackgroundImageTintColor = Color.white;
+                
+                // Scale pumping
+                float s = 1f + Random.Range(-0.02f, 0.05f);
+                container.style.scale = new Scale(new Vector2(s, s));
             }
+            
+            // Momentary "Flash"
+            if (Random.value > 0.95f && fadeOverlay != null)
+            {
+                fadeOverlay.style.opacity = 0.5f;
+                fadeOverlay.style.backgroundColor = Color.white;
+            }
+            else if (fadeOverlay != null)
+            {
+                fadeOverlay.style.opacity = 0f;
+                fadeOverlay.style.backgroundColor = Color.black;
+            }
+            
+            yield return new WaitForSecondsRealtime(0.02f);
+        }
+
+        // Reset container before dissolve
+        if (container != null)
+        {
+            container.style.translate = new Translate(0, 0, 0);
+            container.style.rotate = new Rotate(0);
+            container.style.unityBackgroundImageTintColor = Color.white;
+        }
+
+        // Phase 2: Cinematic Dissolve & Fade to Black
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime; 
+            float t = Mathf.Clamp01(elapsed / duration);
+            float easedT = t * t * (3 - 2 * t); // Smoothstep
+            
+            if (fadeOverlay != null) {
+                fadeOverlay.style.backgroundColor = Color.black;
+                fadeOverlay.style.opacity = easedT;
+            }
+            
+            if (container != null) { 
+                container.style.opacity = 1f - easedT; 
+                // Zooming out and sinking effect
+                float zoom = 1f - (easedT * 0.15f);
+                container.style.scale = new Scale(new Vector2(zoom, zoom)); 
+                container.style.translate = new Translate(0, easedT * 150f, 0);
+                container.style.rotate = new Rotate(new Angle(easedT * 5f));
+            }
+            
+            if (atmosphere != null) atmosphere.brightnessBoost = easedT * 4f;
             
             yield return null;
         }
 
-        // Ensure state is final
         if (fadeOverlay != null) fadeOverlay.style.opacity = 1;
         if (container != null) container.style.opacity = 0;
+        yield return new WaitForSecondsRealtime(0.5f);
 
-        yield return new WaitForSecondsRealtime(0.1f);
-
-        // STEP 3: Show Loading Animation
+        // Phase 3: Loading System Initialization
         if (loadingContainer != null) loadingContainer.style.opacity = 1;
-
-        float spinnerRot = 0;
-        float pulseTime = 0;
-
+        float spinnerRot = 0; float pulseTime = 0;
+        
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("BootScene");
         if (asyncLoad != null)
         {
             asyncLoad.allowSceneActivation = false;
-            
             while (asyncLoad.progress < 0.9f)
             {
                 pulseTime += Time.unscaledDeltaTime;
-                
-                // Spinner rotation
-                if (loadingSpinner != null)
-                {
-                    spinnerRot += 220f * Time.unscaledDeltaTime;
-                    loadingSpinner.style.rotate = new Rotate(new Angle(spinnerRot));
+                if (loadingSpinner != null) { 
+                    spinnerRot += 350f * Time.unscaledDeltaTime; 
+                    loadingSpinner.style.rotate = new Rotate(new Angle(spinnerRot)); 
                 }
-                
-                // Logo pulse
-                if (loadingLogo != null)
-                {
-                    float p = 0.8f + 0.2f * Mathf.PingPong(pulseTime * 0.8f, 1f);
-                    loadingLogo.style.scale = new Scale(new Vector2(p, p));
-                    loadingLogo.style.opacity = 0.5f + 0.5f * p;
+                if (loadingLogo != null) { 
+                    float p = 0.85f + 0.15f * Mathf.PingPong(pulseTime * 1.5f, 1f); 
+                    loadingLogo.style.scale = new Scale(new Vector2(p, p)); 
+                    loadingLogo.style.opacity = 0.6f + 0.4f * p; 
                 }
-                
                 yield return null;
             }
-
-            // Loading complete, wait for "premium" pause
-            yield return new WaitForSecondsRealtime(0.6f);
-            
-            // STEP 4: Scene Activation
+            yield return new WaitForSecondsRealtime(1.0f); // Minimum wait for "feeling"
             asyncLoad.allowSceneActivation = true;
         }
     }
@@ -292,11 +703,10 @@ public class MainMenuController : MonoBehaviour
             float t = 0;
             while (t < 5f)
             {
-                t += Time.deltaTime;
-                float p = Mathf.PingPong(t * 0.4f, 1);
-                if (title != null) title.style.textShadow = new TextShadow { color = new Color(0.47f, 0.82f, 1f, 0.4f * p), blurRadius = 30 * p };
+                if (isTransitioning) yield break;
+                t += Time.unscaledDeltaTime;
                 if (subtitle != null) subtitle.style.opacity = 0.6f + 0.3f * Mathf.PingPong(t * 0.8f, 1);
-                yield return null;
+                yield return new WaitForSecondsRealtime(0.05f);
             }
         }
     }
@@ -307,55 +717,10 @@ public class MainMenuController : MonoBehaviour
         {
             yield return new WaitForSeconds(15f);
             float t = 0;
-            while (t < 1f)
-            {
-                t += Time.deltaTime;
-                btn.style.opacity = 0.35f + 0.15f * Mathf.Sin(t * Mathf.PI);
-                yield return null;
-            }
+            while (t < 1f) { t += Time.deltaTime; btn.style.opacity = 0.35f + 0.15f * Mathf.Sin(t * Mathf.PI); yield return null; }
             btn.style.opacity = 0.35f;
         }
     }
 
-    private void TriggerAnomaly()
-    {
-        int type = Random.Range(0, 5);
-        switch (type)
-        {
-            case 0: if (atmosphere != null) atmosphere.TriggerParticleAnomaly(); break;
-            case 1: if (title != null) StartCoroutine(AnomalyShift(title, 1)); break;
-            case 2: if (menuItems.Count > 0) StartCoroutine(AnomalyFlicker(menuItems[Random.Range(0, menuItems.Count)])); break;
-            case 3: if (container != null) StartCoroutine(AnomalyShift(container, 2)); break;
-            case 4: StartCoroutine(AnomalyDip()); break;
-        }
+    private void PlaySFX(AudioClip clip) { if (clip != null && sfxSource != null) sfxSource.PlayOneShot(clip); }
     }
-
-    private IEnumerator AnomalyShift(VisualElement el, int pixels)
-    {
-        el.style.translate = new Translate(pixels, 0, 0);
-        yield return new WaitForSeconds(0.1f);
-        el.style.translate = new Translate(0, 0, 0);
-    }
-
-    private IEnumerator AnomalyFlicker(VisualElement el)
-    {
-        el.style.opacity = 0.2f;
-        yield return new WaitForSeconds(0.05f);
-        el.style.opacity = 1f;
-    }
-
-    private IEnumerator AnomalyDip()
-    {
-        if (container != null)
-        {
-            container.style.unityBackgroundImageTintColor = new Color(0.7f, 0.7f, 0.7f, 1f);
-            yield return new WaitForSeconds(0.15f);
-            container.style.unityBackgroundImageTintColor = Color.white;
-        }
-    }
-
-    private void PlaySFX(AudioClip clip)
-    {
-        if (clip != null && sfxSource != null) sfxSource.PlayOneShot(clip);
-    }
-}

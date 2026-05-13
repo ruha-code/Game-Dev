@@ -1,0 +1,28 @@
+{
+    "asset": "ae96009b190825247b12d11c33ce09a3",
+    "fileName": "019e235a-c659-7f31-a9a2-1816c59e09e4.jpg",
+    "prompt": "A futuristic OS cursor icon, pointing arrow shape, minimalist digital style, glowing cyan edges, AeroOS aesthetic, high contrast, clean lines, white fill with blue glow, professional UI asset",
+    "negativePrompt": "",
+    "model": "game-ui-essentials-2",
+    "modelName": "Game UI Essentials 2.0",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 2048,
+        "height": 2048
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

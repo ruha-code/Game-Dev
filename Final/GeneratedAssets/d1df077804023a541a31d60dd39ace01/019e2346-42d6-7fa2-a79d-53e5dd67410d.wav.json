@@ -1,0 +1,15 @@
+{
+    "asset": "d1df077804023a541a31d60dd39ace01",
+    "fileName": "019e2346-42d6-7fa2-a79d-53e5dd67410d.wav",
+    "prompt": "a short corrupted digital whisper, non-human, glitchy, eerie, cinematic quality",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
