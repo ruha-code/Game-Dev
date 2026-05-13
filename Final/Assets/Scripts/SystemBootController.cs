@@ -470,6 +470,12 @@ public class SystemBootController : MonoBehaviour
         }
         
         if (!string.IsNullOrEmpty(nextScene))
-            SceneManager.LoadScene(nextScene);
+        {
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nextScene);
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+        }
     }
 }

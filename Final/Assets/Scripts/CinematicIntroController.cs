@@ -53,6 +53,7 @@ public class CinematicIntroController : MonoBehaviour
     
     private float t1, t2, t3, t4, t5, t6, t7, t8;
     
+    
     void Start()
     {
         if (mainCamera == null)
@@ -63,6 +64,7 @@ public class CinematicIntroController : MonoBehaviour
         
         GameObject screenSurface = GameObject.Find("Boot Screen Surface");
         monitorPosition = screenSurface != null ? screenSurface.transform.position : new Vector3(0f, 1.35f, 2.24f);
+        
         
         if (monitorLight == null)
         {
@@ -241,6 +243,7 @@ public class CinematicIntroController : MonoBehaviour
     void UpdateLighting(float t)
     {
         if (monitorLight == null) return;
+        
         if (t < t2) monitorLight.intensity = 0f;
         else if (t < t3) monitorLight.intensity = Mathf.Lerp(0f, 0.5f, (t - t2) / (t3 - t2));
         else if (t < t4) monitorLight.intensity = Mathf.Lerp(0.5f, 2f, (t - t3) / (t4 - t3));
@@ -248,6 +251,8 @@ public class CinematicIntroController : MonoBehaviour
         else if (t < t7) { float p = Mathf.Sin(t * 20f) * 0.5f + 0.5f; monitorLight.intensity = 2f + p * 3f * glitchIntensity; }
         else if (t < t8) monitorLight.intensity = Mathf.Lerp(2f, 8f, (t - t7) / (t8 - t7));
         else monitorLight.intensity = Mathf.Lerp(8f, 0f, (t - t8) / transitionDuration);
+        
+        
         if (ambientLights != null)
         {
             float ai = t < t3 ? 0.1f : 0.05f;
@@ -663,7 +668,15 @@ public class CinematicIntroController : MonoBehaviour
     {
         float elapsed = 0f;
         while (elapsed < transitionDuration) { elapsed += Time.deltaTime; yield return null; }
-        if (!string.IsNullOrEmpty(nextScene)) UnityEngine.SceneManagement.SceneManager.LoadScene(nextScene);
+        
+        if (!string.IsNullOrEmpty(nextScene))
+        {
+            AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextScene);
+            while (!asyncLoad.isDone)
+            {
+                yield return null;
+            }
+        }
     }
     
     void OnGUI()
