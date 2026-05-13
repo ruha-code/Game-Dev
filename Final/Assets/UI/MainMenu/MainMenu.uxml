@@ -2,6 +2,7 @@
     <ui:Style src="MainMenu.uss" />
     <ui:VisualElement name="root" class="main-container">
         
+        <aero:AeroAtmosphere class="atmosphere-overlay" />
         <aero:AeroSwoosh class="swoosh-overlay" />
 
         <ui:VisualElement name="header" class="header">
@@ -63,6 +64,29 @@
             <ui:Label text="v 1.0.0" class="version-text" />
         </ui:VisualElement>
 
+        <ui:VisualElement name="settings-panel" class="panel-overlay">
+            <ui:VisualElement class="panel-content">
+                <ui:Label text="Settings" class="panel-header" />
+                <ui:VisualElement class="setting-row">
+                    <ui:Label text="Master Volume" class="setting-label" />
+                    <ui:Slider name="master-vol" low-value="0" high-value="1" value="1" style="flex-grow: 1; margin-left: 20px;" />
+                </ui:VisualElement>
+                <ui:VisualElement class="setting-row">
+                    <ui:Label text="Fullscreen" class="setting-label" />
+                    <ui:Toggle name="fullscreen-toggle" value="true" />
+                </ui:VisualElement>
+                <ui:Button text="Close" name="settings-close" class="close-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="credits-panel" class="panel-overlay">
+            <ui:VisualElement class="panel-content">
+                <ui:Label text="Credits" class="panel-header" />
+                <ui:Label text="Developed by Ruha" style="font-size: 20px; color: white;" />
+                <ui:Label text="Music by AeroOS AI" style="font-size: 20px; color: white; margin-top: 10px;" />
+                <ui:Button text="Close" name="credits-close" class="close-btn" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
     </ui:VisualElement>
 </ui:UXML>
-

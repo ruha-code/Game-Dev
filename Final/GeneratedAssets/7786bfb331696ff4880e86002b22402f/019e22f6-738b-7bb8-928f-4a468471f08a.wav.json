@@ -1,0 +1,15 @@
+{
+    "asset": "7786bfb331696ff4880e86002b22402f",
+    "fileName": "019e22f6-738b-7bb8-928f-4a468471f08a.wav",
+    "prompt": "nostalgic digital ambient music loop, emotional, atmospheric, Windows Vista startup inspired, soft digital hum, low volume, calm, airy",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

@@ -3,49 +3,50 @@
 This was created with the help of Assistant, a Unity Artificial Intelligence product.
 */
 /*
-AeroOS Main Menu Styles
+AeroOS Main Menu Styles - Final Polish & Alignment Fix
 */
 :root {
     --color-primary: #a3e0ff;
+    --color-accent: #00d2ff;
     --color-text: #ffffff;
-    --color-glass-bg: rgba(255, 255, 255, 0.05);
-    --color-glass-border: rgba(255, 255, 255, 0.15);
-    --color-highlight: rgba(120, 209, 255, 0.2);
+    --color-glass-bg: rgba(255, 255, 255, 0.03);
+    --color-glass-border: rgba(255, 255, 255, 0.2);
+    --color-highlight: rgba(120, 209, 255, 0.25);
     --spacing-lg: 80px;
-    --border-radius: 15px;
+    --border-radius: 20px;
 }
 
 .main-container {
     position: absolute;
-    left: 0;
-    top: 0;
-    right: 0;
-    bottom: 0;
+    left: 0; top: 0; right: 0; bottom: 0;
     background-image: url("project://database/Assets/UI/background_menu.png");
     -unity-background-scale-mode: scale-and-crop;
-    padding: var(--spacing-lg);
+    /* Removed padding to fix absolute child alignment (black bar) */
     justify-content: space-between;
+    transition-property: opacity, -unity-background-image-tint-color;
+    transition-duration: 0.8s;
 }
 
 .header {
-    margin-bottom: 40px;
+    margin: 80px;
+    margin-bottom: 30px;
 }
 
 .title {
     font-size: 160px;
-    color: #ffffff;
     -unity-font-style: bold;
+    color: white;
     margin-bottom: -10px;
-    text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 4px 40px rgba(90, 200, 255, 0.4);
 }
 
 .subtitle {
     font-size: 18px;
     color: var(--color-primary);
-    letter-spacing: 25px;
+    letter-spacing: 28px;
     opacity: 0.8;
     margin-left: 10px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
 }
 
 .menu-box {
@@ -53,68 +54,104 @@ AeroOS Main Menu Styles
     border-width: 1.5px;
     border-color: var(--color-glass-border);
     border-radius: var(--border-radius);
-    padding: 8px;
-    width: 420px;
-    border-top-color: rgba(255, 255, 255, 0.3); /* Subtle top highlight */
+    padding: 12px;
+    width: 520px; /* Increased width to prevent text wrap */
+    border-top-color: rgba(255, 255, 255, 0.45);
+    border-left-color: rgba(255, 255, 255, 0.25);
+    margin-left: 80px;
 }
 
 .menu-item {
     flex-direction: row;
     align-items: center;
-    padding: 16px 24px;
+    padding: 14px 24px;
     margin: 4px;
-    border-radius: 10px;
+    border-radius: 14px;
+    transition-property: scale, background-color, border-color;
     transition-duration: 0.2s;
-    overflow: hidden; /* For active background */
-}
-
-.menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-}
-
-.menu-item-active {
-    /* No solid color here, we use AeroActiveBackground in UXML */
+    overflow: hidden;
+    border-width: 1px;
+    border-color: transparent;
+    height: 60px; /* Explicit height for stability */
 }
 
 .menu-item-content {
     flex-direction: row;
     align-items: center;
     flex-grow: 1;
+    height: 100%;
+}
+
+.menu-item:hover {
+    scale: 1.05;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.menu-item:active {
+    scale: 0.97;
+    background-color: rgba(120, 209, 255, 0.15);
+}
+
+.menu-item-active {
+    border-color: white;
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.menu-item-active .menu-chevron {
+    opacity: 1;
+}
+
+.menu-item-disabled {
+    opacity: 0.3;
+}
+
+.menu-item-disabled .menu-text {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .menu-icon {
     width: 32px;
     height: 32px;
-    margin-right: 20px;
+    margin-right: 25px;
     -unity-background-image-tint-color: white;
+    flex-shrink: 0;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .menu-text {
-    font-size: 26px;
+    font-size: 30px;
     color: var(--color-text);
     flex-grow: 1;
     -unity-font-style: normal;
+    white-space: nowrap; /* Prevent wrapping */
 }
 
 .menu-chevron {
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     -unity-background-image-tint-color: white;
     opacity: 0.7;
+    flex-shrink: 0;
+}
+
+.atmosphere-overlay {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
 }
 
 .swoosh-overlay {
     position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 200px;
+    left: 0; right: 0; bottom: 0;
+    height: 240px;
+    opacity: 0.5;
 }
 
 .footer {
     flex-direction: row;
     justify-content: space-between;
     align-items: flex-end;
+    margin: 80px;
 }
 
 .user-section {
@@ -123,26 +160,49 @@ AeroOS Main Menu Styles
 }
 
 .user-icon {
-    width: 48px;
-    height: 48px;
-    margin-right: 15px;
+    width: 52px;
+    height: 52px;
+    margin-right: 18px;
     -unity-background-image-tint-color: white;
+    -unity-background-scale-mode: scale-to-fit;
 }
 
 .user-welcome {
-    font-size: 20px;
+    font-size: 24px;
     color: var(--color-text);
     -unity-font-style: bold;
 }
 
 .user-subtext {
-    font-size: 15px;
+    font-size: 16px;
     color: var(--color-text);
-    opacity: 0.7;
+    opacity: 0.8;
+    -unity-text-align: middle-left;
+    margin: 0;
 }
 
 .version-text {
     font-size: 14px;
     color: var(--color-text);
     opacity: 0.4;
+}
+
+.panel-overlay {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.9);
+    justify-content: center;
+    align-items: center;
+    display: none;
+    opacity: 0;
+    transition-duration: 0.4s;
+}
+
+.panel-content {
+    width: 650px;
+    padding: 50px;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: var(--border-radius);
 }

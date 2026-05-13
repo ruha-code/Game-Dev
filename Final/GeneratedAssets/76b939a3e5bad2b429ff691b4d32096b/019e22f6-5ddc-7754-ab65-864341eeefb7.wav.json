@@ -1,0 +1,15 @@
+{
+    "asset": "76b939a3e5bad2b429ff691b4d32096b",
+    "fileName": "019e22f6-5ddc-7754-ab65-864341eeefb7.wav",
+    "prompt": "soft UI tick sound, subtle digital beep, high quality, clean",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

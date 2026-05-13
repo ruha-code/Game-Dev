@@ -30,8 +30,8 @@ public class SystemBootController : MonoBehaviour
     public Texture2D wallpaperTexture;
     
     [Header("Settings")]
-    public string nextScene = "AeroDesktopScene";
-    
+    public string nextScene = "MainMenuScene";
+
     private float timeline;
     private float t1, t2, t3, t4, t5, t6, t7;
     private float cameraFloatOffset;

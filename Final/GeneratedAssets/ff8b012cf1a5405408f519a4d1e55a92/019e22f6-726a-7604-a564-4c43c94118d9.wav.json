@@ -1,0 +1,15 @@
+{
+    "asset": "ff8b012cf1a5405408f519a4d1e55a92",
+    "fileName": "019e22f6-726a-7604-a564-4c43c94118d9.wav",
+    "prompt": "soft glass click sound, high quality, clean, crystalline, subtle",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
