@@ -147,7 +147,7 @@ public class ProceduralAudioGenerator : MonoBehaviour
     {
         int sampleRate = 44100;
         int lengthSec = 2;
-        AudioClip clip = AudioClip.Create("Heartbeat", sampleRate * lengthSec, 1, sampleRate, true);
+        AudioClip clip = AudioClip.Create("Heartbeat", sampleRate * lengthSec, 1, sampleRate, false);
         float[] data = new float[sampleRate * lengthSec];
         
         for (int i = 0; i < data.Length; i++)
@@ -177,7 +177,7 @@ public class ProceduralAudioGenerator : MonoBehaviour
     {
         int sampleRate = 44100;
         int lengthSec = 5;
-        AudioClip clip = AudioClip.Create("ScreenHum", sampleRate * lengthSec, 1, sampleRate, true);
+        AudioClip clip = AudioClip.Create("ScreenHum", sampleRate * lengthSec, 1, sampleRate, false);
         float[] data = new float[sampleRate * lengthSec];
         
         for (int i = 0; i < data.Length; i++)
