@@ -1,0 +1,28 @@
+{
+    "asset": "3652824ce9f8f0b45b97258fa7a70a9d",
+    "fileName": "019e22db-3a4b-7296-8019-9b618d512970.png",
+    "prompt": "A high-quality landscape photo for a game main menu. A vibrant green hill with a single lush green tree on the right side. A calm blue lake in the foreground reflecting the sky. Clear blue sky with thin wispy clouds and a subtle lens flare from the top right corner. Modern, clean, professional aesthetic.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

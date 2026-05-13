@@ -17,85 +17,85 @@ MonoBehaviour:
       lastSelectedModels:
         serializedData:
         - key:
-            rid: 2870042319719760090
+            rid: 2870042321196941455
           value:
-            rid: 2870042319719760091
+            rid: 2870042321196941456
         - key:
-            rid: 2870042319719760092
+            rid: 2870042321196941457
           value:
-            rid: 2870042319719760093
+            rid: 2870042321196941458
         - key:
-            rid: 2870042319719760094
+            rid: 2870042321196941459
           value:
-            rid: 2870042319719760095
+            rid: 2870042321196941460
         - key:
-            rid: 2870042319719760096
+            rid: 2870042321196941461
           value:
-            rid: 2870042319719760097
+            rid: 2870042321196941462
         - key:
-            rid: 2870042319719760098
+            rid: 2870042321196941463
           value:
-            rid: 2870042319719760099
+            rid: 2870042321196941464
         - key:
-            rid: 2870042319719760100
+            rid: 2870042321196941465
           value:
-            rid: 2870042319719760101
+            rid: 2870042321196941466
       previewSettings:
         sizeFactor: 0.88
   references:
     version: 2
     RefIds:
-    - rid: 2870042319719760090
+    - rid: 2870042321196941455
       type: {class: LastSelectedModelKey, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modality: Image
         mode: 0
-    - rid: 2870042319719760091
+    - rid: 2870042321196941456
       type: {class: ModelSelection, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
-        modelID: flux-2-pro
-    - rid: 2870042319719760092
+        modelID: gemini-3.1-flash-texture
+    - rid: 2870042321196941457
       type: {class: LastSelectedModelKey, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modality: Image
         mode: 1
-    - rid: 2870042319719760093
+    - rid: 2870042321196941458
       type: {class: ModelSelection, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modelID: 
-    - rid: 2870042319719760094
+    - rid: 2870042321196941459
       type: {class: LastSelectedModelKey, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modality: Image
         mode: 2
-    - rid: 2870042319719760095
+    - rid: 2870042321196941460
       type: {class: ModelSelection, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modelID: 
-    - rid: 2870042319719760096
+    - rid: 2870042321196941461
       type: {class: LastSelectedModelKey, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modality: Image
         mode: 3
-    - rid: 2870042319719760097
+    - rid: 2870042321196941462
       type: {class: ModelSelection, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modelID: 
-    - rid: 2870042319719760098
+    - rid: 2870042321196941463
       type: {class: LastSelectedModelKey, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modality: Image
         mode: 4
-    - rid: 2870042319719760099
+    - rid: 2870042321196941464
       type: {class: ModelSelection, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modelID: 
-    - rid: 2870042319719760100
+    - rid: 2870042321196941465
       type: {class: LastSelectedModelKey, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modality: Video
         mode: 6
-    - rid: 2870042319719760101
+    - rid: 2870042321196941466
       type: {class: ModelSelection, ns: Unity.AI.Image.Services.Stores.States, asm: Unity.AI.Image}
       data:
         modelID: 

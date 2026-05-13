@@ -1,0 +1,68 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:aero="AeroOS.UI">
+    <ui:Style src="MainMenu.uss" />
+    <ui:VisualElement name="root" class="main-container">
+        
+        <aero:AeroSwoosh class="swoosh-overlay" />
+
+        <ui:VisualElement name="header" class="header">
+            <ui:Label text="AeroOS" name="title" class="title" />
+            <ui:Label text="BEYOND THE SCREEN" name="subtitle" class="subtitle" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="menu" class="menu-box">
+            <ui:VisualElement name="new-game-item" class="menu-item menu-item-active">
+                <aero:AeroActiveBackground style="position: absolute; left: 0; top: 0; right: 0; bottom: 0;" />
+                <ui:VisualElement class="menu-item-content">
+                    <ui:VisualElement class="menu-icon" style="background-image: url('project://database/Assets/UI/Icons/play.svg');" />
+                    <ui:Label text="New Game" class="menu-text" />
+                    <ui:VisualElement class="menu-chevron" style="background-image: url('project://database/Assets/UI/Icons/chevron-right.svg');" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            
+            <ui:VisualElement name="continue-item" class="menu-item">
+                <ui:VisualElement class="menu-item-content">
+                    <ui:VisualElement class="menu-icon" style="background-image: url('project://database/Assets/UI/Icons/folder.svg');" />
+                    <ui:Label text="Continue" class="menu-text" />
+                    <ui:VisualElement class="menu-chevron" style="background-image: url('project://database/Assets/UI/Icons/chevron-right.svg'); display: none;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="settings-item" class="menu-item">
+                <ui:VisualElement class="menu-item-content">
+                    <ui:VisualElement class="menu-icon" style="background-image: url('project://database/Assets/UI/Icons/gear.svg');" />
+                    <ui:Label text="Settings" class="menu-text" />
+                    <ui:VisualElement class="menu-chevron" style="background-image: url('project://database/Assets/UI/Icons/chevron-right.svg'); display: none;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="credits-item" class="menu-item">
+                <ui:VisualElement class="menu-item-content">
+                    <ui:VisualElement class="menu-icon" style="background-image: url('project://database/Assets/UI/Icons/book.svg');" />
+                    <ui:Label text="Credits" class="menu-text" />
+                    <ui:VisualElement class="menu-chevron" style="background-image: url('project://database/Assets/UI/Icons/chevron-right.svg'); display: none;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="quit-item" class="menu-item">
+                <ui:VisualElement class="menu-item-content">
+                    <ui:VisualElement class="menu-icon" style="background-image: url('project://database/Assets/UI/Icons/power.svg');" />
+                    <ui:Label text="Quit" class="menu-text" />
+                    <ui:VisualElement class="menu-chevron" style="background-image: url('project://database/Assets/UI/Icons/chevron-right.svg'); display: none;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="footer" class="footer">
+            <ui:VisualElement name="user-section" class="user-section">
+                <ui:VisualElement class="user-icon" style="background-image: url('project://database/Assets/UI/Icons/user.svg');" />
+                <ui:VisualElement class="user-info">
+                    <ui:Label text="Welcome." class="user-welcome" />
+                    <ui:Label text="Prepare to log in to AeroOS." class="user-subtext" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="v 1.0.0" class="version-text" />
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>
+

@@ -1,0 +1,28 @@
+{
+    "asset": "ba9eef042c3552448aa8914a24fff38e",
+    "fileName": "019e22df-b498-7f15-a9d1-1888b9e03290.png",
+    "prompt": "A high-quality, professional landscape photo. A vibrant green hill with a single lush green tree on the right side. A calm blue lake in the foreground reflecting the sky. Clear blue sky with thin wispy clouds. No text, no words, no letters, no UI elements. Just a clean, scenic landscape.",
+    "negativePrompt": "",
+    "model": "flux-2-dev",
+    "modelName": "Flux 2 (Dev)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

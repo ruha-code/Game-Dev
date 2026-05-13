@@ -1,0 +1,28 @@
+{
+    "asset": "ff24a28216da1444d8479c2ce23c19b8",
+    "fileName": "019e22e4-b286-7409-8b52-70a3ae1e7b6b.png",
+    "prompt": "A wide-angle landscape photography for a game menu. A lone, lush green tree standing on a gentle grassy hill. In the distance, a calm lake and rolling blue mountains under a clear sky with a few soft clouds. The composition is spacious and clean, with the main subjects clearly visible and not cut off. Professional cinematic lighting. High resolution, 16:10 aspect ratio. 1920x1200. No text.",
+    "negativePrompt": "",
+    "model": "flux-2-dev",
+    "modelName": "Flux 2 (Dev)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1920,
+        "height": 1200
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}
