@@ -570,6 +570,11 @@ public class MainMenuController : MonoBehaviour
         if (isTransitioning) return;
         isTransitioning = true; anomaliesEnabled = false;
         root.pickingMode = PickingMode.Ignore;
+        
+        // Hide and lock the cursor when entering the game
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
         StopAllCoroutines(); 
         StartCoroutine(TransitionSequence());
     }

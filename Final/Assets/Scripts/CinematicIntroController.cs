@@ -32,7 +32,7 @@ public class CinematicIntroController : MonoBehaviour
     public CinematicAudioController audioController;
     
     [Header("Settings")]
-    public string nextScene = "SystemBootScene";
+    public string nextScene = "MainMenuScene";
     
     private Vector3[] cameraPath;
     private float[] pathDistances;
@@ -42,6 +42,8 @@ public class CinematicIntroController : MonoBehaviour
     private Vector3 monitorPosition;
     
     private float timeline;
+    public float Timeline => timeline;
+    
     private float blackOverlayAlpha = 1f;
     private float whiteFlashAlpha;
     private GameObject creatureRoot;
@@ -52,7 +54,15 @@ public class CinematicIntroController : MonoBehaviour
     private bool transitionStarted;
     
     private float t1, t2, t3, t4, t5, t6, t7, t8;
-    
+    public float T1 => t1;
+    public float T2 => t2;
+    public float T3 => t3;
+    public float T4 => t4;
+    public float T5 => t5;
+    public float T6 => t6;
+    public float T7 => t7;
+    public float T8 => t8;
+
     
     void Start()
     {
@@ -591,7 +601,7 @@ public class CinematicIntroController : MonoBehaviour
         creatureParticles = particleObj.AddComponent<ParticleSystem>();
         
         var main = creatureParticles.main;
-        main.startColor = new Color(0.3f, 0.6f, 0.8f, 0.6f);
+        main.startColor = new Color(0.02f, 0.25f, 0.35f, 0.6f); // AeroOS Active Color
         main.startSize = 0.02f;
         main.startLifetime = 1.5f;
         main.maxParticles = 100;
@@ -605,10 +615,10 @@ public class CinematicIntroController : MonoBehaviour
         
         var renderer = creatureParticles.GetComponent<ParticleSystemRenderer>();
         renderer.material = new Material(Shader.Find("Standard"));
-        renderer.material.SetColor("_Color", new Color(0.3f, 0.6f, 0.8f, 0.5f));
+        renderer.material.SetColor("_Color", new Color(0.3f, 0.9f, 1f, 0.5f)); // AeroOS Panic Color
         renderer.material.EnableKeyword("_EMISSION");
-        renderer.material.SetColor("_EmissionColor", new Color(0.2f, 0.5f, 0.7f, 1f));
-        
+        renderer.material.SetColor("_EmissionColor", new Color(0.02f, 0.25f, 0.35f, 1f));
+
         // Try enhanced shader first, fallback to original
         Shader enhancedShader = Shader.Find("GlitchCreature/EnhancedEntity");
         if (enhancedShader != null)

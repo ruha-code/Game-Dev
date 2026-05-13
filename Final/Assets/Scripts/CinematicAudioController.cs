@@ -63,111 +63,96 @@ public class CinematicAudioController : MonoBehaviour
     {
         if (cinematic == null) return;
         
-        float t = Time.timeSinceLevelLoad;
+        float t = cinematic.Timeline;
         
         // Ambient drone volume based on phase
         if (ambientSource != null)
         {
-            if (t < 3f)
-                ambientSource.volume = Mathf.Lerp(0f, 0.4f, t / 3f);
-            else if (t < 8f)
+            if (t < cinematic.T2)
+                ambientSource.volume = Mathf.Lerp(0f, 0.4f, t / cinematic.T2);
+            else if (t < cinematic.T3)
                 ambientSource.volume = 0.4f;
-            else if (t < 12f)
-                ambientSource.volume = Mathf.Lerp(0.4f, 0.6f, (t - 8f) / 4f);
-            else if (t < 16f)
-                ambientSource.volume = Mathf.Lerp(0.6f, 0.3f, (t - 12f) / 4f);
+            else if (t < cinematic.T5)
+                ambientSource.volume = Mathf.Lerp(0.4f, 0.6f, (t - cinematic.T3) / (cinematic.T5 - cinematic.T3));
+            else if (t < cinematic.T8)
+                ambientSource.volume = Mathf.Lerp(0.6f, 0.3f, (t - cinematic.T5) / (cinematic.T8 - cinematic.T5));
             else
-                ambientSource.volume = Mathf.Lerp(0.3f, 0f, (t - 16f) / 2f);
+                ambientSource.volume = Mathf.Lerp(0.3f, 0f, (t - cinematic.T8) / 2f);
         }
         
-        // Heartbeat during creature appearance (8-12 seconds)
+        // Heartbeat during creature appearance (T4 to T6)
         if (heartbeatSource != null && heartbeat != null)
         {
-            if (t >= 8f && t < 12f)
+            if (t >= cinematic.T4 && t < cinematic.T6)
             {
                 float timeSinceLastBeat = Time.time - lastHeartbeatTime;
-                if (timeSinceLastBeat >= heartbeatInterval)
+                float intensity = (t - cinematic.T4) / (cinematic.T6 - cinematic.T4);
+                float currentInterval = Mathf.Lerp(0.8f, 0.4f, intensity);
+                
+                if (timeSinceLastBeat >= currentInterval)
                 {
                     lastHeartbeatTime = Time.time;
-                    heartbeatSource.PlayOneShot(heartbeat, Mathf.Lerp(0.3f, 0.6f, (t - 8f) / 4f));
+                    heartbeatSource.PlayOneShot(heartbeat, Mathf.Lerp(0.3f, 0.7f, intensity));
                 }
             }
         }
         
-        // Glitch sounds during glitch phase (10-12 seconds)
-        if (t >= 10f && t < 12f && glitchSource != null)
+        // Glitch sounds during glitch phase (T6 to T7)
+        if (t >= cinematic.T6 && t < cinematic.T7 && glitchSource != null)
         {
-            if (Time.time - lastGlitchSoundTime > Random.Range(0.3f, 0.8f))
+            float intensity = (t - cinematic.T6) / (cinematic.T7 - cinematic.T6);
+            if (Time.time - lastGlitchSoundTime > Random.Range(0.1f, 0.5f) / (1f + intensity))
             {
                 lastGlitchSoundTime = Time.time;
                 PlayGlitchSound();
             }
         }
         
-        // Teleport sounds during heavy glitch (10-12 seconds)
-        if (t >= 10f && t < 12f && creatureSource != null && teleportSound != null)
+        // Teleport sounds during heavy glitch (T6 to T7)
+        if (t >= cinematic.T6 && t < cinematic.T7 && creatureSource != null && teleportSound != null)
         {
-            if (Time.time - lastTeleportTime > 0.4f)
+            if (Time.time - lastTeleportTime > Random.Range(0.2f, 0.6f))
             {
                 lastTeleportTime = Time.time;
                 creatureSource.PlayOneShot(teleportSound, 0.4f);
             }
         }
         
-        // Creature whispers during eye contact (8-10 seconds)
-        if (t >= 8f && t < 10f && creatureSource != null && creatureWhisper != null)
+        // Creature whispers during eye contact (T5 to T6)
+        if (t >= cinematic.T5 && t < cinematic.T6 && creatureSource != null && creatureWhisper != null)
         {
-            if (Time.time - lastWhisperTime > Random.Range(1.5f, 3f))
+            if (Time.time - lastWhisperTime > Random.Range(1f, 2.5f))
             {
                 lastWhisperTime = Time.time;
-                creatureSource.PlayOneShot(creatureWhisper, 0.3f);
+                creatureSource.PlayOneShot(creatureWhisper, 0.5f);
             }
         }
         
-        // Intense glitch during pull (12-14 seconds) - ramping up
-        if (t >= 12f && t < 14f && glitchSource != null && intenseGlitch != null)
+        // Intense glitch during pull (T7 to T8) - ramping up
+        if (t >= cinematic.T7 && t < cinematic.T8 && glitchSource != null && intenseGlitch != null)
         {
-            float pullProgress = (t - 12f) / 2f;
-            if (Time.time - lastGlitchSoundTime > Mathf.Lerp(0.15f, 0.05f, pullProgress))
+            float pullProgress = (t - cinematic.T7) / (cinematic.T8 - cinematic.T7);
+            if (Time.time - lastGlitchSoundTime > Mathf.Lerp(0.15f, 0.03f, pullProgress))
             {
                 lastGlitchSoundTime = Time.time;
-                glitchSource.PlayOneShot(intenseGlitch, Mathf.Lerp(0.5f, 0.8f, pullProgress));
-            }
-            
-            // Rising tone effect
-            if (glitchSource != null && ambientDrone != null && !glitchSource.isPlaying)
-            {
-                glitchSource.pitch = Mathf.Lerp(1f, 2f, pullProgress);
-                glitchSource.PlayOneShot(intenseGlitch, pullProgress * 0.6f);
+                glitchSource.PlayOneShot(intenseGlitch, Mathf.Lerp(0.5f, 1.0f, pullProgress));
             }
         }
         
-        // Final suction sound (14-16 seconds)
-        if (t >= 14f && t < 16f && transitionSource != null && transitionWhoosh != null)
-        {
-            float suctionProgress = (t - 14f) / 2f;
-            if (!transitionSource.isPlaying)
-            {
-                transitionSource.clip = transitionWhoosh;
-                transitionSource.pitch = Mathf.Lerp(0.5f, 1.5f, suctionProgress);
-                transitionSource.volume = Mathf.Lerp(0.3f, 0.8f, suctionProgress);
-                transitionSource.Play();
-            }
-        }
-        
-        // Transition whoosh and white flash (16-18 seconds)
-        if (t >= 16f && t < 18f && transitionSource != null && transitionWhoosh != null)
+        // Final suction sound (T8+)
+        if (t >= cinematic.T8 && transitionSource != null && transitionWhoosh != null)
         {
             if (!transitionSource.isPlaying)
             {
                 transitionSource.clip = transitionWhoosh;
-                transitionSource.pitch = 1.5f;
-                transitionSource.volume = 0.8f;
                 transitionSource.Play();
             }
+            float progress = (t - cinematic.T8) / 1.5f; // transitionDuration is 1.5f
+            transitionSource.pitch = Mathf.Lerp(1.0f, 2.5f, progress);
+            transitionSource.volume = Mathf.Lerp(0.6f, 1.0f, progress);
         }
     }
-    
+
     void PlayGlitchSound()
     {
         if (glitchSource == null) return;
