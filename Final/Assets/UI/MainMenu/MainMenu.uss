@@ -30,6 +30,7 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
 .header {
     margin: 80px;
     margin-bottom: 30px;
+    align-items: flex-start;
 }
 
 .title {
@@ -37,27 +38,29 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
     -unity-font-style: bold;
     color: white;
     margin-bottom: -10px;
-    text-shadow: 0 4px 40px rgba(90, 200, 255, 0.4);
+    /* Cleaner glow with tighter focus to reduce blur/jaggedness */
+    text-shadow: 0 0 15px rgba(90, 200, 255, 0.4);
 }
 
 .subtitle {
     font-size: 18px;
     color: var(--color-primary);
-    letter-spacing: 28px;
+    letter-spacing: 12px; 
     opacity: 0.8;
-    margin-left: 10px;
-    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+    margin-left: 38px; /* Balanced alignment for the slanted AeroOS logo */
+    -unity-text-align: middle-left;
+    -unity-font-style: bold;
 }
 
 .menu-box {
     background-color: var(--color-glass-bg);
-    border-width: 1.5px;
+    border-width: 2px;
     border-color: var(--color-glass-border);
     border-radius: var(--border-radius);
     padding: 12px;
     width: 520px; /* Increased width to prevent text wrap */
-    border-top-color: rgba(255, 255, 255, 0.45);
-    border-left-color: rgba(255, 255, 255, 0.25);
+    border-top-color: rgba(255, 255, 255, 0.35);
+    border-left-color: rgba(255, 255, 255, 0.15);
     margin-left: 80px;
 }
 
@@ -94,8 +97,8 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
 }
 
 .menu-item-active {
-    border-color: white;
-    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.12);
 }
 
 .menu-item-active .menu-chevron {
@@ -125,6 +128,7 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
     flex-grow: 1;
     -unity-font-style: normal;
     white-space: nowrap; /* Prevent wrapping */
+    -unity-text-align: middle-left;
 }
 
 .menu-chevron {
@@ -171,6 +175,7 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
     font-size: 24px;
     color: var(--color-text);
     -unity-font-style: bold;
+    -unity-text-align: middle-left;
 }
 
 .user-subtext {
@@ -205,4 +210,49 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
     border-width: 1px;
     border-color: rgba(255, 255, 255, 0.2);
     border-radius: var(--border-radius);
+}
+
+.fade-overlay {
+    position: absolute;
+    left: 0; top: 0; right: 0; bottom: 0;
+    background-color: white;
+    opacity: 0;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    transition-property: opacity;
+    transition-duration: 1s;
+}
+
+.loading-container {
+    opacity: 0;
+    align-items: center;
+    transition-duration: 0.8s;
+}
+
+.loading-logo {
+    font-size: 80px;
+    -unity-font-style: bold;
+    color: #008eb0;
+    margin-bottom: 30px;
+    -unity-text-align: middle-center;
+    letter-spacing: 5px;
+}
+
+.loading-text {
+    font-size: 11px;
+    color: #008eb0;
+    letter-spacing: 10px;
+    margin-top: 25px;
+    -unity-font-style: bold;
+    opacity: 0.5;
+}
+
+.loading-spinner {
+    width: 32px;
+    height: 32px;
+    border-width: 2px;
+    border-color: rgba(0, 142, 176, 0.05);
+    border-top-color: #00d2ff;
+    border-radius: 16px;
 }

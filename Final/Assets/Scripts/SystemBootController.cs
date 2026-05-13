@@ -6,9 +6,11 @@ using System.Collections;
 public class SystemBootController : MonoBehaviour
 {
     [Header("Timing")]
-    public float whiteFlashDuration = 0.5f;
+    public float whiteFlashDuration = 0.2f; // Initial wait
+    public float fadeOutDuration = 1.0f; // Actual fade out
     public float fadeToDigitalDuration = 1.5f;
-    public float stabilizationDuration = 2f;
+// ... rest ...
+public float stabilizationDuration = 2f;
     public float loadingDuration = 4f;
     public float logoDuration = 2f;
     public float glitchDuration = 0.3f;
@@ -64,8 +66,8 @@ public class SystemBootController : MonoBehaviour
         }
         
         if (whiteFlashOverlay == null)
-            whiteFlashOverlay = CreateOverlay("WhiteFlash", Color.white);
-        
+            whiteFlashOverlay = CreateOverlay("WhiteFade", Color.white);
+
         if (backgroundOverlay == null)
             backgroundOverlay = CreateOverlay("Background", new Color(0.02f, 0.05f, 0.15f, 0f));
         
@@ -120,13 +122,14 @@ public class SystemBootController : MonoBehaviour
         obj.transform.SetParent(mainCanvas.transform);
         Image img = obj.AddComponent<Image>();
         img.color = color;
+        
         RectTransform rt = obj.GetComponent<RectTransform>();
-        rt.anchorMin = Vector2.zero;
+rt.anchorMin = Vector2.zero;
         rt.anchorMax = Vector2.one;
         rt.sizeDelta = Vector2.zero;
         return img;
     }
-    
+
     Image CreateLoadingBar()
     {
         GameObject container = new GameObject("LoadingBarContainer");
@@ -255,9 +258,9 @@ public class SystemBootController : MonoBehaviour
         {
             whiteFlashOverlay.color = Color.white;
         }
-        else if (t < t1 + 0.3f)
+        else if (t < t1 + 1.0f) // Fade out over 1 second as requested
         {
-            float p = (t - t1) / 0.3f;
+            float p = (t - t1) / 1.0f;
             whiteFlashOverlay.color = new Color(1f, 1f, 1f, 1f - p);
         }
         else
@@ -265,7 +268,7 @@ public class SystemBootController : MonoBehaviour
             whiteFlashOverlay.color = new Color(1f, 1f, 1f, 0f);
         }
     }
-    
+
     void UpdateBackground(float t)
     {
         if (wallpaperImage == null) return;

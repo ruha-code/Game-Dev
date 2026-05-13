@@ -88,5 +88,13 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
-    </ui:VisualElement>
-</ui:UXML>
+        <ui:VisualElement name="fade-overlay" class="fade-overlay" picking-mode="Ignore">
+            <ui:VisualElement name="loading-container" class="loading-container">
+                <ui:Label text="AeroOS" name="loading-logo" class="loading-logo" />
+                <ui:VisualElement class="loading-spinner" />
+                <ui:Label text="INITIALIZING AeroOS..." class="loading-text" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        </ui:VisualElement>
+        </ui:UXML>

@@ -12,6 +12,7 @@ public class MainMenuController : MonoBehaviour
     private VisualElement container;
     private VisualElement title;
     private VisualElement subtitle;
+    private VisualElement fadeOverlay;
     private AeroActiveBackground activeBackground;
     private AeroAtmosphere atmosphere;
     private List<VisualElement> menuItems = new List<VisualElement>();
@@ -36,6 +37,7 @@ public class MainMenuController : MonoBehaviour
         container = root.Q<VisualElement>("root");
         title = root.Q<VisualElement>("title");
         subtitle = root.Q<VisualElement>("subtitle");
+        fadeOverlay = root.Q<VisualElement>("fade-overlay");
         activeBackground = root.Q<AeroActiveBackground>();
         atmosphere = root.Q<AeroAtmosphere>();
 
@@ -174,54 +176,112 @@ public class MainMenuController : MonoBehaviour
     private void StartNewGame()
     {
         if (isTransitioning) return;
+        
+        // Immediate state change to prevent double-clicks
+        isTransitioning = true;
+        
+        // Block all UI input immediately
+        root.pickingMode = PickingMode.Ignore;
+        
+        // Kill background processes to free up performance
+        StopAllCoroutines(); 
         StartCoroutine(TransitionSequence());
     }
 
     private IEnumerator TransitionSequence()
     {
-        isTransitioning = true;
+        // STEP 1: Preparation
+        if (atmosphere != null) atmosphere.StopAtmosphere();
+        PlaySFX(clickGlass);
+
+        // STEP 2: Cinematic Fade-In (White) + Fade-Out (Menu)
+        float elapsed = 0;
+        float duration = 1.2f;
         
-        float t = 0;
-        var menu = root.Q<VisualElement>("menu");
-        var footer = root.Q<VisualElement>("footer");
-        while (t < 0.3f)
+        if (fadeOverlay != null)
         {
-            t += Time.deltaTime;
-            float alpha = 1f - (t / 0.3f);
-            if (menu != null) menu.style.opacity = alpha;
-            if (footer != null) footer.style.opacity = alpha;
-            yield return null;
-        }
-        if (menu != null) menu.style.opacity = 0;
-        if (footer != null) footer.style.opacity = 0;
-
-        t = 0;
-        while (t < 0.4f)
-        {
-            t += Time.deltaTime;
-            if (atmosphere != null) atmosphere.brightnessBoost = (t / 0.4f) * 0.5f;
-            yield return null;
+            fadeOverlay.style.display = DisplayStyle.Flex;
+            fadeOverlay.pickingMode = PickingMode.Position;
         }
 
-        t = 0;
-        if (container != null)
+        // Get elements for sub-animations
+        var loadingContainer = fadeOverlay?.Q<VisualElement>("loading-container");
+        var loadingLogo = fadeOverlay?.Q<VisualElement>("loading-logo");
+        var loadingSpinner = fadeOverlay?.Q<VisualElement>(className: "loading-spinner");
+        
+        // If we have a title/logo, let's use it for the loading screen too
+        if (loadingLogo != null && title != null)
         {
-            container.style.backgroundColor = Color.white;
-            while (t < 0.3f)
+            loadingLogo.style.unityBackgroundImageTintColor = new Color(0, 0.55f, 0.7f, 1f); // Professional cyan
+            // Use the title's font/style if it's a label, or just assign background if it's a sprite
+        }
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            
+            // Ease-In-Out Quadratic for smoother feel
+            float easedT = t < 0.5f ? 2 * t * t : 1 - Mathf.Pow(-2 * t + 2, 2) / 2;
+            
+            // Fade white overlay in
+            if (fadeOverlay != null) fadeOverlay.style.opacity = easedT;
+            
+            // Fade menu and background out
+            if (container != null)
             {
-                t += Time.deltaTime;
-                container.style.opacity = t / 0.3f;
-                yield return null;
+                container.style.opacity = 1f - easedT;
+                // Subtle scale up effect for "cinematic" feel
+                container.style.scale = new Scale(new Vector2(1f + easedT * 0.05f, 1f + easedT * 0.05f));
             }
+            
+            yield return null;
         }
-        
+
+        // Ensure state is final
+        if (fadeOverlay != null) fadeOverlay.style.opacity = 1;
+        if (container != null) container.style.opacity = 0;
+
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        // STEP 3: Show Loading Animation
+        if (loadingContainer != null) loadingContainer.style.opacity = 1;
+
+        float spinnerRot = 0;
+        float pulseTime = 0;
+
         AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("BootScene");
         if (asyncLoad != null)
         {
-            while (!asyncLoad.isDone)
+            asyncLoad.allowSceneActivation = false;
+            
+            while (asyncLoad.progress < 0.9f)
             {
+                pulseTime += Time.unscaledDeltaTime;
+                
+                // Spinner rotation
+                if (loadingSpinner != null)
+                {
+                    spinnerRot += 220f * Time.unscaledDeltaTime;
+                    loadingSpinner.style.rotate = new Rotate(new Angle(spinnerRot));
+                }
+                
+                // Logo pulse
+                if (loadingLogo != null)
+                {
+                    float p = 0.8f + 0.2f * Mathf.PingPong(pulseTime * 0.8f, 1f);
+                    loadingLogo.style.scale = new Scale(new Vector2(p, p));
+                    loadingLogo.style.opacity = 0.5f + 0.5f * p;
+                }
+                
                 yield return null;
             }
+
+            // Loading complete, wait for "premium" pause
+            yield return new WaitForSecondsRealtime(0.6f);
+            
+            // STEP 4: Scene Activation
+            asyncLoad.allowSceneActivation = true;
         }
     }
 
