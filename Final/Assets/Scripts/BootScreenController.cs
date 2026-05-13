@@ -285,20 +285,7 @@ public class BootScreenController : MonoBehaviour
 
     private void UpdateText(bool hardGlitch)
     {
-        if (mode == ScreenMode.Idle)
-        {
-            if (titleText != null)
-            {
-                titleText.text = "AeroOS v2.4";
-                titleText.color = new Color(activeColor.r, activeColor.g, activeColor.b, 0.7f + Mathf.PingPong(Time.time * 0.5f, 0.3f));
-            }
-            if (statusText != null)
-            {
-                statusText.text = "SYSTEM INITIALIZING...";
-                statusText.color = new Color(activeColor.r, activeColor.g, activeColor.b, 0.5f + Mathf.PingPong(Time.time * 0.8f, 0.4f));
-            }
-        }
-        else if (mode == ScreenMode.GlitchText)
+        if (mode == ScreenMode.GlitchText)
 {
             // Rapid glitch text cycling
             glitchTextTimer += Time.deltaTime;
