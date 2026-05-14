@@ -1,0 +1,25 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:aero="AeroOS.UI">
+    <ui:Style src="SystemBoot.uss" />
+    <ui:VisualElement name="root" class="root">
+        <aero:AeroActiveBackground name="bg-glow" class="background-glow" />
+        <aero:AeroAtmosphere name="atmosphere" class="background-glow" />
+        
+        <ui:VisualElement name="content" class="content-container">
+            <ui:Label name="logo" text="AeroOS" class="logo" />
+            <ui:VisualElement name="loading-container" class="loading-container">
+                <ui:VisualElement name="loading-bar" class="loading-bar" />
+                <ui:VisualElement class="glass-reflection" style="opacity: 0.3;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="setup-panel" class="setup-panel">
+            <ui:VisualElement class="glass-reflection" />
+            <ui:Label text="Welcome to AeroOS" class="setup-title" />
+            <ui:Label text="How should I address you?" class="setup-subtitle" />
+            <ui:TextField name="name-input" placeholder-text="Enter your name..." class="name-input" />
+            <ui:Button name="continue-btn" text="Continue" class="continue-button" />
+        </ui:VisualElement>
+
+        <ui:VisualElement name="glitch-overlay" class="background-glow" picking-mode="Ignore" />
+    </ui:VisualElement>
+</ui:UXML>

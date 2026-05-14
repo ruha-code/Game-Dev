@@ -1,0 +1,15 @@
+{
+    "asset": "205d395846793bf48b90583a382c91a6",
+    "fileName": "019e276f-68f3-7ace-9248-3aad3ac1a6e3.wav",
+    "prompt": "Bright, glossy, premium digital chime, Frutiger Aero style, clean startup sound, 2 seconds duration, high quality",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

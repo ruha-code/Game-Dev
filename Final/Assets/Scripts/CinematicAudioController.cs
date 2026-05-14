@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class CinematicAudioController : MonoBehaviour
 {
@@ -24,20 +25,18 @@ public class CinematicAudioController : MonoBehaviour
     private float lastWhisperTime;
     private float lastGlitchSoundTime;
     private float lastHeartbeatTime;
-    private float heartbeatInterval = 0.8f;
-    
+    private bool isSilenced;
+
     void Start()
     {
         cinematic = GetComponent<CinematicIntroController>();
         
-        // Setup audio sources if not assigned
         if (ambientSource == null) ambientSource = CreateSource("Ambient", 0.5f, true);
         if (glitchSource == null) glitchSource = CreateSource("Glitch", 0.3f, false);
         if (creatureSource == null) creatureSource = CreateSource("Creature", 0.4f, false);
         if (transitionSource == null) transitionSource = CreateSource("Transition", 0.6f, false);
         if (heartbeatSource == null) heartbeatSource = CreateSource("Heartbeat", 0.3f, false);
         
-        // Start ambient drone
         if (ambientSource != null && ambientDrone != null)
         {
             ambientSource.clip = ambientDrone;
@@ -45,7 +44,6 @@ public class CinematicAudioController : MonoBehaviour
             ambientSource.Play();
         }
         
-        // Start subtle screen hum
         if (screenHum != null)
         {
             AudioSource humSource = CreateSource("ScreenHum", 0.08f, true);
@@ -58,14 +56,39 @@ public class CinematicAudioController : MonoBehaviour
         lastGlitchSoundTime = Time.time;
         lastHeartbeatTime = Time.time;
     }
-    
+
+    public void Silence()
+    {
+        if (isSilenced) return;
+        isSilenced = true;
+        
+        if (ambientSource != null) StartCoroutine(FadeOutSource(ambientSource, 1f));
+        if (glitchSource != null) glitchSource.Stop();
+        if (creatureSource != null) creatureSource.Stop();
+        if (transitionSource != null) transitionSource.Stop();
+        if (heartbeatSource != null) heartbeatSource.Stop();
+    }
+
+    private IEnumerator FadeOutSource(AudioSource source, float duration)
+    {
+        float startVol = source.volume;
+        float elapsed = 0;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            source.volume = Mathf.Lerp(startVol, 0f, elapsed / duration);
+            yield return null;
+        }
+        source.volume = 0;
+        source.Stop();
+    }
+
     void Update()
     {
-        if (cinematic == null) return;
+        if (cinematic == null || isSilenced) return;
         
         float t = cinematic.Timeline;
-        
-        // Ambient drone volume based on phase
+
         if (ambientSource != null)
         {
             if (t < cinematic.T2)
@@ -80,7 +103,6 @@ public class CinematicAudioController : MonoBehaviour
                 ambientSource.volume = Mathf.Lerp(0.3f, 0f, (t - cinematic.T8) / 2f);
         }
         
-        // Heartbeat during creature appearance (T4 to T6)
         if (heartbeatSource != null && heartbeat != null)
         {
             if (t >= cinematic.T4 && t < cinematic.T6)
@@ -97,7 +119,6 @@ public class CinematicAudioController : MonoBehaviour
             }
         }
         
-        // Glitch sounds during glitch phase (T6 to T7)
         if (t >= cinematic.T6 && t < cinematic.T7 && glitchSource != null)
         {
             float intensity = (t - cinematic.T6) / (cinematic.T7 - cinematic.T6);
@@ -108,7 +129,6 @@ public class CinematicAudioController : MonoBehaviour
             }
         }
         
-        // Teleport sounds during heavy glitch (T6 to T7)
         if (t >= cinematic.T6 && t < cinematic.T7 && creatureSource != null && teleportSound != null)
         {
             if (Time.time - lastTeleportTime > Random.Range(0.2f, 0.6f))
@@ -118,7 +138,6 @@ public class CinematicAudioController : MonoBehaviour
             }
         }
         
-        // Creature whispers during eye contact (T5 to T6)
         if (t >= cinematic.T5 && t < cinematic.T6 && creatureSource != null && creatureWhisper != null)
         {
             if (Time.time - lastWhisperTime > Random.Range(1f, 2.5f))
@@ -128,7 +147,6 @@ public class CinematicAudioController : MonoBehaviour
             }
         }
         
-        // Intense glitch during pull (T7 to T8) - ramping up
         if (t >= cinematic.T7 && t < cinematic.T8 && glitchSource != null && intenseGlitch != null)
         {
             float pullProgress = (t - cinematic.T7) / (cinematic.T8 - cinematic.T7);
@@ -139,7 +157,6 @@ public class CinematicAudioController : MonoBehaviour
             }
         }
         
-        // Final suction sound (T8+)
         if (t >= cinematic.T8 && transitionSource != null && transitionWhoosh != null)
         {
             if (!transitionSource.isPlaying)
@@ -147,7 +164,7 @@ public class CinematicAudioController : MonoBehaviour
                 transitionSource.clip = transitionWhoosh;
                 transitionSource.Play();
             }
-            float progress = (t - cinematic.T8) / 1.5f; // transitionDuration is 1.5f
+            float progress = (t - cinematic.T8) / 1.5f; 
             transitionSource.pitch = Mathf.Lerp(1.0f, 2.5f, progress);
             transitionSource.volume = Mathf.Lerp(0.6f, 1.0f, progress);
         }

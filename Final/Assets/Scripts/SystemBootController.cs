@@ -1,484 +1,172 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UIElements;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using AeroOS.UI;
 
 public class SystemBootController : MonoBehaviour
 {
-    [Header("Timing")]
-    public float whiteFlashDuration = 0.2f; // Initial wait
-    public float fadeOutDuration = 1.0f; // Actual fade out
-    public float fadeToDigitalDuration = 1.5f;
-// ... rest ...
-public float stabilizationDuration = 2f;
-    public float loadingDuration = 4f;
-    public float logoDuration = 2f;
-    public float glitchDuration = 0.3f;
-    public float transitionDuration = 1.5f;
-    
     [Header("UI")]
-    public Canvas mainCanvas;
-    public Image whiteFlashOverlay;
-    public Image backgroundOverlay;
-    public Image loadingBar;
-    public Image loadingBarFill;
-    public Text logoText;
-    public Text statusText;
-    
-    [Header("Effects")]
-    public ParticleSystem floatingParticles;
-    public Light ambientLight;
-    public UnityEngine.UI.RawImage wallpaperImage;
-    public Texture2D wallpaperTexture;
-    
-    [Header("Settings")]
-    public string nextScene = "MainMenuScene";
+    public UIDocument uiDocument;
+    public string nextScene = "AeroDesktopScene";
 
-    private float timeline;
-    private float t1, t2, t3, t4, t5, t6, t7;
-    private float cameraFloatOffset;
-    private float glitchTimer;
-    private bool glitchActive;
+    [Header("Audio")]
+    public AudioClip startupChime;
+    public AudioClip glitchSound;
+    public AudioClip crackSound;
+    public AudioClip transitionSound;
+    public AudioClip ambientHum;
+    public AudioClip electricalAmbience;
     
-    void Start()
-    {
-        LoadWallpaper();
-        SetupScene();
-        CalculateTimings();
-        StartCoroutine(RunBootSequence());
-    }
-    
-    void LoadWallpaper()
-    {
-        wallpaperTexture = Resources.Load<Texture2D>("Image/Wallpaper");
-    }
-    
-    void SetupScene()
-    {
-        if (mainCanvas == null)
-        {
-            GameObject canvasObj = new GameObject("BootCanvas");
-            mainCanvas = canvasObj.AddComponent<Canvas>();
-            mainCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            mainCanvas.sortingOrder = 100;
-            canvasObj.AddComponent<CanvasScaler>();
-            canvasObj.AddComponent<GraphicRaycaster>();
-        }
-        
-        if (whiteFlashOverlay == null)
-            whiteFlashOverlay = CreateOverlay("WhiteFade", Color.white);
+    private AudioSource sfxSource;
+    private AudioSource ambientSource;
 
-        if (backgroundOverlay == null)
-            backgroundOverlay = CreateOverlay("Background", new Color(0.02f, 0.05f, 0.15f, 0f));
-        
-        if (loadingBar == null)
-            loadingBar = CreateLoadingBar();
-        
-        if (logoText == null)
-            logoText = CreateLogoText();
-        
-        if (statusText == null)
-            statusText = CreateStatusText();
-        
-        if (floatingParticles == null)
-            CreateParticles();
-        
-        if (ambientLight == null)
-        {
-            GameObject lightObj = new GameObject("AmbientLight");
-            ambientLight = lightObj.AddComponent<Light>();
-            ambientLight.type = LightType.Directional;
-            ambientLight.color = new Color(0.3f, 0.6f, 1f);
-            ambientLight.intensity = 0.5f;
-        }
-        
-        CreateWallpaperImage();
-        
-        Camera.main.backgroundColor = Color.black;
-        Camera.main.clearFlags = CameraClearFlags.SolidColor;
-    }
-    
-    void CreateWallpaperImage()
+    private VisualElement root;
+    private VisualElement bgGlow;
+    private VisualElement logo;
+    private VisualElement loadingContainer;
+    private VisualElement loadingBar;
+    private VisualElement setupPanel;
+    private VisualElement glitchOverlay;
+    private TextField nameInput;
+    private Button continueBtn;
+
+    private void OnEnable()
     {
-        GameObject imgObj = new GameObject("WallpaperImage");
-        imgObj.transform.SetParent(mainCanvas.transform);
-        wallpaperImage = imgObj.AddComponent<UnityEngine.UI.RawImage>();
-        wallpaperImage.color = new Color(1f, 1f, 1f, 0f);
+        if (uiDocument == null) uiDocument = GetComponent<UIDocument>();
+        if (uiDocument == null) return;
+
+        root = uiDocument.rootVisualElement.Q<VisualElement>("root");
+        bgGlow = root.Q<VisualElement>("bg-glow");
+        logo = root.Q<VisualElement>("logo");
+        loadingContainer = root.Q<VisualElement>("loading-container");
+        loadingBar = root.Q<VisualElement>("loading-bar");
+        setupPanel = root.Q<VisualElement>("setup-panel");
+        glitchOverlay = root.Q<VisualElement>("glitch-overlay");
+        nameInput = root.Q<TextField>("name-input");
+        continueBtn = root.Q<Button>("continue-btn");
+
+        if (continueBtn != null) continueBtn.clicked += OnContinueClicked;
+
+        sfxSource = gameObject.AddComponent<AudioSource>();
+        sfxSource.volume = 0.6f;
         
-        if (wallpaperTexture != null)
-        {
-            wallpaperImage.texture = wallpaperTexture;
-        }
-        
-        RectTransform rt = imgObj.GetComponent<RectTransform>();
-        rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.sizeDelta = Vector2.zero;
-    }
-    
-    Image CreateOverlay(string name, Color color)
-    {
-        GameObject obj = new GameObject(name);
-        obj.transform.SetParent(mainCanvas.transform);
-        Image img = obj.AddComponent<Image>();
-        img.color = color;
-        
-        RectTransform rt = obj.GetComponent<RectTransform>();
-rt.anchorMin = Vector2.zero;
-        rt.anchorMax = Vector2.one;
-        rt.sizeDelta = Vector2.zero;
-        return img;
+        ambientSource = gameObject.AddComponent<AudioSource>();
+        ambientSource.loop = true;
+        ambientSource.volume = 0.1f; // Very quiet ambient for Frutiger feel
+
+        StartCoroutine(BootSequence());
     }
 
-    Image CreateLoadingBar()
+    private IEnumerator BootSequence()
     {
-        GameObject container = new GameObject("LoadingBarContainer");
-        container.transform.SetParent(mainCanvas.transform);
-        Image containerImg = container.AddComponent<Image>();
-        containerImg.color = new Color(0.1f, 0.2f, 0.4f, 0f);
-        RectTransform containerRt = container.GetComponent<RectTransform>();
-        containerRt.anchorMin = new Vector2(0.3f, 0.45f);
-        containerRt.anchorMax = new Vector2(0.7f, 0.5f);
-        containerRt.sizeDelta = Vector2.zero;
-        
-        GameObject fillObj = new GameObject("LoadingBarFill");
-        fillObj.transform.SetParent(container.transform);
-        Image fillImg = fillObj.AddComponent<Image>();
-        fillImg.color = new Color(0.2f, 0.7f, 1f, 0f);
-        RectTransform fillRt = fillObj.GetComponent<RectTransform>();
-        fillRt.anchorMin = new Vector2(0f, 0f);
-        fillRt.anchorMax = new Vector2(0f, 1f);
-        fillRt.pivot = new Vector2(0f, 0.5f);
-        fillRt.sizeDelta = Vector2.zero;
-        
-        return containerImg;
-    }
-    
-    Text CreateLogoText()
-    {
-        GameObject obj = new GameObject("LogoText");
-        obj.transform.SetParent(mainCanvas.transform);
-        Text txt = obj.AddComponent<Text>();
-        txt.text = "AeroOS";
-        txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        txt.fontSize = 72;
-        txt.alignment = TextAnchor.MiddleCenter;
-        txt.color = new Color(0.4f, 0.8f, 1f, 0f);
-        RectTransform rt = obj.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.3f, 0.55f);
-        rt.anchorMax = new Vector2(0.7f, 0.65f);
-        rt.sizeDelta = Vector2.zero;
-        return txt;
-    }
-    
-    Text CreateStatusText()
-    {
-        GameObject obj = new GameObject("StatusText");
-        obj.transform.SetParent(mainCanvas.transform);
-        Text txt = obj.AddComponent<Text>();
-        txt.text = "Initializing...";
-        txt.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-        txt.fontSize = 24;
-        txt.alignment = TextAnchor.MiddleCenter;
-        txt.color = new Color(0.5f, 0.7f, 0.9f, 0f);
-        RectTransform rt = obj.GetComponent<RectTransform>();
-        rt.anchorMin = new Vector2(0.3f, 0.4f);
-        rt.anchorMax = new Vector2(0.7f, 0.45f);
-        rt.sizeDelta = Vector2.zero;
-        return txt;
-    }
-    
-    void CreateParticles()
-    {
-        GameObject particleObj = new GameObject("FloatingParticles");
-        floatingParticles = particleObj.AddComponent<ParticleSystem>();
-        
-        var main = floatingParticles.main;
-        main.startColor = new Color(0.3f, 0.7f, 1f, 0.6f);
-        main.startSize = 0.05f;
-        main.startLifetime = 8f;
-        main.maxParticles = 100;
-        main.simulationSpace = ParticleSystemSimulationSpace.World;
-        main.loop = true;
-        
-        var emission = floatingParticles.emission;
-        emission.rateOverTime = 5f;
-        
-        var shape = floatingParticles.shape;
-        shape.shapeType = ParticleSystemShapeType.Box;
-        shape.scale = new Vector3(10f, 10f, 10f);
-        
-        var renderer = floatingParticles.GetComponent<ParticleSystemRenderer>();
-        renderer.material = new Material(Shader.Find("Standard"));
-        renderer.material.SetColor("_Color", new Color(0.3f, 0.7f, 1f, 0.5f));
-        renderer.material.EnableKeyword("_EMISSION");
-        renderer.material.SetColor("_EmissionColor", new Color(0.2f, 0.5f, 0.8f, 1f));
-    }
-    
-    void CalculateTimings()
-    {
-        t1 = whiteFlashDuration;
-        t2 = t1 + fadeToDigitalDuration;
-        t3 = t2 + stabilizationDuration;
-        t4 = t3 + loadingDuration;
-        t5 = t4 + logoDuration;
-        t6 = t5 + glitchDuration;
-        t7 = t6 + transitionDuration;
-    }
-    
-    IEnumerator RunBootSequence()
-    {
-        timeline = 0f;
-        while (timeline < t7)
-        {
-            float dt = Time.deltaTime;
-            timeline += dt;
-            
-            UpdateWhiteFlash(timeline);
-            UpdateBackground(timeline);
-            UpdateCamera(timeline, dt);
-            UpdateParticles(timeline);
-            UpdateLoading(timeline);
-            UpdateLogo(timeline);
-            UpdateGlitch(timeline, dt);
-            
-            if (timeline >= t7)
-            {
-                yield return StartCoroutine(TransitionToDesktop());
-                break;
-            }
-            
-            yield return null;
-        }
-    }
-    
-    void UpdateWhiteFlash(float t)
-    {
-        if (t < t1)
-        {
-            whiteFlashOverlay.color = Color.white;
-        }
-        else if (t < t1 + 1.0f) // Fade out over 1 second as requested
-        {
-            float p = (t - t1) / 1.0f;
-            whiteFlashOverlay.color = new Color(1f, 1f, 1f, 1f - p);
-        }
-        else
-        {
-            whiteFlashOverlay.color = new Color(1f, 1f, 1f, 0f);
-        }
-    }
+        // 1. Scene starts from black
+        yield return new WaitForSeconds(0.4f);
 
-    void UpdateBackground(float t)
-    {
-        if (wallpaperImage == null) return;
+        // 2. Soft blue glow appears
+        if (bgGlow != null) bgGlow.AddToClassList("background-glow--visible");
         
-        if (t < t1)
-        {
-            wallpaperImage.color = new Color(1f, 1f, 1f, 0f);
+        // Start ambient sounds (very subtle)
+        if (ambientHum) {
+            ambientSource.clip = ambientHum;
+            ambientSource.Play();
         }
-        else if (t < t2)
-        {
-            float p = (t - t1) / fadeToDigitalDuration;
-            float easedP = p * p * (3f - 2f * p);
-            wallpaperImage.color = new Color(1f, 1f, 1f, easedP);
-        }
-        else
-        {
-            wallpaperImage.color = new Color(1f, 1f, 1f, 1f);
-        }
-    }
-    
-    void UpdateCamera(float t, float dt)
-    {
-        Camera cam = Camera.main;
-        if (cam == null) return;
         
-        if (t < t2)
-        {
-            float shakeAmount = Mathf.Lerp(0.1f, 0.01f, (t - t1) / fadeToDigitalDuration);
-            cam.transform.position += new Vector3(
-                Random.Range(-shakeAmount, shakeAmount),
-                Random.Range(-shakeAmount, shakeAmount),
-                0f
-            );
-        }
-        else if (t < t3)
-        {
-            float p = (t - t2) / stabilizationDuration;
-            cameraFloatOffset = Mathf.Sin(t * 0.5f) * 0.02f * (1f - p);
-            cam.transform.position = new Vector3(0f, cameraFloatOffset, -10f);
-        }
-        else
-        {
-            cameraFloatOffset = Mathf.Sin(t * 0.3f) * 0.01f;
-            cam.transform.position = new Vector3(0f, cameraFloatOffset, -10f);
-        }
-    }
-    
-    void UpdateParticles(float t)
-    {
-        if (floatingParticles == null) return;
+        yield return new WaitForSeconds(0.8f);
+
+        // 3. AeroOS logo - Play startup chime
+        if (logo != null) logo.AddToClassList("logo--visible");
+        if (startupChime != null) sfxSource.PlayOneShot(startupChime, 0.7f);
         
-        if (t < t1)
-        {
-            floatingParticles.Stop();
-        }
-        else if (t < t2)
-        {
-            float p = (t - t1) / fadeToDigitalDuration;
-            var emission = floatingParticles.emission;
-            emission.rateOverTime = p * 5f;
-            if (!floatingParticles.isPlaying && p > 0.1f)
-                floatingParticles.Play();
-        }
-        else
-        {
-            var main = floatingParticles.main;
-            main.startColor = new Color(0.3f, 0.7f, 1f, 0.6f);
-        }
-    }
-    
-    void UpdateLoading(float t)
-    {
-        if (loadingBar == null || loadingBarFill == null) return;
-        
-        RectTransform fillRt = loadingBarFill.GetComponent<RectTransform>();
-        
-        if (t < t3)
-        {
-            loadingBar.color = new Color(0.1f, 0.2f, 0.4f, 0f);
-            loadingBarFill.color = new Color(0.2f, 0.7f, 1f, 0f);
-            fillRt.anchorMax = new Vector2(0f, 1f);
-        }
-        else if (t < t4)
-        {
-            float p = (t - t3) / loadingDuration;
-            loadingBar.color = new Color(0.1f, 0.2f, 0.4f, 0.8f);
-            loadingBarFill.color = new Color(0.2f, 0.7f, 1f, 0.9f);
-            fillRt.anchorMax = new Vector2(p, 1f);
-            
-            if (statusText != null)
-            {
-                statusText.color = new Color(0.5f, 0.7f, 0.9f, 0.8f);
-                if (p < 0.3f) statusText.text = "Initializing...";
-                else if (p < 0.6f) statusText.text = "Loading modules...";
-                else if (p < 0.9f) statusText.text = "Preparing environment...";
-                else statusText.text = "Almost ready...";
-            }
-        }
-        else
-        {
-            loadingBar.color = new Color(0.1f, 0.2f, 0.4f, 0.8f);
-            loadingBarFill.color = new Color(0.2f, 0.7f, 1f, 0.9f);
-            fillRt.anchorMax = new Vector2(1f, 1f);
-            if (statusText != null)
-            {
-                statusText.text = "Complete";
-                statusText.color = new Color(0.4f, 0.9f, 0.6f, 0.8f);
-            }
-        }
-    }
-    
-    void UpdateLogo(float t)
-    {
-        if (logoText == null) return;
-        
-        if (t < t3)
-        {
-            logoText.color = new Color(0.4f, 0.8f, 1f, 0f);
-        }
-        else if (t < t4)
-        {
-            float p = (t - t3) / loadingDuration;
-            float alpha = p > 0.5f ? (p - 0.5f) / 0.5f : 0f;
-            logoText.color = new Color(0.4f, 0.8f, 1f, alpha);
-        }
-        else if (t < t5)
-        {
-            float pulse = Mathf.Sin(t * 2f) * 0.1f + 0.9f;
-            logoText.color = new Color(0.4f * pulse, 0.8f * pulse, 1f, 1f);
-        }
-        else
-        {
-            logoText.color = new Color(0.4f, 0.8f, 1f, 1f);
-        }
-    }
-    
-    void UpdateGlitch(float t, float dt)
-    {
-        if (t < t5) return;
-        
-        glitchTimer += dt;
-        
-        if (glitchTimer > 0.1f && Random.value < 0.3f)
-        {
-            glitchActive = true;
-            glitchTimer = 0f;
-            
-            if (wallpaperImage != null)
-            {
-                wallpaperImage.color = new Color(
-                    1f + Random.value * 0.1f,
-                    1f + Random.value * 0.1f,
-                    1f + Random.value * 0.1f,
-                    1f
-                );
-            }
-            
-            if (logoText != null)
-            {
-                logoText.color = new Color(
-                    0.4f + Random.value * 0.2f,
-                    0.8f,
-                    1f,
-                    0.8f + Random.value * 0.2f
-                );
-            }
-            
-            Invoke("ResetGlitch", 0.05f);
-        }
-    }
-    
-    void ResetGlitch()
-    {
-        glitchActive = false;
-        if (wallpaperImage != null)
-            wallpaperImage.color = new Color(1f, 1f, 1f, 1f);
-        if (logoText != null)
-            logoText.color = new Color(0.4f, 0.8f, 1f, 1f);
-    }
-    
-    IEnumerator TransitionToDesktop()
-    {
+        yield return new WaitForSeconds(1.0f);
+
+        // 4. Loading animation
+        if (loadingContainer != null) loadingContainer.AddToClassList("loading-container--visible");
+
         float elapsed = 0f;
-        while (elapsed < transitionDuration)
+        float duration = 4.0f;
+        bool glitchTriggered = false;
+
+        while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
-            float p = elapsed / transitionDuration;
-            
-            if (wallpaperImage != null)
-                wallpaperImage.color = new Color(1f, 1f, 1f, 1f - p);
-            
-            if (logoText != null)
-                logoText.color = new Color(0.4f, 0.8f, 1f, 1f - p);
-            
-            if (loadingBar != null)
-                loadingBar.color = new Color(0.1f, 0.2f, 0.4f, 0.8f * (1f - p));
-            
-            if (loadingBarFill != null)
-                loadingBarFill.color = new Color(0.2f, 0.7f, 1f, 0.9f * (1f - p));
-            
+            float progress = elapsed / duration;
+            if (loadingBar != null) loadingBar.style.width = Length.Percent(progress * 100f);
+
+            // 5. Glitch event at around 60%
+            if (progress >= 0.6f && !glitchTriggered)
+            {
+                glitchTriggered = true;
+                StartCoroutine(TriggerGlitch());
+            }
+
+            yield return null;
+        }
+
+        if (loadingBar != null) loadingBar.style.width = Length.Percent(100f);
+        yield return new WaitForSeconds(1.0f);
+
+        // 6. After loading completes: Setup panel
+        if (logo != null) logo.RemoveFromClassList("logo--visible");
+        if (loadingContainer != null) loadingContainer.RemoveFromClassList("loading-container--visible");
+        
+        yield return new WaitForSeconds(0.5f);
+        
+        if (setupPanel != null) setupPanel.AddToClassList("setup-panel--visible");
+    }
+
+    private IEnumerator TriggerGlitch()
+    {
+        if (glitchSound) sfxSource.PlayOneShot(glitchSound, 0.3f); // Lower volume
+        if (crackSound) sfxSource.PlayOneShot(crackSound, 0.2f); // Lower volume
+
+        // Logo distorts horizontally
+        if (logo != null) logo.AddToClassList("glitch-distort");
+        // Screen has RGB split and static
+        if (glitchOverlay != null)
+        {
+            glitchOverlay.AddToClassList("glitch-rgb");
+            glitchOverlay.AddToClassList("glitch-static");
+            glitchOverlay.style.opacity = 0.25f; // More subtle glitch
+        }
+
+        yield return new WaitForSeconds(0.4f);
+
+        if (logo != null) logo.RemoveFromClassList("glitch-distort");
+        if (glitchOverlay != null)
+        {
+            glitchOverlay.RemoveFromClassList("glitch-rgb");
+            glitchOverlay.RemoveFromClassList("glitch-static");
+            glitchOverlay.style.opacity = 0f;
+        }
+    }
+
+    private void OnContinueClicked()
+    {
+        string playerName = nameInput != null ? nameInput.value : "User";
+        if (string.IsNullOrEmpty(playerName)) playerName = "User";
+        
+        PlayerPrefs.SetString("PlayerName", playerName);
+        PlayerPrefs.Save();
+
+        if (transitionSound) sfxSource.PlayOneShot(transitionSound);
+        
+        StartCoroutine(FadeOutAndLoad());
+    }
+
+    private IEnumerator FadeOutAndLoad()
+    {
+        if (setupPanel != null) setupPanel.RemoveFromClassList("setup-panel--visible");
+        if (bgGlow != null) bgGlow.RemoveFromClassList("background-glow--visible");
+        
+        float fadeOut = 0;
+        while (fadeOut < 1f) {
+            fadeOut += Time.deltaTime * 0.7f;
+            ambientSource.volume = 0.4f * (1f - fadeOut);
             yield return null;
         }
         
-        if (!string.IsNullOrEmpty(nextScene))
-        {
-            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nextScene);
-            while (!asyncLoad.isDone)
-            {
-                yield return null;
-            }
-        }
+        yield return new WaitForSeconds(0.5f);
+        SceneManager.LoadScene(nextScene);
     }
 }
