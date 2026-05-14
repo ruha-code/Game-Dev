@@ -1,0 +1,15 @@
+{
+    "asset": "51fa9d7ba281a0046bc95aeb4a912954",
+    "fileName": "019e272a-86f8-76d8-a192-e973c251a801.wav",
+    "prompt": "soft steady ventilation air flow white noise, indoor environment",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 5.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

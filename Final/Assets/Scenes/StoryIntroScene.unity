@@ -248,6 +248,9 @@ MonoBehaviour:
   droneClip: {fileID: 8300000, guid: dd43db4e8d32d6346a36edee1965d42b, type: 3}
   typewriterClip: {fileID: 8300000, guid: 79af0801c1df0d14baf901861dac8652, type: 3}
   glitchClip: {fileID: 8300000, guid: 0cb1f90aa5bcdd04796dbe8808be3d26, type: 3}
+  staticCrackClip: {fileID: 8300000, guid: 87357755a97e20a45a9b436caa4580c8, type: 3}
+  pcHumClip: {fileID: 8300000, guid: 7fe61e5c578fd2d4aa140578ff73f13b, type: 3}
+  ventilationClip: {fileID: 8300000, guid: 51fa9d7ba281a0046bc95aeb4a912954, type: 3}
   typewriterSilenceOffset: 0.142
 --- !u!114 &1371441444
 MonoBehaviour:
