@@ -1,0 +1,50 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:aero="AeroOS.UI">
+    <ui:Style src="DesktopArrival.uss" />
+    <ui:VisualElement name="root" class="root" picking-mode="Ignore">
+        <ui:VisualElement name="background-dark" class="background-dark" picking-mode="Ignore" />
+        
+        <!-- Wallpaper Materialization -->
+<ui:VisualElement name="wallpaper-container" class="wallpaper-container" picking-mode="Ignore">
+            <ui:VisualElement name="sky" class="wallpaper-layer" picking-mode="Ignore" />
+            <ui:VisualElement name="sunlight" class="wallpaper-layer" picking-mode="Ignore" />
+            <ui:VisualElement name="clouds" class="wallpaper-layer" picking-mode="Ignore" />
+            <ui:VisualElement name="city" class="wallpaper-layer" picking-mode="Ignore" />
+            <ui:VisualElement name="trees" class="wallpaper-layer" picking-mode="Ignore" />
+            <ui:VisualElement name="grass" class="wallpaper-layer" picking-mode="Ignore" />
+            <ui:VisualElement name="water" class="wallpaper-layer" picking-mode="Ignore" />
+            <ui:VisualElement name="bubbles" class="wallpaper-layer" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <aero:AeroAtmosphere name="atmosphere" picking-mode="Ignore" />
+
+        <!-- Phase 1 & 2 Text -->
+        <ui:VisualElement name="intro-container" class="intro-container" picking-mode="Ignore">
+            <ui:Label name="identity-text" class="intro-text" text="Identity Accepted" picking-mode="Ignore" />
+            <ui:Label name="welcome-text" class="intro-text" text="" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <!-- Phase 2 Typewriter -->
+        <ui:VisualElement name="typewriter-container" class="typewriter-container" picking-mode="Ignore">
+        </ui:VisualElement>
+
+        <!-- Glitch -->
+        <ui:VisualElement name="glitch-overlay" class="glitch-overlay" picking-mode="Ignore">
+            <ui:VisualElement name="silhouette" class="silhouette" picking-mode="Ignore" />
+        </ui:VisualElement>
+
+        <!-- UI Materialization -->
+        <ui:VisualElement name="taskbar" class="taskbar" picking-mode="Ignore" />
+        <ui:VisualElement name="icon-grid" class="icon-grid" picking-mode="Ignore">
+        </ui:VisualElement>
+
+        <!-- Final Message -->
+        <ui:VisualElement name="popup-container" class="popup-container" picking-mode="Ignore">
+            <ui:VisualElement name="glass-popup" class="glass-popup" picking-mode="Ignore">
+                <ui:Label name="popup-title" class="popup-title" text="Welcome, [PlayerName]" picking-mode="Ignore" />
+                <ui:Label class="popup-message" text="AeroOS is ready." picking-mode="Ignore" />
+                <ui:Label name="unread-message" class="popup-message" text="You have 1 unread message." style="margin-top: 10px; color: #00ffff;" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+    </ui:VisualElement>
+</ui:UXML>

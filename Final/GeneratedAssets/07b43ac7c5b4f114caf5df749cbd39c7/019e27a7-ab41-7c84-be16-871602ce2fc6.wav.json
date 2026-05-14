@@ -1,0 +1,15 @@
+{
+    "asset": "07b43ac7c5b4f114caf5df749cbd39c7",
+    "fileName": "019e27a7-ab41-7c84-be16-871602ce2fc6.wav",
+    "prompt": "Soft glassy whoosh with a magical sparkle, materializing object, premium high-end UI transition sound.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

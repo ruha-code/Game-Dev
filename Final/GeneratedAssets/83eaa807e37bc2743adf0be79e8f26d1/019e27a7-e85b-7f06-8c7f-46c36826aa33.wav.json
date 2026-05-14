@@ -1,0 +1,15 @@
+{
+    "asset": "83eaa807e37bc2743adf0be79e8f26d1",
+    "fileName": "019e27a7-e85b-7f06-8c7f-46c36826aa33.wav",
+    "prompt": "Soft bubble pop landing on a glass surface, friendly, rounded, premium UI sound.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

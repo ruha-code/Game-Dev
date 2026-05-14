@@ -1,0 +1,15 @@
+{
+    "asset": "cff2915fe637604468f2ff2f9fdf4572",
+    "fileName": "019e27a8-08d6-7bef-82f4-b0d4c183f9a3.wav",
+    "prompt": "Subtle digital glitch, short static burst with an eerie undertone, sharp but short.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

@@ -1,0 +1,15 @@
+{
+    "asset": "5beacbcab75d0b2498078ad6636f7462",
+    "fileName": "019e27ab-b9a2-7dea-b642-ce48404a3e11.wav",
+    "prompt": "Soft glassy bubble pop, slightly different pitch from the first one, premium UI sound.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

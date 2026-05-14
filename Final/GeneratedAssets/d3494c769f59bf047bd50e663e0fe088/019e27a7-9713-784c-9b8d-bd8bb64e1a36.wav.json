@@ -1,0 +1,15 @@
+{
+    "asset": "d3494c769f59bf047bd50e663e0fe088",
+    "fileName": "019e27a7-9713-784c-9b8d-bd8bb64e1a36.wav",
+    "prompt": "Soft digital typewriter clicks, high-pitched, clean, minimal, tech interface, glassy.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

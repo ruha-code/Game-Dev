@@ -1,0 +1,15 @@
+{
+    "asset": "d845695f700aa1b4ead0a34d9316b521",
+    "fileName": "019e27a7-ada2-76b4-8426-fcb7c70414be.wav",
+    "prompt": "Airy digital ambience, soft synth pads, light wind, feeling of a beautiful world being created, alive, peaceful.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 8.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

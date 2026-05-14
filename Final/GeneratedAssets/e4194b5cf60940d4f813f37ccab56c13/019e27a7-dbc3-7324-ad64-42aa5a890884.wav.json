@@ -1,0 +1,15 @@
+{
+    "asset": "e4194b5cf60940d4f813f37ccab56c13",
+    "fileName": "019e27a7-dbc3-7324-ad64-42aa5a890884.wav",
+    "prompt": "Glassy harmonic notification sound, soft, premium, Windows Aero style.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

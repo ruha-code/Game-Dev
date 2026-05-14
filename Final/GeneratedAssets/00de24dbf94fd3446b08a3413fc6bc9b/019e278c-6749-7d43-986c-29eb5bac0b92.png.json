@@ -1,0 +1,28 @@
+{
+    "asset": "00de24dbf94fd3446b08a3413fc6bc9b",
+    "fileName": "019e278c-6749-7d43-986c-29eb5bac0b92.png",
+    "prompt": "Frutiger Aero style, Windows Vista aesthetic, glossy glass 'Lab 7' experimental flask icon, cyan and blue colors, high detail, 3D effect, soft highlights, white background, premium quality.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}
