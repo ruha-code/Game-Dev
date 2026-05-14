@@ -1,0 +1,15 @@
+{
+    "asset": "02152a470796d5f45a6d6b46eadaec25",
+    "fileName": "019e25ee-e41d-7079-ba14-10453593f4dc.wav",
+    "prompt": "single sharp mechanical typewriter key strike, very short, no reverb, punchy click",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

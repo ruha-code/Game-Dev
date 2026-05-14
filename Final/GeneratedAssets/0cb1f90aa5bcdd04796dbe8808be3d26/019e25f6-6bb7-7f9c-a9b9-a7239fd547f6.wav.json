@@ -1,0 +1,15 @@
+{
+    "asset": "0cb1f90aa5bcdd04796dbe8808be3d26",
+    "fileName": "019e25f6-6bb7-7f9c-a9b9-a7239fd547f6.wav",
+    "prompt": "sharp digital glitch burst, instant attack, no silence, electronic static crackle",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

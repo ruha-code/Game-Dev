@@ -17,7 +17,8 @@ public class MonitorScreenController : MonoBehaviour
     public float screenTear = 0f;
     public float vignetteStrength = 0.3f;
     
-    private Material screenMaterial;
+    [Header("Internal")]
+    public Material screenMaterial; // Use assigned material if available
     private Texture2D generatedFace;
     private float glitchTimer;
     private bool isGlitching;
@@ -29,7 +30,10 @@ public class MonitorScreenController : MonoBehaviour
         if (screenSurface == null) screenSurface = GetComponent<Renderer>();
         if (screenSurface != null)
         {
-            screenMaterial = new Material(Shader.Find("Monitor/GlitchScreen"));
+            if (screenMaterial == null)
+            {
+                screenMaterial = new Material(Shader.Find("Monitor/GlitchScreen"));
+            }
             screenSurface.material = screenMaterial;
             if (wallpaperTexture != null) screenMaterial.SetTexture("_MainTex", wallpaperTexture);
             if (creatureFaceTexture == null) { generatedFace = GenFace(); screenMaterial.SetTexture("_FaceTex", generatedFace); }
@@ -42,7 +46,7 @@ public class MonitorScreenController : MonoBehaviour
             nextGlitchTime = Random.Range(2f, 5f);
         }
     }
-    
+
     void Update()
     {
         if (screenMaterial != null)

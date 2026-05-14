@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 public class CinematicIntroController : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class CinematicIntroController : MonoBehaviour
     
     [Header("Creature")]
     public Shader glitchCreatureShader;
+    public Material creatureMaterial; // Use assigned material
     
     [Header("Timing")]
     public float blackScreenDuration = 0.5f;
@@ -33,6 +35,7 @@ public class CinematicIntroController : MonoBehaviour
     
     [Header("Settings")]
     public string nextScene = "MainMenuScene";
+    public InputActionReference skipAction; // Added for skipping
     
     private Vector3[] cameraPath;
     private float[] pathDistances;
@@ -47,7 +50,7 @@ public class CinematicIntroController : MonoBehaviour
     private float blackOverlayAlpha = 1f;
     private float whiteFlashAlpha;
     private GameObject creatureRoot;
-    private Material creatureMaterial;
+    // private Material creatureMaterial; // Removed local variable to use serialized field
     private bool creatureSpawned;
     private float glitchIntensity;
     private float shakeAmount;
@@ -128,6 +131,33 @@ public class CinematicIntroController : MonoBehaviour
         
         StartCoroutine(RunCinematic());
     }
+
+    void Update()
+    {
+        // Check for skip input
+        if (!transitionStarted && skipAction != null && skipAction.action.WasPressedThisFrame())
+        {
+            SkipCinematic();
+        }
+    }
+
+    private void SkipCinematic()
+    {
+        transitionStarted = true;
+        StopAllCoroutines();
+        ShowLoadingUI();
+        StartCoroutine(TransitionToNextScene());
+    }
+
+    private void ShowLoadingUI()
+    {
+        GameObject loadingCanvas = GameObject.Find("LoadingCanvas");
+        if (loadingCanvas != null)
+        {
+            Transform textTrans = loadingCanvas.transform.Find("LoadingText");
+            if (textTrans != null) textTrans.gameObject.SetActive(true);
+        }
+    }
     
     IEnumerator RunCinematic()
     {
@@ -144,11 +174,13 @@ public class CinematicIntroController : MonoBehaviour
             if (timeline >= t8 + transitionDuration && !transitionStarted)
             {
                 transitionStarted = true;
+                ShowLoadingUI(); // Show before transition
                 yield return StartCoroutine(TransitionToNextScene());
             }
             yield return null;
         }
     }
+
     
     void BuildCameraPath()
     {
@@ -620,37 +652,40 @@ public class CinematicIntroController : MonoBehaviour
         renderer.material.SetColor("_EmissionColor", new Color(0.02f, 0.25f, 0.35f, 1f));
 
         // Try enhanced shader first, fallback to original
-        Shader enhancedShader = Shader.Find("GlitchCreature/EnhancedEntity");
-        if (enhancedShader != null)
+        if (creatureMaterial == null)
         {
-            creatureMaterial = new Material(enhancedShader);
-            creatureMaterial.SetColor("_MainColor", new Color(0.05f, 0.08f, 0.1f, 0f));
-            creatureMaterial.SetFloat("_NoiseScale", 5f);
-            creatureMaterial.SetFloat("_NoiseSpeed", 2f);
-            creatureMaterial.SetFloat("_FlickerIntensity", 0.5f);
-            creatureMaterial.SetFloat("_Distortion", 0.3f);
-            creatureMaterial.SetFloat("_ParticleDensity", 0.3f);
-            creatureMaterial.SetFloat("_ParticleSpeed", 1f);
-            creatureMaterial.SetFloat("_GlitchBlocks", 0.2f);
-            creatureMaterial.SetFloat("_DissolveAmount", 0f);
+            Shader enhancedShader = Shader.Find("GlitchCreature/EnhancedEntity");
+            if (enhancedShader != null)
+            {
+                creatureMaterial = new Material(enhancedShader);
+                creatureMaterial.SetColor("_MainColor", new Color(0.05f, 0.08f, 0.1f, 0f));
+                creatureMaterial.SetFloat("_NoiseScale", 5f);
+                creatureMaterial.SetFloat("_NoiseSpeed", 2f);
+                creatureMaterial.SetFloat("_FlickerIntensity", 0.5f);
+                creatureMaterial.SetFloat("_Distortion", 0.3f);
+                creatureMaterial.SetFloat("_ParticleDensity", 0.3f);
+                creatureMaterial.SetFloat("_ParticleSpeed", 1f);
+                creatureMaterial.SetFloat("_GlitchBlocks", 0.2f);
+                creatureMaterial.SetFloat("_DissolveAmount", 0f);
+            }
+            else if (glitchCreatureShader != null)
+            {
+                creatureMaterial = new Material(glitchCreatureShader);
+                creatureMaterial.SetColor("_MainColor", new Color(0.1f, 0.1f, 0.1f, 0f));
+                creatureMaterial.SetFloat("_NoiseScale", 5f);
+                creatureMaterial.SetFloat("_NoiseSpeed", 2f);
+                creatureMaterial.SetFloat("_FlickerIntensity", 0.5f);
+                creatureMaterial.SetFloat("_Distortion", 0.3f);
+            }
+            else
+            {
+                creatureMaterial = new Material(Shader.Find("Standard"));
+                creatureMaterial.SetColor("_Color", new Color(0.1f, 0.1f, 0.1f, 0.5f));
+                creatureMaterial.SetFloat("_Mode", 3);
+                creatureMaterial.EnableKeyword("_ALPHABLEND_ON");
+            }
         }
-        else if (glitchCreatureShader != null)
-        {
-            creatureMaterial = new Material(glitchCreatureShader);
-            creatureMaterial.SetColor("_MainColor", new Color(0.1f, 0.1f, 0.1f, 0f));
-            creatureMaterial.SetFloat("_NoiseScale", 5f);
-            creatureMaterial.SetFloat("_NoiseSpeed", 2f);
-            creatureMaterial.SetFloat("_FlickerIntensity", 0.5f);
-            creatureMaterial.SetFloat("_Distortion", 0.3f);
-        }
-        else
-        {
-            creatureMaterial = new Material(Shader.Find("Standard"));
-            creatureMaterial.SetColor("_Color", new Color(0.1f, 0.1f, 0.1f, 0.5f));
-            creatureMaterial.SetFloat("_Mode", 3);
-            creatureMaterial.EnableKeyword("_ALPHABLEND_ON");
-        }
-        
+
         CreateBodyPart("Torso", PrimitiveType.Capsule, new Vector3(0f, 0.6f, 0f), new Vector3(0.25f, 0.35f, 0.15f));
         GameObject head = CreateBodyPart("Head", PrimitiveType.Sphere, new Vector3(0f, 1.05f, 0f), new Vector3(0.12f, 0.15f, 0.12f));
         head.transform.SetParent(creatureRoot.transform);

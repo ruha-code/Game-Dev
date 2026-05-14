@@ -678,7 +678,7 @@ public class MainMenuController : MonoBehaviour
         if (loadingContainer != null) loadingContainer.style.opacity = 1;
         float spinnerRot = 0; float pulseTime = 0;
         
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("BootScene");
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync("StoryIntroScene");
         if (asyncLoad != null)
         {
             asyncLoad.allowSceneActivation = false;

@@ -1,0 +1,15 @@
+{
+    "asset": "1f6794556547cff4d9969a0410e48799",
+    "fileName": "019e25eb-21a3-7b87-a9f4-98cb2f3bb2ae.wav",
+    "prompt": "digital glitch burst, data corruption, static electricity spark, sudden electronic interference",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

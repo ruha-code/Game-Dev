@@ -1,0 +1,15 @@
+{
+    "asset": "dd43db4e8d32d6346a36edee1965d42b",
+    "fileName": "019e25ea-f4c6-7725-8b96-6d5eefd39cff.wav",
+    "prompt": "low frequency ominous sci-fi ambient drone, deep space, oscillating dark atmosphere, subtle digital hum",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

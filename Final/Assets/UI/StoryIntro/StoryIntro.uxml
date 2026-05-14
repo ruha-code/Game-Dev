@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="project://database/Assets/UI/StoryIntro/StoryIntro.uss" />
+    <ui:VisualElement name="root-container" class="root">
+        <ui:Label name="story-text" class="story-text" />
+        <ui:Label name="glitch-text-r" class="story-text glitch-text r" />
+        <ui:Label name="glitch-text-b" class="story-text glitch-text b" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,0 +1,15 @@
+{
+    "asset": "79af0801c1df0d14baf901861dac8652",
+    "fileName": "019e25f6-5712-792b-a6ca-3ca6cdf24d65.wav",
+    "prompt": "SHARP mechanical typewriter key strike, NO LEADING SILENCE, instant attack, high frequency click, no reverb, isolated sound",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

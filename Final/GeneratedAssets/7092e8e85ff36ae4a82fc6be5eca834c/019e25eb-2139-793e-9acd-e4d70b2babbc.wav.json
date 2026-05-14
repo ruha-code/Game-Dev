@@ -1,0 +1,15 @@
+{
+    "asset": "7092e8e85ff36ae4a82fc6be5eca834c",
+    "fileName": "019e25eb-2139-793e-9acd-e4d70b2babbc.wav",
+    "prompt": "mechanical typewriter key press, fast single click, high fidelity, sharp metallic sound",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
