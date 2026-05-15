@@ -2,6 +2,10 @@
 2026-05-15 AI-Tag
 This was created with the help of Assistant, a Unity Artificial Intelligence product.
 */
+/*
+2026-05-15 AI-Tag
+This was created with the help of Assistant, a Unity Artificial Intelligence product.
+*/
 :root {
     --glass-background: rgba(200, 240, 255, 0.16);
     --glass-background-hover: rgba(255, 255, 255, 0.35);
@@ -40,10 +44,11 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     height: 150px;
     align-items: center;
     justify-content: center;
-    margin: 15px;
+    margin: 20px;
     padding: 10px;
     border-radius: 18px;
     transition-duration: 0.2s;
+    overflow: hidden;
 }
 
 .desktop-icon-wrapper:hover {
@@ -69,14 +74,14 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     width: 100%;
 }
 
-#icon-computer { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Computer_V5.png"); }
-#icon-documents { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Documents_V5.png"); }
-#icon-pictures { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Pictures_V5.png"); }
-#icon-videos { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Videos_V5.png"); }
-#icon-music { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Music_V5.png"); }
-#icon-network { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Network_V5.png"); }
-#icon-control-panel { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Settings_V5.png"); }
-#icon-recycle-bin { background-image: url("project://database/Assets/UI/Icons/Aero/V5/RecycleBin_V5.png"); }
+#icon-computer { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Computer.png"); }
+#icon-documents { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Documents.png"); }
+#icon-pictures { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Pictures.png"); }
+#icon-videos { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Videos.png"); }
+#icon-music { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Music.png"); }
+#icon-network { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Network.png"); }
+#icon-control-panel { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/ControlPanel.png"); }
+#icon-recycle-bin { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/RecycleBin.png"); }
 
 .taskbar {
     height: var(--taskbar-height);
@@ -94,7 +99,7 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 .taskbar-start-button {
     width: 72px;
     height: 72px;
-    background-image: url("project://database/Assets/UI/Icons/Aero/V5/StartOrb_V5.png");
+    background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/StartOrb_Aero.png");
     -unity-background-scale-mode: scale-to-fit;
     margin-right: 24px;
     transition-duration: 0.3s;
@@ -126,10 +131,10 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     scale: 1.3;
 }
 
-#app-my-files { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Documents_V5.png"); }
-#app-mail { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Mail_V5.png"); }
-#app-media { background-image: url("project://database/Assets/UI/Icons/Aero/V5/MediaPlayer_V5.png"); }
-#app-network { background-image: url("project://database/Assets/UI/Icons/Aero/V5/Network_V5.png"); }
+#app-my-files { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Documents.png"); }
+#app-mail { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Mail.png"); }
+#app-media { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/MediaPlayer.png"); }
+#app-network { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Network.png"); }
 
 .taskbar-system-tray {
     flex-direction: row;
@@ -156,9 +161,9 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     scale: 1.25;
 }
 
-#tray-wifi { background-image: url("project://database/Assets/UI/Icons/Aero/V5/TrayWifi_V5.png"); }
-#tray-volume { background-image: url("project://database/Assets/UI/Icons/Aero/V5/TrayVolume_V5.png"); }
-#tray-battery { background-image: url("project://database/Assets/UI/Icons/Aero/V5/TrayBattery_V5.png"); }
+#tray-wifi { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Network.png"); }
+#tray-volume { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/MediaPlayer.png"); }
+#tray-battery { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/System.png"); }
 
 .tray-clock {
     color: white;
