@@ -1,5 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
-    <ui:Style src="project://database/Assets/UI/StoryIntro/StoryIntro.uss" />
+    <ui:Style src="StoryIntro.uss" />
     <ui:VisualElement name="root-container" class="root">
         <ui:Label name="story-text" class="story-text" />
         <ui:Label name="glitch-text-r" class="story-text glitch-text r" />

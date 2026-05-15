@@ -7,8 +7,6 @@ namespace AeroOS.UI
     [UxmlElement]
     public partial class AeroActiveBackground : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<AeroActiveBackground, UxmlTraits> { }
-
         private static readonly Gradient sharedGradient = new Gradient();
         private static readonly GradientColorKey[] colorKeys = new GradientColorKey[3];
         private static readonly GradientAlphaKey[] alphaKeys = new GradientAlphaKey[3];
@@ -48,8 +46,6 @@ namespace AeroOS.UI
     [UxmlElement]
     public partial class AeroSwoosh : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<AeroSwoosh, UxmlTraits> { }
-
         public AeroSwoosh()
         {
             generateVisualContent += OnGenerateVisualContent;
@@ -84,8 +80,6 @@ namespace AeroOS.UI
     [UxmlElement]
     public partial class AeroAtmosphere : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<AeroAtmosphere, UxmlTraits> { }
-
         private class Particle { public Vector2 pos; public float size; public float speed; public Color color; public bool anomaly; }
         private List<Particle> bgParticles = new List<Particle>();
         private List<Particle> midParticles = new List<Particle>();
@@ -202,7 +196,6 @@ namespace AeroOS.UI
     [UxmlElement]
     public partial class AeroLogo : VisualElement
     {
-        public new class UxmlFactory : UxmlFactory<AeroLogo, UxmlTraits> { }
         private float time;
         private float sweepX = -0.5f;
 
@@ -256,7 +249,6 @@ namespace AeroOS.UI
         [UxmlElement]
         public partial class AeroHighlightSweep : VisualElement
         {
-        public new class UxmlFactory : UxmlFactory<AeroHighlightSweep, UxmlTraits> { }
         private float offset = -1.0f;
         private bool isAnimating = false;
 

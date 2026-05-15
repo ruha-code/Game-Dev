@@ -295,7 +295,7 @@ public class StoryIntroController : MonoBehaviour
         GameObject ghost = GameObject.Find("Glitching Hallucination Presence");
         if (ghost != null) ghost.SetActive(true);
 
-        CinematicIntroController cinematic = FindFirstObjectByType<CinematicIntroController>();
+        CinematicIntroController cinematic = FindAnyObjectByType<CinematicIntroController>();
         if (cinematic != null) cinematic.enabled = true;
         
         SceneManager.UnloadSceneAsync("StoryIntroScene");

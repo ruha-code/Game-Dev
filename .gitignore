@@ -98,6 +98,12 @@ Library/
 Final/Temp/*
 Final/Logs/
 **/Logs/
+Final/Assets/Screenshots/
+Final/Assets/_Recovery/
+Final_BurstDebugInformation_DoNotShip/
+Final_Data/
+D3D12/
+MonoBleedingEdge/
 
 # --- Large/Sensitive Files ---
 /[Mm]emoryCaptures/

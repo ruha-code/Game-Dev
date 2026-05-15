@@ -7,7 +7,7 @@ public class ProceduralAudioGenerator : MonoBehaviour
     void Start()
     {
         if (audioController == null)
-            audioController = FindFirstObjectByType<CinematicAudioController>();
+            audioController = FindAnyObjectByType<CinematicAudioController>();
         
         if (audioController != null)
         {
@@ -205,7 +205,6 @@ public class ProceduralAudioGenerator : MonoBehaviour
         int lengthSamples = (int)(sampleRate * 0.3f);
         AudioClip clip = AudioClip.Create("TeleportSound", lengthSamples, 1, sampleRate, false);
         float[] data = new float[lengthSamples];
-        float lengthSec = 0.3f;
         
         for (int i = 0; i < data.Length; i++)
         {
@@ -217,7 +216,7 @@ public class ProceduralAudioGenerator : MonoBehaviour
             sample += Mathf.Sin(t * freq * Mathf.PI * 2f) * 0.5f;
             
             // Noise burst
-            sample += (Random.value - 0.5f) * 0.3f * (1f - t / lengthSec);
+            sample += (Random.value - 0.5f) * 0.3f * (1f - t / 0.3f);
             
             data[i] = Mathf.Clamp(sample, -1f, 1f);
         }
@@ -234,7 +233,6 @@ public class ProceduralAudioGenerator : MonoBehaviour
         int lengthSamples = (int)(sampleRate * 0.5f);
         AudioClip clip = AudioClip.Create("IntenseGlitch", lengthSamples, 1, sampleRate, false);
         float[] data = new float[lengthSamples];
-        float lengthSec = 0.5f;
         
         for (int i = 0; i < data.Length; i++)
         {
