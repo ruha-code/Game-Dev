@@ -12,9 +12,6 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Uu]ser[Ss]ettings/
-Final/Temp/*
-Final/Logs/
-**/Logs/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
@@ -77,97 +74,12 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 
-Library/
-
 # End of https://www.toptal.com/developers/gitignore/api/unity
-# This .gitignore file is optimized for Unity projects.
-# Source: https://github.com/github/gitignore/blob/main/Unity.gitignore
 
-# --- Unity Folders ---
-/[Ll]ibrary/
-/[Tt]emp/
-/[Oo]bj/
-/[Bb]uild/
-/[Bb]uilds/
-/[Ll]ogs/
-/[Uu]ser[Ss]ettings/
-/[Aa]sset[Cc]ache/
-/[Hh]ub[Cc]heckpoint/
-
-# --- Project Specific Redundancies (Keep if git root is above project folder) ---
-Final/Temp/*
-Final/Logs/
-**/Logs/
-Final/Assets/Screenshots/
-Final/Assets/_Recovery/
-Final_BurstDebugInformation_DoNotShip/
-Final_Data/
-D3D12/
-MonoBleedingEdge/
-
-# --- Large/Sensitive Files ---
-/[Mm]emoryCaptures/
-/[Rr]ecordings/
-
-# --- Asset Store Tools ---
-# /[Aa]ssets/AssetStoreTools*
-
-# --- IDEs & Tools ---
-.vs/
-.gradle/
 .vscode/
-/[Aa]ssets/Plugins/Editor/JetBrains*
-ExportedObj/
-.consulo/
-*.csproj
-*.unityproj
-*.sln
-*.suo
-*.tmp
-*.user
-*.userprefs
-*.pidb
-*.booproj
-*.svd
-*.pdb
-*.mdb
-*.opendb
-*.VC.db
-
-# --- Unity Meta Files ---
-*.pidb.meta
-*.pdb.meta
-*.mdb.meta
-
-# --- Build Artifacts ---
-*.apk
-*.aab
-*.unitypackage
-*.app
-sysinfo.txt
-crashlytics-build.properties
-
-# --- Addressables ---
-/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
-/[Aa]ssets/[Ss]treamingAssets/aa.meta
-/[Aa]ssets/[Ss]treamingAssets/aa/*
-
-# --- Package & Internal Docs ---
-**/[Dd]ocumentation~/**
-**/[Dd]ocumentation~.meta
-**/[Cc]heckpoints~/**
-**/[Cc]heckpoints~.meta
-
-# --- Specific Package Ignore (Embedded for fixes) ---
-**/Packages/com.unity.ai.assistant/
-**/Packages/com.unity.ai.assistant.meta
-
-# --- OS Specific ---
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-Icon?
-ehthumbs.db
-Thumbs.db
+GatewaySettings.asset
+*_DoNotShip/
+ProfilerCaptures
+.vsconfig
+*.lscache
+_Recovery/
