@@ -81,3 +81,4 @@ GatewaySettings.asset
 *_DoNotShip/
 ProfilerCaptures
 .vsconfig
+*.lscache
