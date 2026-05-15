@@ -18,13 +18,13 @@ MonoBehaviour:
         serializedData:
         - key: 0
           value:
-            rid: 2870042341737497313
+            rid: 2870042360845959636
         - key: 1
           value:
-            rid: 2870042341737497314
+            rid: 2870042360845959637
         - key: 2
           value:
-            rid: 2870042341737497315
+            rid: 2870042360845959638
       lastMaterialMappings:
         serializedData: []
       previewSettings:
@@ -32,15 +32,15 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
-    - rid: 2870042341737497313
+    - rid: 2870042360845959636
       type: {class: ModelSelection, ns: Unity.AI.Pbr.Services.Stores.States, asm: Unity.AI.Pbr}
       data:
         modelID: gemini-3.1-flash-texture
-    - rid: 2870042341737497314
+    - rid: 2870042360845959637
       type: {class: ModelSelection, ns: Unity.AI.Pbr.Services.Stores.States, asm: Unity.AI.Pbr}
       data:
         modelID: 
-    - rid: 2870042341737497315
+    - rid: 2870042360845959638
       type: {class: ModelSelection, ns: Unity.AI.Pbr.Services.Stores.States, asm: Unity.AI.Pbr}
       data:
         modelID: 

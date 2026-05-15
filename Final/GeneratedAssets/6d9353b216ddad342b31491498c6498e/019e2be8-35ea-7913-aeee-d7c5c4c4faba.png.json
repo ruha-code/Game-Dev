@@ -1,0 +1,28 @@
+{
+    "asset": "6d9353b216ddad342b31491498c6498e",
+    "fileName": "019e2be8-35ea-7913-aeee-d7c5c4c4faba.png",
+    "prompt": "A high-quality, crisp white audio speaker icon in Frutiger Aero style. Subtle outer glow, clean minimalist design, professional system tray icon.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

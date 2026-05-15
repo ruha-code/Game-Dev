@@ -1,0 +1,38 @@
+{
+    "asset": "4b4df6df132459c4497e9897a74932e2",
+    "fileName": "019e2c07-8897-7f63-ae37-476948befb83.png",
+    "prompt": "A professional, ultra-glossy 3D crystal Network Globe icon for an OS taskbar. Authentic Frutiger Aero style. Translucent blue glass sphere with glowing cyan internal data lines, high-reflectivity, realistic refraction. Clean, sharp edges. Professional UI asset. White background.",
+    "negativePrompt": "",
+    "model": "flux-2-dev",
+    "modelName": "Flux 2 (Dev)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "a4d31ed77d2d5644ba477934dc79a876",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

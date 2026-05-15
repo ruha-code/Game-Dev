@@ -1,0 +1,28 @@
+{
+    "asset": "8eb8d061aed5f264a97d99bb39c5d0b2",
+    "fileName": "019e2be8-3942-7d18-87b7-dbc435ae53cd.png",
+    "prompt": "A high-quality, crisp white battery icon in Frutiger Aero style. Subtle outer glow, clean minimalist design, professional system tray icon.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

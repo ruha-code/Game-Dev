@@ -1,0 +1,28 @@
+{
+    "asset": "0770f0946d2e39147a0fecf517932b00",
+    "fileName": "019e2bea-17a3-76ce-a42c-78121e9447e0.png",
+    "prompt": "A high-resolution Frutiger Aero style media player icon. Glossy 3D glass button, vibrant orange with a crisp white play symbol. Liquid-like reflections, high specular highlights, skeuomorphic, professional UI icon.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

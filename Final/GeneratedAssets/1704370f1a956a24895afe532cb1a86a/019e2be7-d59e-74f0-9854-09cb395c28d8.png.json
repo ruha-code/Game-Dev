@@ -1,0 +1,28 @@
+{
+    "asset": "1704370f1a956a24895afe532cb1a86a",
+    "fileName": "019e2be7-d59e-74f0-9854-09cb395c28d8.png",
+    "prompt": "A high-quality, glossy translucent blue 3D folder icon for 'My Files' in Frutiger Aero style. Skeuomorphic, glass texture, vibrant blue, high-gloss highlights, professional UI icon.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

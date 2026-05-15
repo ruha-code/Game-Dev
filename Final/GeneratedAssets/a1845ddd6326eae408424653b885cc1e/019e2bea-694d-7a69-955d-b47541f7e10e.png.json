@@ -1,0 +1,28 @@
+{
+    "asset": "a1845ddd6326eae408424653b885cc1e",
+    "fileName": "019e2bea-694d-7a69-955d-b47541f7e10e.png",
+    "prompt": "Frutiger Aero style Volume tray icon. Crisp white speaker icon with a subtle glowing aura, semi-transparent glass effect, high quality, professional system tray icon.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

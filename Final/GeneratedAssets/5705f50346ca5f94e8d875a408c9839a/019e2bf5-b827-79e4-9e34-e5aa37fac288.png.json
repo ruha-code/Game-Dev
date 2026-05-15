@@ -1,0 +1,38 @@
+{
+    "asset": "5705f50346ca5f94e8d875a408c9839a",
+    "fileName": "019e2bf5-b827-79e4-9e34-e5aa37fac288.png",
+    "prompt": "A high-quality individual UI icon for 'Videos' in Frutiger Aero style. A glossy 3D film strip or media reel icon, vibrant blue and white colors, glass textures, realistic highlights, skeuomorphic design. White background.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "a4d31ed77d2d5644ba477934dc79a876",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

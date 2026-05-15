@@ -1,0 +1,38 @@
+{
+    "asset": "8433dbc7faf558f40bbd5ee7a94bdda8",
+    "fileName": "019e2c00-c4ec-7f7a-8625-8dd9ed4fd289.png",
+    "prompt": "A ultra-high-quality, professional individual UI icon for 'Music' in authentic Frutiger Aero style. A glossy 3D musical note icon with a vibrant blue glass texture, realistic liquid reflections and highlights, skeuomorphic. Matching reference InstanceID 80842. White background.",
+    "negativePrompt": "",
+    "model": "flux-2-dev",
+    "modelName": "Flux 2 (Dev)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "a4d31ed77d2d5644ba477934dc79a876",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

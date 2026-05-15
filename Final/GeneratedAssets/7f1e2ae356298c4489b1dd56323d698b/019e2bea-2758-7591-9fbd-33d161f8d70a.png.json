@@ -1,0 +1,28 @@
+{
+    "asset": "7f1e2ae356298c4489b1dd56323d698b",
+    "fileName": "019e2bea-2758-7591-9fbd-33d161f8d70a.png",
+    "prompt": "A high-resolution Frutiger Aero style start button. A glossy, skeuomorphic 3D glass orb with a deep blue core and vibrant cyan highlights. Realistic glass refractions and specular glints. Professional operating system icon, high detail, vibrant colors.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

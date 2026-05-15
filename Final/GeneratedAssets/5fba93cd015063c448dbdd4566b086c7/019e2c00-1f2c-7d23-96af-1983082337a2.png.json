@@ -1,0 +1,38 @@
+{
+    "asset": "5fba93cd015063c448dbdd4566b086c7",
+    "fileName": "019e2c00-1f2c-7d23-96af-1983082337a2.png",
+    "prompt": "A ultra-high-quality, professional individual UI icon for 'Pictures' in authentic Frutiger Aero style. A glossy 3D picture frame with a vibrant nature landscape photo inside, realistic glass reflections and highlights, skeuomorphic. Matching reference InstanceID 80842. White background.",
+    "negativePrompt": "",
+    "model": "flux-2-dev",
+    "modelName": "Flux 2 (Dev)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "a4d31ed77d2d5644ba477934dc79a876",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

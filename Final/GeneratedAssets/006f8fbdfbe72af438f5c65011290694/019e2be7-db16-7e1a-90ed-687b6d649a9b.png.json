@@ -1,0 +1,28 @@
+{
+    "asset": "006f8fbdfbe72af438f5c65011290694",
+    "fileName": "019e2be7-db16-7e1a-90ed-687b6d649a9b.png",
+    "prompt": "A high-quality, glossy orange and white play button icon for 'Media Player' in Frutiger Aero style. Skeuomorphic, glass texture, vibrant orange, high-gloss highlights, professional UI icon.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

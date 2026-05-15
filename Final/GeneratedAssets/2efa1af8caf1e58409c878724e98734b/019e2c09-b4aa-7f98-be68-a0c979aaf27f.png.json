@@ -1,0 +1,38 @@
+{
+    "asset": "2efa1af8caf1e58409c878724e98734b",
+    "fileName": "019e2c09-b4aa-7f98-be68-a0c979aaf27f.png",
+    "prompt": "A high-quality, professional system tray icon for 'Volume' in authentic Frutiger Aero style. Crisp white speaker symbol with a vibrant blue glowing glass aura, realistic depth, skeuomorphic details. Matching reference InstanceID 80842. White background.",
+    "negativePrompt": "",
+    "model": "flux-2-dev",
+    "modelName": "Flux 2 (Dev)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "a4d31ed77d2d5644ba477934dc79a876",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}
