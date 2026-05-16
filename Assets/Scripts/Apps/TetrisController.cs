@@ -201,7 +201,11 @@ public class TetrisController : MonoBehaviour
     private void OnSubmitName()
     {
         string playerName = _nameInput.value;
-        if (string.IsNullOrEmpty(playerName)) playerName = "Anonymous";
+        if (string.IsNullOrEmpty(playerName))
+        {
+            playerName = PlayerPrefs.GetString("PlayerName", "Anonymous");
+            if (string.IsNullOrEmpty(playerName)) playerName = "Anonymous";
+        }
 
         _highScores.Add(new HighScoreEntry { name = playerName, score = _score });
         _highScores.Sort((a, b) => b.score.CompareTo(a.score));
@@ -301,7 +305,12 @@ public class TetrisController : MonoBehaviour
         var inputSection = _gameOverOverlay.Q("name-input-section");
         if (inputSection != null)
         {
-            if (isHighScore) inputSection.RemoveFromClassList("hidden");
+            if (isHighScore)
+            {
+                inputSection.RemoveFromClassList("hidden");
+                string savedName = PlayerPrefs.GetString("PlayerName", "");
+                _nameInput.value = string.IsNullOrEmpty(savedName) ? "" : savedName;
+            }
             else inputSection.AddToClassList("hidden");
         }
     }
