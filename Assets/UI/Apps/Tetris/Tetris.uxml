@@ -32,6 +32,11 @@
                 </ui:VisualElement>
 
                 <ui:VisualElement class="stat-container">
+                    <ui:Label text="LINES" class="stat-label" />
+                    <ui:Label name="lines-label" text="0" class="stat-value" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="stat-container">
                     <ui:Label text="NEXT" class="stat-label" />
                     <ui:VisualElement name="next-piece-preview" class="next-piece-preview" />
                 </ui:VisualElement>
@@ -42,6 +47,7 @@
                 </ui:VisualElement>
 
                 <ui:VisualElement style="flex-grow: 1;" />
+                <ui:Label name="bonus-status-label" text="Clear 5 lines to recover a hidden shard." class="bonus-status-label" />
                 <ui:Label text="WASD / ARROWS to Move" style="color: rgba(255,255,255,0.5); font-size: 10px;" />
                 <ui:Label text="W / UP to Rotate" style="color: rgba(255,255,255,0.5); font-size: 10px;" />
             </ui:VisualElement>

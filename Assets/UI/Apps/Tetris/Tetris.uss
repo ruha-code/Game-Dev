@@ -196,6 +196,13 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     -unity-font-style: bold;
 }
 
+.bonus-status-label {
+    color: rgba(210, 245, 255, 0.82);
+    font-size: 11px;
+    white-space: normal;
+    margin-bottom: 12px;
+}
+
 .next-piece-preview {
     width: 100px;
     height: 100px;
