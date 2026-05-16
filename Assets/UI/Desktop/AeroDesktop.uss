@@ -88,7 +88,7 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 #icon-network { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Network.png"); }
 #icon-control-panel { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/ControlPanel.png"); }
 #icon-recycle-bin { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/RecycleBin.png"); }
-#icon-tetris { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/MediaPlayer.png"); }
+#icon-tetris { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/TetrisIcon.png"); }
 
 .taskbar {
     height: var(--taskbar-height);

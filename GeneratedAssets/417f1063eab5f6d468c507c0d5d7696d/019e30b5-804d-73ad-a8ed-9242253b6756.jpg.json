@@ -1,0 +1,38 @@
+{
+    "asset": "417f1063eab5f6d468c507c0d5d7696d",
+    "fileName": "019e30b5-804d-73ad-a8ed-9242253b6756.jpg",
+    "prompt": "A Tetris game icon, featuring glossy blue and green tetromino blocks, in Frutiger Aero style, high gloss, water droplets, glass-like texture, vibrant blue background, soft glowing edges, matching the provided reference image style.",
+    "negativePrompt": "",
+    "model": "flux-2-pro",
+    "modelName": "Flux 2 (Pro)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "cf54834a45abf8b468b7f633fd1d052b",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}
