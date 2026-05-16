@@ -1,7 +1,8 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Style src="AeroDesktop.uss" />
+    <ui:Template name="tetris-template" src="project://database/Assets/UI/Apps/Tetris/Tetris.uxml" />
     <ui:VisualElement name="root" class="desktop-root">
-        <ui:VisualElement name="background" class="desktop-background" />
+<ui:VisualElement name="background" class="desktop-background" />
         
         <ui:VisualElement name="main-area" class="desktop-main-area">
             <ui:VisualElement class="desktop-icon-wrapper">
@@ -36,10 +37,14 @@
                 <ui:VisualElement name="icon-recycle-bin" class="desktop-icon" />
                 <ui:Label text="Recycle Bin" class="desktop-icon-label" />
             </ui:VisualElement>
-        </ui:VisualElement>
-        
-        <ui:VisualElement name="start-menu" class="start-menu hidden">
-            <ui:VisualElement class="start-menu-left">
+            <ui:VisualElement class="desktop-icon-wrapper">
+                <ui:VisualElement name="icon-tetris" class="desktop-icon" />
+                <ui:Label text="Tetris" class="desktop-icon-label" />
+            </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="start-menu" class="start-menu hidden">
+<ui:VisualElement class="start-menu-left">
                 <ui:VisualElement class="start-menu-item">
                     <ui:VisualElement class="start-menu-item-icon" style="background-image: url(&apos;project://database/Assets/Sprites/AeroIcons_Processed/Documents.png&apos;);" />
                     <ui:Label text="Internet Explorer" class="start-menu-item-label" />
@@ -74,5 +79,6 @@
                 <ui:Label name="tray-clock" text="12:00 PM" class="tray-clock" />
             </ui:VisualElement>
         </ui:VisualElement>
-    </ui:VisualElement>
-</ui:UXML>
+        <ui:Instance template="tetris-template" name="tetris-app" class="app-container" picking-mode="Ignore" />
+        </ui:VisualElement>
+        </ui:UXML>

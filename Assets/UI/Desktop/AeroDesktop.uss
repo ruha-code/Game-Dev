@@ -88,6 +88,7 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 #icon-network { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Network.png"); }
 #icon-control-panel { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/ControlPanel.png"); }
 #icon-recycle-bin { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/RecycleBin.png"); }
+#icon-tetris { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/MediaPlayer.png"); }
 
 .taskbar {
     height: var(--taskbar-height);
@@ -258,4 +259,12 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 .start-menu.hidden {
     translate: 0 650px;
     display: none;
+}
+
+.app-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }

@@ -1,0 +1,34 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="Tetris.uss" />
+    <ui:VisualElement name="tetris-window" class="tetris-window hidden">
+        <ui:VisualElement class="window-title-bar">
+            <ui:Label text="Aero Tetris" class="window-title" />
+            <ui:Button name="close-button" text="X" class="close-button" />
+        </ui:VisualElement>
+        
+        <ui:VisualElement class="tetris-content">
+            <ui:VisualElement name="tetris-board" class="tetris-board" />
+            
+            <ui:VisualElement class="tetris-side-panel">
+                <ui:VisualElement class="stat-container">
+                    <ui:Label text="SCORE" class="stat-label" />
+                    <ui:Label name="score-label" text="000000" class="stat-value" />
+                </ui:VisualElement>
+                
+                <ui:VisualElement class="stat-container">
+                    <ui:Label text="LEVEL" class="stat-label" />
+                    <ui:Label name="level-label" text="1" class="stat-value" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="stat-container">
+                    <ui:Label text="NEXT" class="stat-label" />
+                    <ui:VisualElement name="next-piece-preview" class="next-piece-preview" />
+                </ui:VisualElement>
+
+                <ui:VisualElement style="flex-grow: 1;" />
+                <ui:Label text="WASD / ARROWS to Move" style="color: rgba(255,255,255,0.5); font-size: 10px;" />
+                <ui:Label text="W / UP to Rotate" style="color: rgba(255,255,255,0.5); font-size: 10px;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

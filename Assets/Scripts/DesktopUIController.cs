@@ -10,11 +10,14 @@ public class DesktopUIController : MonoBehaviour
     private VisualElement _startMenu;
     private Label _clockLabel;
     private VisualElement _mainArea;
+    private TetrisController _tetrisController;
 
     private void OnEnable()
     {
         _uiDocument = GetComponent<UIDocument>();
         if (_uiDocument == null) return;
+
+        _tetrisController = GetComponent<TetrisController>();
 
         _root = _uiDocument.rootVisualElement;
 
@@ -23,6 +26,12 @@ public class DesktopUIController : MonoBehaviour
         _startMenu = _root.Q<VisualElement>("start-menu");
         _clockLabel = _root.Q<Label>("tray-clock");
         _mainArea = _root.Q<VisualElement>("main-area");
+
+        // Initialize Tetris
+        if (_tetrisController != null)
+        {
+            _tetrisController.Initialize(_root);
+        }
 
         // Register events
         if (_startButton != null)
@@ -96,5 +105,13 @@ public class DesktopUIController : MonoBehaviour
         
         // Add selected visual feedback
         icon.AddToClassList("desktop-icon-wrapper--selected");
+
+        if (iconName == "Tetris")
+        {
+            if (_tetrisController != null)
+            {
+                _tetrisController.Show();
+            }
+        }
     }
-}
+    }
