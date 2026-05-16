@@ -48,9 +48,9 @@
 
                 <ui:VisualElement style="flex-grow: 1;" />
                 <ui:Label name="bonus-status-label" text="Clear 5 lines to recover a hidden shard." class="bonus-status-label" />
-                <ui:Label text="WASD / ARROWS to Move" style="color: rgba(255,255,255,0.5); font-size: 10px;" />
-                <ui:Label text="W / UP to Rotate" style="color: rgba(255,255,255,0.5); font-size: 10px;" />
-            </ui:VisualElement>
-        </ui:VisualElement>
-    </ui:VisualElement>
-</ui:UXML>
+                <ui:Label text="WASD / ARROWS to Move" class="control-hint" />
+                <ui:Label text="W / UP to Rotate" class="control-hint" />
+                </ui:VisualElement>
+                </ui:VisualElement>
+                </ui:VisualElement>
+                </ui:UXML>

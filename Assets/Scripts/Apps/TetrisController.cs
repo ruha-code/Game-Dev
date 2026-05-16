@@ -55,6 +55,23 @@ public class TetrisController : MonoBehaviour
     private Button _restartButton;
     private VisualElement _highScoreListContainer;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip moveClip;
+    public AudioClip rotateClip;
+    public AudioClip lineClearClip;
+    public AudioClip gameOverClip;
+    public AudioClip hardDropClip;
+    public AudioClip lockClip;
+
+    private void PlaySound(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
+    }
+
     private List<PieceData> _pieceTemplates;
     private List<PieceData> _bag = new List<PieceData>();
     private List<HighScoreEntry> _highScores = new List<HighScoreEntry>();
@@ -277,6 +294,7 @@ public class TetrisController : MonoBehaviour
     {
         if (_gameOverOverlay == null) return;
         _gameOverOverlay.RemoveFromClassList("hidden");
+        PlaySound(gameOverClip);
         
         // Show/hide name input based on if it's a high score
         bool isHighScore = _score > 0 && (_highScores.Count < 7 || _score > _highScores[_highScores.Count - 1].score);
@@ -469,11 +487,13 @@ public class TetrisController : MonoBehaviour
         {
             _currentY++;
         }
+        PlaySound(hardDropClip);
         LockPiece();
     }
 
     private void LockPiece()
     {
+        PlaySound(lockClip);
         int size = _currentPiece.matrix.Count;
         for (int i = 0; i < size; i++)
         {

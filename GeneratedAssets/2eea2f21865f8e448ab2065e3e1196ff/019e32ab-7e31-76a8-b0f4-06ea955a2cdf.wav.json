@@ -1,0 +1,15 @@
+{
+    "asset": "2eea2f21865f8e448ab2065e3e1196ff",
+    "fileName": "019e32ab-7e31-76a8-b0f4-06ea955a2cdf.wav",
+    "prompt": "Bright, sparkling electronic chime, rewarding and positive, Frutiger Aero style, high quality line clear sound",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

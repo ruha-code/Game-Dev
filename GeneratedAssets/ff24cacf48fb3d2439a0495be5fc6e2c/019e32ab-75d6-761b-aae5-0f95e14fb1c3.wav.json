@@ -1,0 +1,15 @@
+{
+    "asset": "ff24cacf48fb3d2439a0495be5fc6e2c",
+    "fileName": "019e32ab-75d6-761b-aae5-0f95e14fb1c3.wav",
+    "prompt": "Short, crisp electronic UI blip, glossy 2000s tech aesthetic, high quality sound effect for a movement action",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

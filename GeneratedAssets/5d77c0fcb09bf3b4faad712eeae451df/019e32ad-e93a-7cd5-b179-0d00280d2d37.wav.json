@@ -1,0 +1,15 @@
+{
+    "asset": "5d77c0fcb09bf3b4faad712eeae451df",
+    "fileName": "019e32ad-e93a-7cd5-b179-0d00280d2d37.wav",
+    "prompt": "Short digital click or thud, indicating a tetris piece has locked into place, Aero aesthetic, clean and subtle",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

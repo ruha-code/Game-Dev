@@ -3,10 +3,10 @@
 This was created with the help of Assistant, a Unity Artificial Intelligence product.
 */
 :root {
-    --tetris-bg: rgba(200, 240, 255, 0.15);
-    --glass-border: rgba(255, 255, 255, 0.5);
-    --glass-highlight: rgba(255, 255, 255, 0.8);
-    --tetris-grid-bg: rgba(0, 0, 0, 0.4);
+    --tetris-bg: rgba(200, 240, 255, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.7);
+    --glass-highlight: rgba(255, 255, 255, 0.9);
+    --tetris-grid-bg: rgba(0, 0, 0, 0.75);
 }
 
 .tetris-window {
@@ -178,6 +178,9 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     flex-grow: 1;
     padding: 0 15px;
     justify-content: flex-start;
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    margin-left: 5px;
 }
 
 .stat-container {
@@ -185,9 +188,10 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 }
 
 .stat-label {
-    color: #e0f0ff;
+    color: #8ffcff;
     font-size: 14px;
     margin-bottom: 5px;
+    -unity-font-style: bold;
 }
 
 .stat-value {
@@ -197,7 +201,7 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 }
 
 .bonus-status-label {
-    color: rgba(210, 245, 255, 0.82);
+    color: #e0f0ff;
     font-size: 11px;
     white-space: normal;
     margin-bottom: 12px;
@@ -206,10 +210,16 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 .next-piece-preview {
     width: 100px;
     height: 100px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.6);
     border-width: 1px;
     border-color: var(--glass-border);
     margin-top: 10px;
+}
+
+.control-hint {
+    color: #e0f0ff;
+    font-size: 10px;
+    -unity-font-style: bold;
 }
 
 .tetris-block {

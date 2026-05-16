@@ -1,0 +1,15 @@
+{
+    "asset": "c8dff936b1e14f842b6fa026667352d7",
+    "fileName": "019e32ab-c378-7064-8daa-e61e19f85190.wav",
+    "prompt": "Satisfying digital thud, short and punchy, low frequency impact, tech UI style, hard drop sound",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
