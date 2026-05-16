@@ -152,6 +152,7 @@ MonoBehaviour:
   uiDocument: {fileID: 143498478}
   nextScene: AeroDesktopScene
   startupChime: {fileID: 8300000, guid: 205d395846793bf48b90583a382c91a6, type: 3}
+  typewriterClip: {fileID: 8300000, guid: fd8847be716ab2e43ac0db37b0be17c9, type: 3}
   glitchSound: {fileID: 8300000, guid: 1f6794556547cff4d9969a0410e48799, type: 3}
   crackSound: {fileID: 8300000, guid: 87357755a97e20a45a9b436caa4580c8, type: 3}
   transitionSound: {fileID: 8300000, guid: ff8b012cf1a5405408f519a4d1e55a92, type: 3}

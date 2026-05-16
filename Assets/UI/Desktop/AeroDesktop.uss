@@ -39,6 +39,10 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     align-items: flex-start;
 }
 
+.desktop-main-area--glitch {
+    opacity: 0.97;
+}
+
 .desktop-icon-wrapper {
     width: 130px;
     height: 150px;
@@ -61,6 +65,12 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     background-color: rgba(255, 255, 255, 0.35);
     border-width: 1.5px;
     border-color: rgba(255, 255, 255, 0.6);
+}
+
+.desktop-icon-wrapper--haunted {
+    background-color: rgba(0, 180, 255, 0.22);
+    border-width: 1.5px;
+    border-color: rgba(170, 255, 255, 0.85);
 }
 
 .desktop-icon {
@@ -172,6 +182,11 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     text-shadow: 0 1px 2px rgba(0, 0, 0, 1);
 }
 
+.tray-clock--glitch {
+    color: #8ffcff;
+    text-shadow: 0 0 8px rgba(120, 255, 255, 0.9);
+}
+
 .start-menu {
     position: absolute;
     bottom: var(--taskbar-height);
@@ -267,4 +282,73 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+.desktop-toast {
+    position: absolute;
+    right: 24px;
+    bottom: 104px;
+    width: 320px;
+    padding: 18px;
+    background-color: rgba(195, 235, 255, 0.22);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.5);
+    border-radius: 18px;
+    opacity: 0;
+    translate: 0 40px;
+    transition-property: opacity, translate;
+    transition-duration: 0.35s;
+}
+
+.desktop-toast--visible {
+    opacity: 1;
+    translate: 0 0;
+}
+
+.desktop-toast-title {
+    color: white;
+    font-size: 16px;
+    -unity-font-style: bold;
+    margin-bottom: 6px;
+}
+
+.desktop-toast-body {
+    color: rgba(235, 248, 255, 0.92);
+    font-size: 13px;
+    white-space: normal;
+}
+
+.desktop-fake-window {
+    position: absolute;
+    width: 420px;
+    left: 50%;
+    top: 20%;
+    margin-left: -210px;
+    padding: 20px 22px;
+    background-color: rgba(210, 238, 255, 0.2);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
+    opacity: 0;
+    scale: 0.94 0.94;
+    transition-property: opacity, scale;
+    transition-duration: 0.28s;
+}
+
+.desktop-fake-window--visible {
+    opacity: 1;
+    scale: 1 1;
+}
+
+.desktop-fake-window-title {
+    color: white;
+    font-size: 18px;
+    -unity-font-style: bold;
+    margin-bottom: 10px;
+}
+
+.desktop-fake-window-body {
+    color: rgba(235, 248, 255, 0.94);
+    font-size: 14px;
+    white-space: normal;
 }

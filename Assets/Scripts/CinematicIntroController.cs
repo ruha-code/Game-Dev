@@ -67,6 +67,9 @@ public class CinematicIntroController : MonoBehaviour
 
     void Start()
     {
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
         if (mainCamera == null) mainCamera = Camera.main;
         mainCamera.clearFlags = CameraClearFlags.SolidColor;
         mainCamera.backgroundColor = Color.black;

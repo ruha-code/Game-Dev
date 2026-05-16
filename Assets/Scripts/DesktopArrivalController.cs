@@ -22,7 +22,10 @@ public AudioClip typewriterClip;
     public AudioClip popupClip;
     public AudioClip digitalAmbience;
     public AudioClip materializeClip;
+    public AudioClip loginChime;
     public List<AudioClip> uiLandClips = new List<AudioClip>();
+    [SerializeField, Range(0f, 1f)] private float typewriterVolume = 0.14f;
+    [SerializeField] private float typewriterMinInterval = 0.045f;
 
     [Header("Icons")]
 public Sprite myFilesIcon;
@@ -57,16 +60,21 @@ public Sprite myFilesIcon;
 
     private AudioSource sfxSource;
     private AudioSource ambientSource;
+    private AudioSource typewriterSource;
     private string playerName;
+    private Label unreadLabel;
 
     private void Start()
     {
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
         if (uiDocument == null) uiDocument = GetComponent<UIDocument>();
         root = uiDocument.rootVisualElement.Q<VisualElement>("root");
         backgroundDark = root.Q<VisualElement>("background-dark");
 
         identityText = root.Q<Label>("identity-text");
-welcomeText = root.Q<Label>("welcome-text");
+        welcomeText = root.Q<Label>("welcome-text");
         typewriterContainer = root.Q<VisualElement>("typewriter-container");
         glitchOverlay = root.Q<VisualElement>("glitch-overlay");
         silhouette = root.Q<VisualElement>("silhouette");
@@ -76,11 +84,20 @@ welcomeText = root.Q<Label>("welcome-text");
         glassPopup = root.Q<VisualElement>("glass-popup");
         popupTitle = root.Q<Label>("popup-title");
         atmosphere = root.Q<AeroAtmosphere>("atmosphere");
+        unreadLabel = root.Q<Label>("unread-message");
+
+        // Ensure we are covering everything at the start
+        if (backgroundDark != null) backgroundDark.style.opacity = 1f;
 
         // Hide all scene layers initially
         SetLayersAlpha(0);
         if (sunLight) sunLight.intensity = 0;
         if (desktopController) desktopController.enabled = false;
+
+        // Find the "real" Desktop UI and hide it initially
+        DesktopUIController realUIController = Object.FindAnyObjectByType<DesktopUIController>();
+        GameObject realUIGO = realUIController != null ? realUIController.gameObject : null;
+        if (realUIGO != null) realUIGO.SetActive(false);
 
         sfxSource = gameObject.AddComponent<AudioSource>();
         sfxSource.outputAudioMixerGroup = sfxGroup;
@@ -89,10 +106,20 @@ welcomeText = root.Q<Label>("welcome-text");
         ambientSource.outputAudioMixerGroup = ambientGroup;
         ambientSource.loop = true;
 
-        playerName = PlayerPrefs.GetString("PlayerName", "User");
-        popupTitle.text = "Welcome, " + playerName;
+        typewriterSource = gameObject.AddComponent<AudioSource>();
+        typewriterSource.outputAudioMixerGroup = sfxGroup;
+        typewriterSource.playOnAwake = false;
+        typewriterSource.loop = false;
+        typewriterSource.spatialBlend = 0f;
+        typewriterSource.volume = typewriterVolume;
 
-        StartCoroutine(CinematicSequence());
+        playerName = PlayerPrefs.GetString("PlayerName", "User");
+        popupTitle.text = "Welcome back, " + playerName;
+        if (identityText != null) identityText.text = "Identity Accepted: " + playerName;
+        if (welcomeText != null) welcomeText.text = "Restoring your desktop, " + playerName + ".";
+        if (unreadLabel != null) unreadLabel.text = playerName + ", you have 7 missed calls from 'Unknown'.";
+
+        StartCoroutine(CinematicSequence(realUIGO));
     }
 
     private void SetLayersAlpha(float alpha)
@@ -113,49 +140,53 @@ welcomeText = root.Q<Label>("welcome-text");
         }
     }
 
-    private IEnumerator CinematicSequence()
+    private IEnumerator CinematicSequence(GameObject realUIGO)
     {
-        // PHASE 1 — IDENTITY ACCEPTED
-        yield return new WaitForSeconds(0.5f);
-        identityText.AddToClassList("intro-text--visible");
+        yield return new WaitForSeconds(0.35f);
+        if (identityText != null)
+        {
+            identityText.AddToClassList("intro-text--visible");
+        }
         if (startupChime) sfxSource.PlayOneShot(startupChime, 0.6f);
-        
-        yield return new WaitForSeconds(1.5f);
-        identityText.RemoveFromClassList("intro-text--visible");
-        yield return new WaitForSeconds(0.5f);
-        
-        welcomeText.text = "Welcome, " + playerName;
-        welcomeText.AddToClassList("intro-text--visible");
-        
-        yield return new WaitForSeconds(1.5f);
-        welcomeText.RemoveFromClassList("intro-text--visible");
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1.1f);
 
-        // PHASE 2 — WORLD GENERATION
+        if (identityText != null)
+        {
+            identityText.RemoveFromClassList("intro-text--visible");
+        }
+
+        if (welcomeText != null)
+        {
+            welcomeText.AddToClassList("intro-text--visible");
+        }
+        yield return new WaitForSeconds(1.0f);
+
+        string[] restoreLines = {
+            "Restoring profile shell for " + playerName + "...",
+            "Syncing deleted notifications and pinned memories...",
+            "AeroOS remembers your last session."
+        };
+
+        foreach (string line in restoreLines)
+        {
+            yield return StartCoroutine(TypewriteLine(line));
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        if (welcomeText != null)
+        {
+            welcomeText.RemoveFromClassList("intro-text--visible");
+        }
+        yield return new WaitForSeconds(0.5f);
+        
         if (digitalAmbience) {
             ambientSource.clip = digitalAmbience;
             ambientSource.Play();
         }
 
-        string[] lines = {
-            "Loading Personal Environment...",
-            "Synchronizing Memory...",
-            "Building Interface...",
-            "Preparing Desktop...",
-            "Verifying Reality..."
-        };
-
-        foreach (var line in lines)
-        {
-            yield return StartCoroutine(TypewriteLine(line));
-            yield return new WaitForSeconds(0.3f);
-        }
-
-        yield return new WaitForSeconds(0.5f);
-
-        // PHASE 3 — WALLPAPER CREATION
-        typewriterContainer.style.display = DisplayStyle.None;
+        // PHASE 1 — WALLPAPER MATERIALIZATION
         if (backgroundDark != null) backgroundDark.AddToClassList("background-dark--hidden");
+        yield return new WaitForSeconds(1.0f);
         
         // 1. Sky
         if (materializeClip) sfxSource.PlayOneShot(materializeClip, 0.3f);
@@ -168,20 +199,20 @@ welcomeText = root.Q<Label>("welcome-text");
         // 4. City
         if (materializeClip) sfxSource.PlayOneShot(materializeClip, 0.3f);
         yield return StartCoroutine(FadeLayer(cityLayers, 1f, 1.0f));
-        // 5. Trees & 6. Grass
+        // 5. Nature
         if (materializeClip) sfxSource.PlayOneShot(materializeClip, 0.3f);
         yield return StartCoroutine(FadeLayer(natureLayers, 1f, 1.0f));
-        // 7. Water (If separate, but usually in nature/city)
-        // 8. Floating bubbles
+        // 6. Bubbles
         if (materializeClip) sfxSource.PlayOneShot(materializeClip, 0.2f);
         yield return StartCoroutine(FadeLayer(bubbleLayers, 1f, 0.8f));
 
-        // PHASE 4 — SYSTEM GLITCH
+        // PHASE 2 — SYSTEM GLITCH
         yield return new WaitForSeconds(0.2f);
         StartCoroutine(TriggerGlitch());
         yield return new WaitForSeconds(0.6f);
 
-        // PHASE 5 — UI MATERIALIZATION
+        // PHASE 3 — UI MATERIALIZATION
+        if (loginChime) sfxSource.PlayOneShot(loginChime, 0.8f);
         taskbar.AddToClassList("taskbar--visible");
         yield return new WaitForSeconds(0.5f);
 
@@ -193,31 +224,57 @@ welcomeText = root.Q<Label>("welcome-text");
             CreateIcon(iconNames[i], iconSprites[i]);
             if (uiLandClips.Count > 0) 
             {
-                AudioClip clip = uiLandClips[Random.Range(0, uiLandClips.Count)];
+                AudioClip clip = uiLandClips[UnityEngine.Random.Range(0, uiLandClips.Count)];
                 sfxSource.PlayOneShot(clip, 0.4f);
             }
             else if (uiLandClip) sfxSource.PlayOneShot(uiLandClip, 0.4f);
             yield return new WaitForSeconds(0.2f);
         }
 
-        // PHASE 6 — FIRST SYSTEM MESSAGE
+        // PHASE 4 — FIRST SYSTEM MESSAGE
         yield return new WaitForSeconds(1.0f);
         popupContainer.style.display = DisplayStyle.Flex;
         yield return new WaitForEndOfFrame();
+        
         glassPopup.AddToClassList("glass-popup--visible");
         if (popupClip) sfxSource.PlayOneShot(popupClip, 0.7f);
 
         yield return new WaitForSeconds(3.0f);
 
-        // PHASE 7 — HAND CONTROL
+        // PHASE 5 — HANDOVER
+        if (realUIGO != null) realUIGO.SetActive(true);
+        
+        float fade = 1f;
+        while (fade > 0) {
+            fade -= Time.deltaTime * 2f;
+            root.style.opacity = fade;
+            yield return null;
+        }
+
         if (desktopController) desktopController.enabled = true;
         UnityEngine.Cursor.visible = true;
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
-        root.pickingMode = PickingMode.Ignore;
+        gameObject.SetActive(false); 
     }
 
-    private IEnumerator FadeLayer(List<SpriteRenderer> srs, float targetAlpha, float duration)
+        private IEnumerator FlashNarrativeHint(string text, float duration)
+        {
+        Label hint = new Label(text);
+        hint.style.position = Position.Absolute;
+        hint.style.top = Length.Percent(45);
+        hint.style.width = Length.Percent(100);
+        hint.style.unityTextAlign = TextAnchor.MiddleCenter;
+        hint.style.color = new Color(1, 0, 0, 0.4f);
+        hint.style.fontSize = 60;
+        hint.style.unityFontStyleAndWeight = FontStyle.Bold;
+        root.Add(hint);
+
+        yield return new WaitForSeconds(duration);
+        root.Remove(hint);
+        }
+
+        private IEnumerator FadeLayer(List<SpriteRenderer> srs, float targetAlpha, float duration)
     {
         float elapsed = 0;
         while (elapsed < duration)
@@ -253,11 +310,18 @@ welcomeText = root.Q<Label>("welcome-text");
         typewriterContainer.Add(line);
 
         string currentText = "";
+        float nextTypewriterAt = 0f;
         for (int i = 0; i < text.Length; i++)
         {
             currentText += text[i];
             line.text = currentText;
-            if (typewriterClip) sfxSource.PlayOneShot(typewriterClip, 0.1f);
+            if (!char.IsWhiteSpace(text[i]) && typewriterClip != null && typewriterSource != null && Time.unscaledTime >= nextTypewriterAt)
+            {
+                typewriterSource.Stop();
+                typewriterSource.pitch = UnityEngine.Random.Range(0.97f, 1.03f);
+                typewriterSource.PlayOneShot(typewriterClip, typewriterVolume);
+                nextTypewriterAt = Time.unscaledTime + typewriterMinInterval;
+            }
             yield return new WaitForSeconds(0.03f);
         }
     }

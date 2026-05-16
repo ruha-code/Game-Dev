@@ -1,0 +1,15 @@
+{
+    "asset": "fd8847be716ab2e43ac0db37b0be17c9",
+    "fileName": "019e30f8-bbb9-7220-ad8d-b83b92556a6e.wav",
+    "prompt": "Short high-tech digital UI blip, glassy and clean Frutiger Aero aesthetic, optimistic but sharp, data stream or text reveal sound effect, very short, high quality.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

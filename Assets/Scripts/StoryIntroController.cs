@@ -50,6 +50,9 @@ public class StoryIntroController : MonoBehaviour
 
     private IEnumerator Start()
     {
+        UnityEngine.Cursor.visible = false;
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+
         var uiDocument = GetComponent<UIDocument>();
         if (uiDocument == null)
         {

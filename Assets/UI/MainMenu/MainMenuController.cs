@@ -92,7 +92,11 @@ public class MainMenuController : MonoBehaviour
         SetupAnomalyWeights();
         CheckSave();
         
-        StopAllCoroutines();
+        // Ensure cursor is visible in main menu
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+
+        StopAllCoroutines(); 
         StartCoroutine(TitleGlowBreathing());
         StartCoroutine(ClockUpdate());
         

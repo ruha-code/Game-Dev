@@ -1,0 +1,15 @@
+{
+    "asset": "cd73b799e6dba4e458aee6adcbb538c7",
+    "fileName": "019e30e7-a4db-75aa-b788-8eb4e98c53d4.wav",
+    "prompt": "Nostalgic Frutiger Aero OS login chime, glassy, ethereal, optimistic but slightly unsettling, digital synthesizer, 4 notes, high quality, Windows startup style.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 3.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

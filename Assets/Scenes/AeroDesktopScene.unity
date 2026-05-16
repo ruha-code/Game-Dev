@@ -187,6 +187,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db47328486c493e43a9045b889429f64, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DesktopUIController
+  desktopAppearChime: {fileID: 8300000, guid: cd73b799e6dba4e458aee6adcbb538c7, type: 3}
+  desktopAppearVolume: 0.8
+  uiAnomalyClip: {fileID: 8300000, guid: cff2915fe637604468f2ff2f9fdf4572, type: 3}
+  minUiAnomalyInterval: 12
+  maxUiAnomalyInterval: 24
 --- !u!1 &893316266
 GameObject:
   m_ObjectHideFlags: 0

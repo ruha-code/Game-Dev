@@ -616,7 +616,8 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: SENTIS_ANALYTICS_ENABLED
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
@@ -722,11 +723,11 @@ PlayerSettings:
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
   enableDirectStorage: 0
-  cloudProjectId: 0e157186-6aae-4903-9e1c-c387cdb23be1
+  cloudProjectId: c2be8b20-5c4b-4c20-8bf7-13cb0e134338
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Final (2)
-  organizationId: aldabergen123dastan
+  projectName: Final (1)
+  organizationId: unity_230103026
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

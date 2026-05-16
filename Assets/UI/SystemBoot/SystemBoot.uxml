@@ -13,7 +13,7 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="setup-panel" class="setup-panel">
-            <ui:VisualElement class="glass-reflection" />
+            <ui:VisualElement class="glass-reflection" picking-mode="Ignore" />
             <ui:Label text="Welcome to AeroOS" class="setup-title" />
             <ui:Label text="How should I address you?" class="setup-subtitle" />
             <ui:TextField name="name-input" placeholder-text="Enter your name..." class="name-input" />
@@ -21,5 +21,6 @@
         </ui:VisualElement>
 
         <ui:VisualElement name="glitch-overlay" class="background-glow" picking-mode="Ignore" />
-    </ui:VisualElement>
-</ui:UXML>
+        <ui:VisualElement name="fade-overlay" class="fade-overlay" picking-mode="Ignore" />
+        </ui:VisualElement>
+        </ui:UXML>
