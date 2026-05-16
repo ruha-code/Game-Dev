@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CursorManager
   cursorTexture: {fileID: 2800000, guid: eca8ef70d030fd24d9fde8b78eaf3370, type: 3}
-  hotspot: {x: 0, y: 0}
+  hotspot: {x: 258, y: 202}
   cursorSize: 64
 --- !u!4 &20651372
 Transform:
