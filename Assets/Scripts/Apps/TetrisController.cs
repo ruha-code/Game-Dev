@@ -54,6 +54,9 @@ public class TetrisController : MonoBehaviour
     private float _softDropTimer;
     private const float SOFT_DROP_INTERVAL = 0.05f;
 
+    private float _lockTimer;
+    private const float LOCK_DELAY = 0.5f;
+
     private int _score;
 private int _level = 1;
     private bool _isGameOver;
@@ -156,11 +159,25 @@ private int _level = 1;
 
         HandleInput();
 
-        _dropTimer += Time.deltaTime;
-        if (_dropTimer >= _dropInterval)
+        // Check if piece is at the bottom
+        if (!IsValidMove(_currentPiece, _currentX, _currentY + 1))
         {
-            _dropTimer = 0;
-            MoveDown();
+            _lockTimer += Time.deltaTime;
+            if (_lockTimer >= LOCK_DELAY)
+            {
+                LockPiece();
+                _lockTimer = 0;
+            }
+        }
+        else
+        {
+            _lockTimer = 0;
+            _dropTimer += Time.deltaTime;
+            if (_dropTimer >= _dropInterval)
+            {
+                _dropTimer = 0;
+                MoveDown();
+            }
         }
     }
 
@@ -225,6 +242,7 @@ private int _level = 1;
         {
             _currentX += dir;
             UpdateBoardVisuals();
+            _lockTimer = 0; // Reset lock delay on move
         }
     }
 
@@ -237,10 +255,27 @@ private int _level = 1;
             matrix = RotateMatrix(_currentPiece.matrix)
         };
 
+        // Try standard rotation
         if (IsValidMove(rotated, _currentX, _currentY))
         {
             _currentPiece = rotated;
             UpdateBoardVisuals();
+            _lockTimer = 0;
+            return;
+        }
+
+        // Simple Wall Kick: Try shifting left or right
+        int[] wallKickOffsets = { -1, 1, -2, 2 };
+        foreach (int offset in wallKickOffsets)
+        {
+            if (IsValidMove(rotated, _currentX + offset, _currentY))
+            {
+                _currentX += offset;
+                _currentPiece = rotated;
+                UpdateBoardVisuals();
+                _lockTimer = 0;
+                return;
+            }
         }
     }
 
@@ -269,10 +304,7 @@ private int _level = 1;
         {
             _currentY++;
             UpdateBoardVisuals();
-        }
-        else
-        {
-            LockPiece();
+            _lockTimer = 0;
         }
     }
 
@@ -414,15 +446,46 @@ private int _level = 1;
 
     private void UpdateBoardVisuals()
     {
-        // Ghost current piece? Nah, let's keep it simple.
-        // We only need to render the current piece on top.
-        // I'll use a separate container or just dynamic elements.
-        
-        // Let's remove old temporary blocks
+        // Remove old temporary blocks and ghost blocks
         var tempBlocks = _board.Query(className: "temp-block").ToList();
         foreach (var b in tempBlocks) _board.Remove(b);
 
+        var ghostBlocks = _board.Query(className: "ghost-block").ToList();
+        foreach (var b in ghostBlocks) _board.Remove(b);
+
+        // Calculate ghost position
+        int ghostY = _currentY;
+        while (IsValidMove(_currentPiece, _currentX, ghostY + 1))
+        {
+            ghostY++;
+        }
+
         int size = _currentPiece.matrix.Count;
+        Color pieceColor;
+        ColorUtility.TryParseHtmlString(_currentPiece.color, out pieceColor);
+
+        // Render Ghost Piece
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                if (_currentPiece.matrix[i].row[j] == 1)
+                {
+                    VisualElement block = new VisualElement();
+                    block.AddToClassList("tetris-block");
+                    block.AddToClassList("ghost-block");
+                    
+                    block.style.backgroundColor = pieceColor;
+                    block.style.width = 30;
+                    block.style.height = 30;
+                    block.style.left = (_currentX + j) * 30;
+                    block.style.top = (ghostY + i) * 30;
+                    _board.Add(block);
+                }
+            }
+        }
+
+        // Render Current Piece
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
@@ -433,10 +496,7 @@ private int _level = 1;
                     block.AddToClassList("tetris-block");
                     block.AddToClassList("temp-block");
                     
-                    Color color;
-                    ColorUtility.TryParseHtmlString(_currentPiece.color, out color);
-                    block.style.backgroundColor = color;
-
+                    block.style.backgroundColor = pieceColor;
                     block.style.width = 30;
                     block.style.height = 30;
                     block.style.left = (_currentX + j) * 30;
@@ -445,7 +505,7 @@ private int _level = 1;
                 }
             }
         }
-        }
+    }
 
         private void UpdateNextPreview()
         {
