@@ -44,7 +44,7 @@ public class StoryIntroController : MonoBehaviour
 
     private string[] confirmedLines = {
         "USER CONFIRMED",
-        "22:47 PM\nLAB 7\nNIGHT SHIFT",
+        "{TIME}\nLAB 7\nNIGHT SHIFT",
         "Please investigate the test environment."
     };
 
@@ -120,8 +120,14 @@ public class StoryIntroController : MonoBehaviour
         }
 
         fullText.Append("\n\n");
-        foreach (var line in confirmedLines)
+        foreach (var originalLine in confirmedLines)
         {
+            string line = originalLine;
+            if (line.Contains("{TIME}"))
+            {
+                line = line.Replace("{TIME}", System.DateTime.Now.ToString("h:mm tt"));
+            }
+            
             yield return StartCoroutine(TypewriteLine(line, fullText));
             fullText.Append("\n");
             if (storyLabel != null) storyLabel.text = fullText.ToString();

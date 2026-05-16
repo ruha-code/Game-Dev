@@ -523,7 +523,7 @@ public class MainMenuController : MonoBehaviour
     {
         while (true)
         {
-            if (clockLabel != null) clockLabel.text = System.DateTime.Now.ToString("HH:mm");
+            if (clockLabel != null) clockLabel.text = System.DateTime.Now.ToString("h:mm tt");
             yield return new WaitForSecondsRealtime(30f);
         }
     }
