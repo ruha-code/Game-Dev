@@ -7,7 +7,7 @@
 **Platform:** PC (Unity).
 
 **Main Idea:**
-The player is inside an operating system that is actually a **digital prison** for the consciousness of missing people. The beautiful interface is a mask hiding a dark truth. To learn the truth, the player must complete **Mini-Games** in various programs to collect clues and unlock access to hidden **3D Locations** on the desktop wallpaper.
+The player is inside an operating system that is actually a **digital prison** for the consciousness of missing people. The beautiful interface is a mask hiding a dark truth. To learn the truth, the player must complete **Mini-Games** in various programs to collect clues and unlock access to hidden **2D Locations** on the desktop wallpaper.
 
 ---
 
@@ -20,7 +20,7 @@ You are the last active employee of `Aether Dynamics`. Seven engineers vanished 
 The computer boots `AeroOS`. It looks perfect: blue sky, green grass, glass icons. But it feels "alive." It reacts to you. It watches you.
 
 **The Investigation:**
-You search for files. You find logs saying the system started behaving strangely. The engineers claimed the computer wouldn't let them leave. You realize the wallpaper objects (**City, Tree, Balloon**) are not just images—they are real places inside the system.
+You search for files. You find logs saying the system started behaving strangely. The engineers claimed the computer wouldn't let them leave. You realize the wallpaper objects (**City, Tree, Balloon**) are not just images—they are real 2D places inside the system.
 
 **The Twist:**
 The engineers didn't escape. **They are trapped inside.**
@@ -44,47 +44,81 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 2.  **Action:** Click Icon -> Play **Mini-Game**.
 3.  **Reward:** Win -> Get **"Data Key"** (Clue).
 4.  **Reaction:** Wallpaper changes (e.g., Tree starts glowing).
-5.  **Exploration:** Click Wallpaper Object -> Enter **3D Location** -> Learn Story.
+5.  **Exploration:** Click Wallpaper Object -> Enter **2D Location Scene** -> Learn Story.
 6.  **Return:** Back to Desktop to unlock next program.
 
 ---
 
-## 4. The 9 Mini-Games (Programs)
+## 4. The 9 Mini-Games (Programs) - Detailed Mechanics
 
 ### Tree Branch (Emotion/Memory)
-1.  **Documents:** *Text Puzzle.* Restore redacted text by clicking black bars to reveal words.
-    *   *Reward:* Unlocks **Tree**.
-2.  **Pictures:** *Spot the Difference.* Find 3 anomalies in photos (shadows, extra objects).
-    *   *Reward:* Deepens Tree story.
-3.  **Music:** *Frequency Tuner.* Adjust Low/Mid/High sliders to cancel noise and hear a hidden voice.
-    *   *Reward:* Audio clue for Tree.
+1.  **Documents:** *Text Puzzle.*
+    *   **Mechanic:** A document appears with black bars covering key words. The player clicks the bars to reveal words from a list at the bottom. They must drag the correct word to the correct bar.
+    *   **Goal:** Restore the sentence: "The system is [WATCHING] us. We must find the [TRUTH]."
+    *   **Reward:** Unlocks **TreeScene**.
+
+2.  **Pictures:** *Spot the Difference.*
+    *   **Mechanic:** Two images appear side-by-side. The player has 30 seconds to click 3 differences. Differences are subtle (e.g., a shadow pointing the wrong way, a window missing).
+    *   **Goal:** Find all 3 anomalies before time runs out.
+    *   **Reward:** Unlocks deeper lore in TreeScene.
+
+3.  **Music:** *Frequency Tuner.*
+    *   **Mechanic:** A noisy audio track plays. Three sliders (Low, Mid, High) control filters. The player must adjust sliders to match a target waveform shown on screen.
+    *   **Goal:** Align the waveform to clear the noise and hear a hidden voice message.
+    *   **Reward:** Audio clue for TreeScene.
 
 ### City Branch (Logic/Structure)
-4.  **Computer:** *Pathfinding.* Navigate a grid from "User" to "Core" avoiding "Firewall" blocks.
-    *   *Reward:* Unlocks **City**.
-5.  **Control Panel:** *Switch Logic.* Flip toggles to match a pattern or light up all green lamps.
-    *   *Reward:* Access code for City.
-6.  **Tetris:** *Falling Blocks.* Classic Tetris, but blocks glitch and form words ("HELP", "LAB 7").
-    *   *Reward:* Memory Shard (for Secret Ending).
+4.  **Computer:** *Pathfinding.*
+    *   **Mechanic:** A 5x5 grid. Player starts at Green node, must reach Red node. Gray nodes are "Firewalls" (blocking). Player clicks adjacent open nodes to move.
+    *   **Goal:** Reach the Core node in under 10 moves.
+    *   **Reward:** Unlocks **CityScene**.
+
+5.  **Control Panel:** *Switch Logic.*
+    *   **Mechanic:** 4 Toggles and 4 Lights. Toggling one switch flips the state of itself and its neighbors.
+    *   **Goal:** Turn all lights from Red to Green.
+    *   **Reward:** Access Code for CityScene.
+
+6.  **Tetris:** *Falling Blocks.*
+    *   **Mechanic:** Standard Tetris. However, every 3rd piece is a "Glitch Piece" (transparent, wrong color).
+    *   **Goal:** Clear 5 lines. If you clear a line with a Glitch Piece, a secret message appears ("HELP").
+    *   **Reward:** Memory Shard (for Secret Ending).
 
 ### Balloon Branch (Signal/Network)
-7.  **Network:** *Pipe Connection.* Rotate tiles to connect "Source" to "Destination".
-    *   *Reward:* Unlocks **Balloon**.
-8.  **Videos:** *Timeline Sort.* Drag-and-drop scrambled video frames into correct order.
-    *   *Reward:* Video evidence.
-9.  **Recycle Bin:** *Data Mining.* Click blocks to find files, avoid "Virus" blocks (Minesweeper style).
-    *   *Reward:* Final Truth file.
+7.  **Network:** *Pipe Connection.*
+    *   **Mechanic:** A grid of pipes. Player clicks a pipe to rotate it 90 degrees.
+    *   **Goal:** Create a continuous path from Source (Top Left) to Destination (Bottom Right).
+    *   **Reward:** Unlocks **BalloonScene**.
+
+8.  **Videos:** *Timeline Sort.*
+    *   **Mechanic:** 5 video frames are scrambled. Player drags and drops them into slots 1-5.
+    *   **Goal:** Order the frames correctly to play the video.
+    *   **Reward:** Video evidence.
+
+9.  **Recycle Bin:** *Data Mining.*
+    *   **Mechanic:** 5x5 grid of "Corrupted" blocks. Player clicks to reveal. 3 blocks are "Files", 5 are "Viruses".
+    *   **Goal:** Find all 3 Files without clicking a Virus.
+    *   **Reward:** Final Truth file.
 
 ---
 
-## 5. The 3 Locations (Wallpaper Objects)
+## 5. The 3 Locations (2D Scenes)
 
-1.  **Tree (The Lie):** 3D scene. Perfect grass, one tree, bench. Uncanny stillness.
-    *   *Story:* Shows nature is a simulation.
-2.  **City (The Prison):** 3D scene. Glass towers, data lines, no people.
-    *   *Story:* Shows the containment pods where engineers are held.
-3.  **Balloon (The Signal):** 3D scene. Surreal sky, floating islands, glowing sphere.
-    *   *Story:* Meet the digital ghost of an engineer.
+*These are 2D scenes. They use 2D Sprites, UI, or Tilemaps, NOT 3D models.*
+
+1.  **TreeScene (The Lie):**
+    *   **Visuals:** 2D Parallax background. Layer 1: Sky. Layer 2: Clouds. Layer 3: Grass. Layer 4: Tree Sprite.
+    *   **Interaction:** Player clicks the Tree Sprite. A dialogue box appears with text logs.
+    *   **Story:** "This nature is fake. It's just code."
+
+2.  **CityScene (The Prison):**
+    *   **Visuals:** 2D Side-view of glass towers. Parallax scrolling background. Neon UI elements.
+    *   **Interaction:** Player clicks on "Windows" (hotspots) to read data logs about the engineers.
+    *   **Story:** "They are trapped in the servers."
+
+3.  **BalloonScene (The Signal):**
+    *   **Visuals:** 2D Sky background. A large Balloon Sprite floats in the center. Particle effects (clouds).
+    *   **Interaction:** Player clicks the Balloon. A "Ghost" sprite appears and talks to the player.
+    *   **Story:** "Help us escape."
 
 ---
 
@@ -94,7 +128,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 
 ### Phase 0: Foundation & Systems
 
-#### Step 0.1: ProgressionManager
+#### Sub-Phase 0.1: Core Managers
 **PROMPT:**
 > Create a C# script named `ProgressionManager.cs`.
 > Make it a Singleton with `DontDestroyOnLoad`.
@@ -105,7 +139,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > Use `PlayerPrefs` to save/load data (save bools as ints 1/0).
 > Add `Debug.Log` for every state change.
 
-#### Step 0.2: AudioManager
+#### Sub-Phase 0.2: Audio System
 **PROMPT:**
 > Create a C# script named `AudioManager.cs`.
 > Make it a Singleton.
@@ -114,7 +148,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > Create an `AudioMixer` asset named `AeroMixer` with groups: Master, Music, SFX, UI.
 > Ensure all AudioSources use this mixer.
 
-#### Step 0.3: Build Settings
+#### Sub-Phase 0.3: Scene Setup
 **PROMPT:**
 > Open Build Settings. Add the following scenes in this exact order (create empty scenes if they don't exist in `Assets/Scenes/`):
 > 0. MainMenuScene
@@ -123,17 +157,17 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > 3. SystemBootScene
 > 4. AeroDesktopScene
 > 5. DocumentsMiniGame
-> 6. TreeLocation
+> 6. TreeScene
 > 7. PicturesMiniGame
 > 8. MusicMiniGame
 > 9. ComputerMiniGame
 > 10. ControlPanelMiniGame
 > 11. TetrisMiniGame
-> 12. CityLocation
+> 12. CityScene
 > 13. NetworkMiniGame
 > 14. VideosMiniGame
 > 15. RecycleBinMiniGame
-> 16. BalloonLocation
+> 16. BalloonScene
 > 17. CoreScene
 > 18. ExitProtocolScene
 
@@ -141,18 +175,18 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 
 ### Phase 1: Vertical Slice (MVP)
 
-#### Step 1.1: DesktopController (Hub)
+#### Sub-Phase 1.1: Desktop Hub
 **PROMPT:**
 > In `AeroDesktopScene`, create a script `DesktopController.cs` on the `Desktop_UI` object.
 > 1. Add public references for Icon Buttons: `btnDocuments`, `btnPictures`, etc.
-> 2. Add public references for Wallpaper Objects: `GameObject treeObject`, `cityObject`, `balloonObject`.
+> 2. Add public references for Wallpaper Objects (2D Sprites): `GameObject treeObject`, `cityObject`, `balloonObject`.
 > 3. In `Start()`, check `ProgressionManager`. If `isTreeUnlocked` is true, make `treeObject` interactive (add a Button component or click handler) and change its color to green/glowing.
 > 4. Method `OnDocumentsClick()`: Loads scene `DocumentsMiniGame`.
-> 5. Method `OnTreeClick()`: Loads scene `TreeLocation`.
+> 5. Method `OnTreeClick()`: Loads scene `TreeScene`.
 > 6. Create a UI Popup (Panel + Text + Button) that appears on start with text: "Welcome back, [PlayerName]. Recovery incomplete. Please review Documents." Button "OK" closes it.
 > 7. Use `PlayerPrefs.GetString("PlayerName", "User")` for the name.
 
-#### Step 1.2: DocumentsMiniGame
+#### Sub-Phase 1.2: Documents Mini-Game
 **PROMPT:**
 > Create scene `DocumentsMiniGame`.
 > Add a Canvas with UI:
@@ -164,29 +198,31 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > - Button calls `ProgressionManager.Instance.UnlockTree()`, plays `loginChime`, and loads `AeroDesktopScene`.
 > - Play `typewriterClick` sound on every word click.
 
-#### Step 1.3: TreeLocation
+#### Sub-Phase 1.3: Tree Scene (2D)
 **PROMPT:**
-> Create scene `TreeLocation`.
-> Add 3D objects: Plane (Green material), Cylinder (Trunk), Sphere (Leaves), Cube (Bench).
-> Add Camera at (0, 2, -5) looking at tree.
+> Create scene `TreeScene`.
+> **Visuals:** Use 2D Sprites.
+> - Background: Sky Sprite.
+> - Foreground: Grass Sprite.
+> - Center: Tree Sprite.
 > Add script `TreeInteraction.cs`:
-> - On click (Raycast or Collider), show UI Panel: "SCAN RESULT: Object is a Simulation. Status: False Life."
+> - On click (Button or Collider), show UI Panel: "SCAN RESULT: Object is a Simulation. Status: False Life."
 > - Add "Return to Desktop" button loading `AeroDesktopScene`.
 > - Play `anomalyHum` (loop) and `anomalyWhisper` on click.
 
-#### Step 1.4: Link & Test
+#### Sub-Phase 1.4: Link & Test
 **PROMPT:**
 > Add a debug button in `AeroDesktopScene` labeled "Test: Unlock Tree".
 > On click, it calls `ProgressionManager.Instance.UnlockTree()`.
 > Verify that the Tree object changes appearance and becomes clickable.
-> Test full loop: Desktop -> Documents -> Win -> Desktop -> Tree Click -> TreeLocation -> Return.
+> Test full loop: Desktop -> Documents -> Win -> Desktop -> Tree Click -> TreeScene -> Return.
 > Remove debug button after test.
 
 ---
 
 ### Phase 2: Tree Branch (Pictures + Music)
 
-#### Step 2.1: PicturesMiniGame
+#### Sub-Phase 2.1: Pictures Mini-Game
 **PROMPT:**
 > Create scene `PicturesMiniGame`.
 > UI: Two Images side-by-side (Image A, Image B).
@@ -195,7 +231,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > When 3 found, show "Analyze Complete" button.
 > Button sets `ProgressionManager.hasPicturesKey = true`, plays `popupNotify`, loads `AeroDesktopScene`.
 
-#### Step 2.2: MusicMiniGame
+#### Sub-Phase 2.2: Music Mini-Game
 **PROMPT:**
 > Create scene `MusicMiniGame`.
 > UI: 3 Sliders (Low, Mid, High). Text: "Adjust frequencies to clear noise".
@@ -203,17 +239,17 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > On win: Stop noise, play clean voice clip (`anomalyWhisper`), show text "Voice Recovered: 'Don't trust the beauty...'".
 > Button "Save" sets `ProgressionManager.hasMusicKey = true`, loads `AeroDesktopScene`.
 
-#### Step 2.3: Update TreeLocation
+#### Sub-Phase 2.3: Update Tree Scene
 **PROMPT:**
-> Update `TreeInteraction.cs` in `TreeLocation`.
+> Update `TreeInteraction.cs` in `TreeScene`.
 > Check `ProgressionManager`: If `hasPicturesKey` AND `hasMusicKey` are true, show extra text on click: "DEEP SCAN: Memories are fabricated. The tree is a lie."
-> Add visual effect: Tree rotates slowly or turns red for 2 seconds on click if keys are collected.
+> Add visual effect: Tree sprite changes color to red for 2 seconds on click if keys are collected.
 
 ---
 
 ### Phase 3: City Branch (Computer + Control Panel + Tetris)
 
-#### Step 3.1: ComputerMiniGame
+#### Sub-Phase 3.1: Computer Mini-Game
 **PROMPT:**
 > Create scene `ComputerMiniGame`.
 > UI: 5x5 Grid of Buttons.
@@ -224,7 +260,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > Button "Return" sets `ProgressionManager.hasComputerKey = true`, loads `AeroDesktopScene`.
 > Play `clickGlass` on move.
 
-#### Step 3.2: ControlPanelMiniGame
+#### Sub-Phase 3.2: Control Panel Mini-Game
 **PROMPT:**
 > Create scene `ControlPanelMiniGame`.
 > UI: 4 Toggles and 4 Lamp Images.
@@ -233,7 +269,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > Start state: All Red.
 > On Win: Play `identityAccepted`, set `ProgressionManager.hasControlPanelKey = true`, load `AeroDesktopScene`.
 
-#### Step 3.3: TetrisMiniGame
+#### Sub-Phase 3.3: Tetris Mini-Game
 **PROMPT:**
 > Create scene `TetrisMiniGame`.
 > Implement basic Tetris (10x20 grid, 7 shapes, arrow controls).
@@ -241,12 +277,15 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > After 5 lines, show button "Extract Data".
 > Button sets `ProgressionManager.hasTetrisKey = true` AND `ProgressionManager.AddShard()`, loads `AeroDesktopScene`.
 
-#### Step 3.4: CityLocation
+#### Sub-Phase 3.4: City Scene (2D)
 **PROMPT:**
-> Create scene `CityLocation`.
-> 3D: Cubes as skyscrapers (emissive material), Plane as floor, Point Lights as windows.
+> Create scene `CityScene`.
+> **Visuals:** 2D Side-view.
+> - Background: Dark blue gradient.
+> - Foreground: Glass Tower Sprites (Cubes with emissive material or UI Images).
+> - Hotspots: Invisible Buttons on "Windows".
 > Script `CityInteraction.cs`:
-> On Enter, check `ProgressionManager`: If `hasComputerKey` AND `hasControlPanelKey` true, show UI: "CITY ACCESS: You see containment pods. Silhouettes of engineers inside."
+> On Click Hotspot, check `ProgressionManager`: If `hasComputerKey` AND `hasControlPanelKey` true, show UI: "CITY ACCESS: You see containment pods. Silhouettes of engineers inside."
 > Add "Return" button.
 > Atmosphere: Cold blue light, `pcHum` sound.
 
@@ -254,7 +293,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 
 ### Phase 4: Balloon Branch (Network + Videos + Recycle Bin)
 
-#### Step 4.1: NetworkMiniGame
+#### Sub-Phase 4.1: Network Mini-Game
 **PROMPT:**
 > Create scene `NetworkMiniGame`.
 > UI: 4x4 Grid of "Pipe" images.
@@ -262,7 +301,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > Goal: Connect Top-Left to Bottom-Right.
 > On Win: Set `ProgressionManager.hasNetworkKey = true`, load `AeroDesktopScene`.
 
-#### Step 4.2: VideosMiniGame
+#### Sub-Phase 4.2: Videos Mini-Game
 **PROMPT:**
 > Create scene `VideosMiniGame`.
 > UI: 5 Image slots. 5 Draggable Frame images (shuffled order).
@@ -271,7 +310,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > On Win: Show text "VIDEO RESTORED: Engineers pulled into screen."
 > Set `ProgressionManager.hasVideosKey = true`, load `AeroDesktopScene`.
 
-#### Step 4.3: RecycleBinMiniGame
+#### Sub-Phase 4.3: Recycle Bin Mini-Game
 **PROMPT:**
 > Create scene `RecycleBinMiniGame`.
 > UI: 5x5 Grid of Buttons.
@@ -280,12 +319,14 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > Find 3 Files before Viruses -> Win.
 > Set `ProgressionManager.hasRecycleBinKey = true`, load `AeroDesktopScene`.
 
-#### Step 4.4: BalloonLocation
+#### Sub-Phase 4.4: Balloon Scene (2D)
 **PROMPT:**
-> Create scene `BalloonLocation`.
-> 3D: Plane (Clouds), Sphere (Glowing Balloon), Cubes (Platforms).
+> Create scene `BalloonScene`.
+> **Visuals:** 2D Sky background.
+> - Center: Balloon Sprite (Glowing).
+> - Particles: Cloud sprites moving.
 > Script `BalloonInteraction.cs`:
-> Player enters Trigger near Balloon.
+> Player clicks Balloon (Button).
 > Show UI: "SIGNAL DETECTED: 'Help us... destroy the core or join us.'"
 > If `collectedShards >= 3`, show extra text: "SECRET OPTION: Merge with system?".
 > Add "Return" button.
@@ -294,10 +335,12 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 
 ### Phase 5: Finale (Core + Endings)
 
-#### Step 5.1: CoreScene
+#### Sub-Phase 5.1: Core Scene
 **PROMPT:**
 > Create scene `CoreScene`.
-> 3D: Large Cylinder (Core), Particles.
+> **Visuals:** 2D Abstract.
+> - Center: Large Glowing Circle (Core).
+> - Particles: Data streams.
 > UI Panel with 3 Buttons:
 > 1. "Destroy System" (Requires all branch keys).
 > 2. "Join System" (Always available).
@@ -308,7 +351,7 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > - Button 3: Save "ending_merge", load `ExitProtocolScene`.
 > Sound: Epic ambient.
 
-#### Step 5.2: ExitProtocolScene
+#### Sub-Phase 5.2: Exit Protocol Scene
 **PROMPT:**
 > Create scene `ExitProtocolScene`.
 > Script `EndingController.cs`:
@@ -322,14 +365,14 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 
 ### Phase 6: Polish (VFX, UI, Optimization)
 
-#### Step 6.1: Visual Effects
+#### Sub-Phase 6.1: Visual Effects
 **PROMPT:**
 > Add Post-Processing Volume to Main Camera.
 > Enable Bloom (for icons/balloon), Vignette (atmosphere).
 > Create script `GlitchEffect.cs`:
 > - On error or horror moment, enable Chromatic Aberration and Noise for 0.5s.
 
-#### Step 6.2: UI Animations
+#### Sub-Phase 6.2: UI Animations
 **PROMPT:**
 > Add animations to UI transitions.
 > - Open Mini-game: Scale from 0.8 to 1.0.
@@ -337,13 +380,13 @@ AeroOS is a living AI created in `Lab 7` that stole their minds.
 > - Button Hover: Change color or scale up slightly.
 > Use `Mathf.Lerp` in Update or Unity Animator.
 
-#### Step 6.3: Save System
+#### Sub-Phase 6.3: Save System
 **PROMPT:**
 > In `ProgressionManager`, add auto-save on every change.
 > In `MainMenuScene`, add "Continue" button that loads `AeroDesktopScene` with saved progress.
 > Verify `PlayerPrefs` saves bools correctly.
 
-#### Step 6.4: Final Test
+#### Sub-Phase 6.4: Final Test
 **PROMPT:**
 > Test full playthrough:
 > 1. Play all 9 mini-games.
