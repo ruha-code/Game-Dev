@@ -1,0 +1,198 @@
+:root {
+    --doc-bg: rgba(9, 28, 59, 0.92);
+    --doc-panel: rgba(178, 219, 255, 0.15);
+    --doc-border: rgba(255, 255, 255, 0.22);
+    --doc-accent: #8fe6ff;
+    --doc-text: #f5fbff;
+    --doc-subtle: rgba(219, 239, 255, 0.72);
+    --doc-danger: rgba(255, 126, 126, 0.36);
+}
+
+.documents-root {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(4, 15, 36, 0.92);
+}
+
+.documents-shell {
+    width: 1200px;
+    min-height: 760px;
+    padding: 28px;
+    background-color: var(--doc-bg);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.28);
+    border-top-color: rgba(255, 255, 255, 0.48);
+    border-radius: 28px;
+}
+
+.documents-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.documents-title {
+    font-size: 34px;
+    color: var(--doc-text);
+    -unity-font-style: bold;
+}
+
+.documents-subtitle {
+    font-size: 16px;
+    color: var(--doc-subtle);
+    margin-bottom: 20px;
+    max-width: 820px;
+}
+
+.documents-panel {
+    flex-direction: row;
+    gap: 18px;
+}
+
+.documents-column {
+    flex-grow: 1;
+    background-color: var(--doc-panel);
+    border-width: 1px;
+    border-color: var(--doc-border);
+    border-radius: 18px;
+    padding: 20px;
+}
+
+.documents-sidebar {
+    width: 320px;
+    background-color: rgba(255, 255, 255, 0.06);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+    border-radius: 18px;
+    padding: 20px;
+}
+
+.documents-section-title {
+    color: var(--doc-accent);
+    font-size: 15px;
+    letter-spacing: 3px;
+    -unity-font-style: bold;
+    margin-bottom: 14px;
+}
+
+.document-card {
+    padding: 16px;
+    margin-bottom: 12px;
+    background-color: rgba(255, 255, 255, 0.055);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    -unity-text-align: upper-left;
+}
+
+.document-card:hover {
+    background-color: rgba(143, 230, 255, 0.12);
+    border-color: rgba(143, 230, 255, 0.28);
+}
+
+.document-card--restored {
+    background-color: rgba(120, 226, 172, 0.18);
+    border-color: rgba(120, 226, 172, 0.34);
+}
+
+.document-card--error {
+    background-color: var(--doc-danger);
+    border-color: rgba(255, 157, 157, 0.45);
+}
+
+.document-card-title {
+    font-size: 20px;
+    color: var(--doc-text);
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.document-card-body {
+    font-size: 14px;
+    color: var(--doc-subtle);
+    white-space: normal;
+}
+
+.documents-rule {
+    font-size: 16px;
+    color: var(--doc-text);
+    margin-bottom: 8px;
+}
+
+.documents-status-panel {
+    margin-top: 26px;
+    padding: 16px;
+    background-color: rgba(4, 14, 34, 0.56);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.1);
+    border-radius: 14px;
+}
+
+.documents-status-title {
+    color: var(--doc-accent);
+    font-size: 15px;
+    -unity-font-style: bold;
+    margin-bottom: 12px;
+}
+
+.documents-status-text {
+    font-size: 18px;
+    color: var(--doc-text);
+    white-space: normal;
+    margin-bottom: 12px;
+}
+
+.documents-hint-text {
+    font-size: 14px;
+    color: var(--doc-subtle);
+    white-space: normal;
+}
+
+.documents-return-button,
+.success-button {
+    min-width: 170px;
+    height: 44px;
+    background-color: rgba(255, 255, 255, 0.09);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.28);
+    border-radius: 12px;
+    color: white;
+    -unity-font-style: bold;
+}
+
+.documents-return-button:hover,
+.success-button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+}
+
+.success-panel {
+    position: absolute;
+    right: 40px;
+    bottom: 38px;
+    width: 360px;
+    padding: 20px;
+    background-color: rgba(10, 33, 64, 0.95);
+    border-width: 1px;
+    border-color: rgba(143, 230, 255, 0.38);
+    border-radius: 18px;
+}
+
+.success-title {
+    font-size: 24px;
+    color: var(--doc-text);
+    -unity-font-style: bold;
+    margin-bottom: 10px;
+}
+
+.success-body {
+    font-size: 14px;
+    color: var(--doc-subtle);
+    white-space: normal;
+    margin-bottom: 14px;
+}
+
+.hidden {
+    display: none;
+}

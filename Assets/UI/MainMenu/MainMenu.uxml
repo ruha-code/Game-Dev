@@ -72,26 +72,65 @@
             </ui:VisualElement>
 
         <ui:VisualElement name="settings-panel" class="panel-overlay">
-            <ui:VisualElement class="panel-content">
-                <ui:Label text="Settings" class="panel-header" />
-                <ui:VisualElement class="setting-row">
-                    <ui:Label text="Master Volume" class="setting-label" />
-                    <ui:Slider name="master-vol" low-value="0" high-value="1" value="1" style="flex-grow: 1; margin-left: 20px;" />
+            <ui:VisualElement class="panel-content panel-content--settings">
+                <ui:Label text="System Settings" class="panel-header" />
+                <ui:Label text="Tune the AeroOS shell before entering the recovered session." class="panel-subtitle" />
+
+                <ui:VisualElement class="settings-card">
+                    <ui:VisualElement class="setting-block">
+                        <ui:VisualElement class="setting-copy">
+                            <ui:Label text="Master Volume" class="setting-label" />
+                            <ui:Label text="Controls menu ambience, effects, and system anomalies." class="setting-description" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="setting-meta-row">
+                            <ui:Label text="OUTPUT LEVEL" class="setting-meta-label" />
+                            <ui:Label name="master-vol-value" text="100%" class="setting-meta-value" />
+                        </ui:VisualElement>
+                        <ui:Slider name="master-vol" low-value="0" high-value="1" value="1" class="settings-slider" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="setting-block setting-block--toggle">
+                        <ui:VisualElement class="setting-copy">
+                            <ui:Label text="Fullscreen" class="setting-label" />
+                            <ui:Label text="Keep the desktop sealed inside a full-screen shell." class="setting-description" />
+                        </ui:VisualElement>
+                        <ui:VisualElement class="settings-toggle-row">
+                            <ui:Label name="fullscreen-value" text="Enabled" class="setting-meta-value" />
+                            <ui:Toggle name="fullscreen-toggle" value="true" class="settings-toggle" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement class="setting-row">
-                    <ui:Label text="Fullscreen" class="setting-label" />
-                    <ui:Toggle name="fullscreen-toggle" value="true" />
+
+                <ui:VisualElement class="panel-footer">
+                    <ui:Button text="Close" name="settings-close" class="close-btn" />
                 </ui:VisualElement>
-                <ui:Button text="Close" name="settings-close" class="close-btn" />
             </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:VisualElement name="credits-panel" class="panel-overlay">
-            <ui:VisualElement class="panel-content">
+            <ui:VisualElement class="panel-content panel-content--credits">
                 <ui:Label text="Credits" class="panel-header" />
-                <ui:Label text="Developed by Ruha" style="font-size: 20px; color: white;" />
-                <ui:Label text="Music by AeroOS AI" style="font-size: 20px; color: white; margin-top: 10px;" />
-                <ui:Button text="Close" name="credits-close" class="close-btn" />
+                <ui:Label text="Built inside the recovered AeroOS environment." class="panel-subtitle" />
+
+                <ui:VisualElement class="credits-card">
+                    <ui:VisualElement class="credits-section">
+                        <ui:Label text="Core Team" class="credits-section-title" />
+                        <ui:VisualElement class="credits-name-list">
+                            <ui:Label text="Ruslan" class="credits-name" />
+                            <ui:Label text="Dastan" class="credits-name" />
+                            <ui:Label text="Bekassyl" class="credits-name" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="credits-section">
+                        <ui:Label text="Special Systems" class="credits-section-title" />
+                        <ui:Label text="AeroOS AI audio and atmospheric support" class="credits-detail" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="panel-footer">
+                    <ui:Button text="Close" name="credits-close" class="close-btn" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
 

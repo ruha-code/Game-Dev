@@ -8,6 +8,9 @@ using System.Collections;
 
 public class MainMenuController : MonoBehaviour
 {
+    private const string MasterVolumePrefKey = "Settings.MasterVolume";
+    private const string FullscreenPrefKey = "Settings.Fullscreen";
+
     private VisualElement root;
     private VisualElement container;
     private VisualElement title;
@@ -25,6 +28,8 @@ public class MainMenuController : MonoBehaviour
     private VisualElement loadElement;
     private VisualElement loadFill;
     private Label clockLabel;
+    private Label masterVolumeValueLabel;
+    private Label fullscreenValueLabel;
     private VisualElement eyeLeft;
     private VisualElement eyeRight;
     private VisualElement reflectionElement;
@@ -50,6 +55,7 @@ public class MainMenuController : MonoBehaviour
     private bool isTransitioning;
     private int lastAnomalyIndex = -1;
     private bool anomaliesEnabled = false;
+    private bool suppressSettingsCallbacks;
 
     private struct AnomalyWeight
     {
@@ -79,6 +85,8 @@ public class MainMenuController : MonoBehaviour
         loadElement = root.Q<VisualElement>("fake-load");
         loadFill = root.Q<VisualElement>("load-bar-fill");
         clockLabel = root.Q<Label>("clock-text");
+        masterVolumeValueLabel = root.Q<Label>("master-vol-value");
+        fullscreenValueLabel = root.Q<Label>("fullscreen-value");
         eyeLeft = root.Q<VisualElement>("eye-left");
         eyeRight = root.Q<VisualElement>("eye-right");
         reflectionElement = root.Q<VisualElement>("glass-reflection");
@@ -123,13 +131,10 @@ public class MainMenuController : MonoBehaviour
                 item.UnregisterCallback<MouseEnterEvent>(OnHoverEvent);
             }
         }
-        var newGameBtn = root?.Q<VisualElement>("new-game-item");
-        newGameBtn?.UnregisterCallback<ClickEvent>(OnStartNewGameEvent);
     }
 
     private void OnMenuItemClickedEvent(ClickEvent evt) => OnMenuItemClicked(evt.currentTarget as VisualElement);
     private void OnHoverEvent(MouseEnterEvent evt) => OnHover(evt.currentTarget as VisualElement);
-    private void OnStartNewGameEvent(ClickEvent evt) => StartNewGame();
 
     private void SetupMenu()
     {
@@ -147,8 +152,6 @@ public class MainMenuController : MonoBehaviour
                 }
             }
         }
-        var newGameBtn = root.Q<VisualElement>("new-game-item");
-        if (newGameBtn != null) newGameBtn.RegisterCallback<ClickEvent>(OnStartNewGameEvent);
     }
 
     private void SetupAnomalyWeights()
@@ -505,21 +508,57 @@ public class MainMenuController : MonoBehaviour
         if (creditsItem != null) creditsItem.RegisterCallback<ClickEvent>(evt => ShowPanel(creditsPanel));
         var creditsClose = root.Q<Button>("credits-close");
         if (creditsClose != null) creditsClose.clicked += () => HidePanel(creditsPanel);
+
         var masterSlider = root.Q<Slider>("master-vol");
-        if (masterSlider != null) masterSlider.RegisterValueChangedCallback(evt => AudioListener.volume = evt.newValue);
+        if (masterSlider != null)
+        {
+            masterSlider.RegisterValueChangedCallback(evt =>
+            {
+                if (suppressSettingsCallbacks)
+                {
+                    return;
+                }
+
+                ApplyMasterVolume(evt.newValue, true);
+            });
+        }
+
         var fsToggle = root.Q<Toggle>("fullscreen-toggle");
-        if (fsToggle != null) fsToggle.RegisterValueChangedCallback(evt => Screen.fullScreen = evt.newValue);
+        if (fsToggle != null)
+        {
+            fsToggle.RegisterValueChangedCallback(evt =>
+            {
+                if (suppressSettingsCallbacks)
+                {
+                    return;
+                }
+
+                ApplyFullscreenSetting(evt.newValue, true);
+            });
+        }
+
+        InitializeSettingsUi(masterSlider, fsToggle);
     }
 
     private void CheckSave()
     {
         bool hasSave = PlayerPrefs.HasKey("SaveExists");
         var continueBtn = root.Q<VisualElement>("continue-item");
-        if (continueBtn != null && !hasSave)
+        if (continueBtn == null)
         {
-            continueBtn.SetEnabled(false);
-            continueBtn.AddToClassList("menu-item-disabled");
+            return;
+        }
+
+        continueBtn.SetEnabled(hasSave);
+        continueBtn.EnableInClassList("menu-item-disabled", !hasSave);
+
+        if (!hasSave)
+        {
             StartCoroutine(DisabledContinuePulse(continueBtn));
+        }
+        else
+        {
+            continueBtn.style.opacity = 1f;
         }
     }
 
@@ -541,7 +580,7 @@ public class MainMenuController : MonoBehaviour
 
     private void OnMenuItemClicked(VisualElement clickedItem)
     {
-        if (isTransitioning) return;
+        if (clickedItem == null || isTransitioning) return;
         PlaySFX(clickGlass);
         if (activeBackground != null) clickedItem.Insert(0, activeBackground);
         foreach (var item in menuItems)
@@ -553,6 +592,19 @@ public class MainMenuController : MonoBehaviour
         clickedItem.AddToClassList("menu-item-active");
         var activeChevron = clickedItem.Q<VisualElement>(className: "menu-chevron");
         if (activeChevron != null) activeChevron.style.display = DisplayStyle.Flex;
+
+        switch (clickedItem.name)
+        {
+            case "new-game-item":
+                StartNewGame();
+                break;
+            case "continue-item":
+                ContinueGame();
+                break;
+            case "quit-item":
+                QuitGame();
+                break;
+        }
     }
 
     private void ShowPanel(VisualElement panel)
@@ -572,15 +624,84 @@ public class MainMenuController : MonoBehaviour
     private void StartNewGame()
     {
         if (isTransitioning) return;
+        ProgressionManager.Instance.ResetProgress();
         isTransitioning = true; anomaliesEnabled = false;
         root.pickingMode = PickingMode.Ignore;
-        
-        // Hide and lock the cursor when entering the game
-        UnityEngine.Cursor.visible = false;
-        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
 
         StopAllCoroutines(); 
         StartCoroutine(TransitionSequence());
+    }
+
+    private void ContinueGame()
+    {
+        if (isTransitioning)
+        {
+            return;
+        }
+
+        if (!PlayerPrefs.HasKey("SaveExists"))
+        {
+            return;
+        }
+
+        isTransitioning = true;
+        anomaliesEnabled = false;
+        root.pickingMode = PickingMode.Ignore;
+
+        StopAllCoroutines();
+        StartCoroutine(ContinueTransitionSequence());
+    }
+
+    private IEnumerator ContinueTransitionSequence()
+    {
+        if (atmosphere != null)
+        {
+            atmosphere.StopAtmosphere();
+        }
+
+        if (fadeOverlay != null)
+        {
+            fadeOverlay.style.display = DisplayStyle.Flex;
+            fadeOverlay.pickingMode = PickingMode.Position;
+            fadeOverlay.style.backgroundColor = Color.black;
+        }
+
+        float elapsed = 0f;
+        const float duration = 0.9f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            if (fadeOverlay != null)
+            {
+                fadeOverlay.style.opacity = t;
+            }
+
+            if (container != null)
+            {
+                container.style.opacity = 1f - t;
+            }
+
+            yield return null;
+        }
+
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+        SceneManager.LoadScene("AeroDesktopScene");
+    }
+
+    private void QuitGame()
+    {
+        if (isTransitioning)
+        {
+            return;
+        }
+
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 
     private IEnumerator TransitionSequence()
@@ -732,4 +853,60 @@ public class MainMenuController : MonoBehaviour
     }
 
     private void PlaySFX(AudioClip clip) { if (clip != null && sfxSource != null) sfxSource.PlayOneShot(clip); }
+
+    private void InitializeSettingsUi(Slider masterSlider, Toggle fullscreenToggle)
+    {
+        suppressSettingsCallbacks = true;
+
+        float savedVolume = Mathf.Clamp01(PlayerPrefs.GetFloat(MasterVolumePrefKey, AudioListener.volume > 0f ? AudioListener.volume : 1f));
+        bool savedFullscreen = PlayerPrefs.GetInt(FullscreenPrefKey, Screen.fullScreen ? 1 : 0) == 1;
+
+        if (masterSlider != null)
+        {
+            masterSlider.SetValueWithoutNotify(savedVolume);
+        }
+
+        if (fullscreenToggle != null)
+        {
+            fullscreenToggle.SetValueWithoutNotify(savedFullscreen);
+        }
+
+        ApplyMasterVolume(savedVolume, false);
+        ApplyFullscreenSetting(savedFullscreen, false);
+
+        suppressSettingsCallbacks = false;
     }
+
+    private void ApplyMasterVolume(float value, bool save)
+    {
+        float clamped = Mathf.Clamp01(value);
+        AudioListener.volume = clamped;
+
+        if (masterVolumeValueLabel != null)
+        {
+            masterVolumeValueLabel.text = Mathf.RoundToInt(clamped * 100f) + "%";
+        }
+
+        if (save)
+        {
+            PlayerPrefs.SetFloat(MasterVolumePrefKey, clamped);
+            PlayerPrefs.Save();
+        }
+    }
+
+    private void ApplyFullscreenSetting(bool isFullscreen, bool save)
+    {
+        Screen.fullScreen = isFullscreen;
+
+        if (fullscreenValueLabel != null)
+        {
+            fullscreenValueLabel.text = isFullscreen ? "Enabled" : "Windowed";
+        }
+
+        if (save)
+        {
+            PlayerPrefs.SetInt(FullscreenPrefKey, isFullscreen ? 1 : 0);
+            PlayerPrefs.Save();
+        }
+    }
+}

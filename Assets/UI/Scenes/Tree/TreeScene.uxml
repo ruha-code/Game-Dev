@@ -1,0 +1,27 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="TreeScene.uss" />
+    <ui:VisualElement name="tree-root" class="tree-root">
+        <ui:VisualElement name="tree-pulse-overlay" class="tree-pulse-overlay" />
+
+        <ui:VisualElement class="tree-header">
+            <ui:Label text="Tree Layer // The Lie" class="tree-title" />
+            <ui:Label name="tree-status-label" text="AeroOS routed the first anomaly into this silent branch. Follow the lit nodes." class="tree-status-label" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="tree-stage">
+            <ui:VisualElement class="tree-sky-glow" />
+            <ui:VisualElement class="tree-trunk" />
+            <ui:VisualElement class="tree-canopy" />
+
+            <ui:Button name="memory-node-1" text="1" class="memory-node memory-node-1" />
+            <ui:Button name="memory-node-2" text="2" class="memory-node memory-node-2" />
+            <ui:Button name="memory-node-3" text="3" class="memory-node memory-node-3" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="tree-memory-panel">
+            <ui:Label name="memory-title" text="Echo 00" class="memory-title" />
+            <ui:Label name="memory-body" text="The tree is holding on to a human memory trace. Touch a lit branch to recover it." class="memory-body" />
+            <ui:Button name="tree-return-button" text="Return to Desktop" class="tree-return-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

@@ -21,6 +21,7 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     border-color: var(--glass-highlight);
     border-radius: 12px;
     padding: 10px;
+    overflow: hidden;
 }
 
 .window-title-bar {
@@ -84,6 +85,55 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     align-items: center;
     justify-content: center;
     padding: 20px;
+}
+
+.fragment-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 16, 24, 0.88);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 28px;
+    opacity: 0;
+}
+
+.fragment-overlay--visible {
+    opacity: 1;
+}
+
+.fragment-panel {
+    width: 100%;
+    max-width: 320px;
+    align-items: center;
+    justify-content: center;
+    padding: 26px 24px;
+    background-color: rgba(9, 17, 26, 0.82);
+    border-width: 1px;
+    border-color: rgba(143, 252, 255, 0.35);
+    border-radius: 10px;
+}
+
+.fragment-title {
+    color: #8ffcff;
+    font-size: 22px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    max-width: 250px;
+    margin-bottom: 16px;
+    text-shadow: 0 0 12px rgba(110, 255, 255, 0.75);
+}
+
+.fragment-body {
+    color: rgba(230, 248, 255, 0.94);
+    font-size: 15px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    max-width: 240px;
 }
 
 .game-over-title {

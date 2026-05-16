@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
@@ -48,6 +49,9 @@ public class TetrisController : MonoBehaviour
     private Label _bonusStatusLabel;
     private VisualElement _nextPreview;
     private Button _closeButton;
+    private VisualElement _fragmentOverlay;
+    private Label _fragmentTitle;
+    private Label _fragmentBody;
 
     private VisualElement _gameOverOverlay;
     private TextField _nameInput;
@@ -57,12 +61,11 @@ public class TetrisController : MonoBehaviour
 
     [Header("Audio")]
     public AudioSource audioSource;
-    public AudioClip moveClip;
-    public AudioClip rotateClip;
-    public AudioClip lineClearClip;
     public AudioClip gameOverClip;
     public AudioClip hardDropClip;
     public AudioClip lockClip;
+    public AudioClip fragmentGlitchClip;
+    public AudioClip fragmentWhisperClip;
 
     private void PlaySound(AudioClip clip)
     {
@@ -109,7 +112,23 @@ public class TetrisController : MonoBehaviour
 
     public void Initialize(VisualElement root)
     {
+        if (audioSource == null)
+        {
+            audioSource = GetComponent<AudioSource>();
+            if (audioSource == null)
+            {
+                audioSource = gameObject.AddComponent<AudioSource>();
+                audioSource.playOnAwake = false;
+                audioSource.loop = false;
+                audioSource.spatialBlend = 0f;
+            }
+        }
+
         _window = root.Q<VisualElement>("tetris-window");
+        if (_window != null)
+        {
+            _window.pickingMode = PickingMode.Ignore;
+        }
         _board = root.Q<VisualElement>("tetris-board");
         _scoreLabel = root.Q<Label>("score-label");
         _levelLabel = root.Q<Label>("level-label");
@@ -117,6 +136,9 @@ public class TetrisController : MonoBehaviour
         _bonusStatusLabel = root.Q<Label>("bonus-status-label");
         _nextPreview = root.Q<VisualElement>("next-piece-preview");
         _closeButton = root.Q<Button>("close-button");
+        _fragmentOverlay = root.Q<VisualElement>("fragment-overlay");
+        _fragmentTitle = root.Q<Label>("fragment-title");
+        _fragmentBody = root.Q<Label>("fragment-body");
 
         _gameOverOverlay = root.Q<VisualElement>("game-over-overlay");
         _nameInput = root.Q<TextField>("name-input");
@@ -235,6 +257,7 @@ public class TetrisController : MonoBehaviour
     public void Show()
     {
         _window.RemoveFromClassList("hidden");
+        _window.pickingMode = PickingMode.Position;
         _isPaused = false;
         if (_isGameOver) ResetGame();
     }
@@ -242,6 +265,7 @@ public class TetrisController : MonoBehaviour
     public void Hide()
     {
         _window.AddToClassList("hidden");
+        _window.pickingMode = PickingMode.Ignore;
         _isPaused = true;
     }
 
@@ -255,6 +279,11 @@ public class TetrisController : MonoBehaviour
         _sessionRewardTriggered = false;
         _bag.Clear();
         if (_gameOverOverlay != null) _gameOverOverlay.AddToClassList("hidden");
+        if (_fragmentOverlay != null)
+        {
+            _fragmentOverlay.RemoveFromClassList("fragment-overlay--visible");
+            _fragmentOverlay.AddToClassList("hidden");
+        }
         
         for (int x = 0; x < 10; x++)
         {
@@ -587,15 +616,45 @@ public class TetrisController : MonoBehaviour
         }
 
         _sessionRewardTriggered = true;
+        _isPaused = true;
 
         if (ProgressionManager.Instance.ClaimTetrisReward())
         {
             SetBonusStatus("Hidden shard recovered. AeroOS did not expect that.");
+            StartCoroutine(PlayFragmentRecoverySequence());
         }
         else
         {
             SetBonusStatus("Shard already recovered. Keep playing for score.");
+            _isPaused = false;
         }
+    }
+
+    private IEnumerator PlayFragmentRecoverySequence()
+    {
+        if (_fragmentOverlay != null)
+        {
+            if (_fragmentTitle != null)
+            {
+                _fragmentTitle.text = "MEMORY FRAGMENT\nRECOVERED";
+            }
+
+            if (_fragmentBody != null)
+            {
+                _fragmentBody.text = "Lab 7 breach record restored.\nAeroOS attempted to hide this shard.";
+            }
+
+            _fragmentOverlay.RemoveFromClassList("hidden");
+            _fragmentOverlay.AddToClassList("fragment-overlay--visible");
+        }
+
+        PlaySound(fragmentGlitchClip);
+        yield return new WaitForSeconds(0.55f);
+        PlaySound(fragmentWhisperClip);
+        yield return new WaitForSeconds(2.6f);
+
+        Hide();
+        ResetGame();
     }
 
     private void RemoveLine(int y)

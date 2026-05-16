@@ -1,0 +1,162 @@
+:root {
+    --tree-dark: #051528;
+    --tree-glow: rgba(146, 252, 255, 0.32);
+    --tree-text: #f3fbff;
+    --tree-subtle: rgba(213, 239, 255, 0.76);
+}
+
+.tree-root {
+    flex-grow: 1;
+    background-color: var(--tree-dark);
+    justify-content: space-between;
+    padding: 34px;
+}
+
+.tree-header {
+    max-width: 700px;
+}
+
+.tree-title {
+    font-size: 36px;
+    color: var(--tree-text);
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+}
+
+.tree-status-label {
+    font-size: 16px;
+    color: var(--tree-subtle);
+    white-space: normal;
+}
+
+.tree-stage {
+    position: relative;
+    flex-grow: 1;
+    margin: 24px 0;
+}
+
+.tree-sky-glow {
+    position: absolute;
+    left: 50%;
+    top: 10%;
+    width: 700px;
+    height: 420px;
+    translate: -50% 0;
+    background-color: rgba(71, 153, 255, 0.15);
+    border-radius: 999px;
+}
+
+.tree-trunk {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 120px;
+    height: 360px;
+    translate: -50% 0;
+    background-color: rgba(15, 30, 20, 0.95);
+    border-radius: 50px 50px 14px 14px;
+}
+
+.tree-canopy {
+    position: absolute;
+    left: 50%;
+    bottom: 240px;
+    width: 560px;
+    height: 320px;
+    translate: -50% 0;
+    background-color: rgba(8, 22, 18, 0.98);
+    border-radius: 999px;
+}
+
+.memory-node {
+    position: absolute;
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    background-color: rgba(143, 230, 255, 0.14);
+    border-width: 1px;
+    border-color: rgba(143, 230, 255, 0.48);
+    color: white;
+    -unity-font-style: bold;
+    font-size: 18px;
+    -unity-text-align: middle-center;
+    text-shadow: 0 0 10px rgba(143, 230, 255, 0.85);
+}
+
+.memory-node:hover {
+    background-color: rgba(143, 230, 255, 0.28);
+}
+
+.memory-node--visited {
+    background-color: rgba(123, 225, 175, 0.25);
+    border-color: rgba(123, 225, 175, 0.62);
+}
+
+.memory-node-1 {
+    left: 38%;
+    bottom: 330px;
+}
+
+.memory-node-2 {
+    left: 49%;
+    bottom: 410px;
+}
+
+.memory-node-3 {
+    left: 60%;
+    bottom: 310px;
+}
+
+.tree-memory-panel {
+    align-self: flex-end;
+    width: 430px;
+    padding: 20px;
+    background-color: rgba(10, 29, 51, 0.86);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+}
+
+.memory-title {
+    font-size: 22px;
+    color: var(--tree-text);
+    -unity-font-style: bold;
+    margin-bottom: 10px;
+}
+
+.memory-body {
+    font-size: 15px;
+    color: var(--tree-subtle);
+    white-space: normal;
+    margin-bottom: 16px;
+}
+
+.tree-return-button {
+    height: 44px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.25);
+    border-radius: 12px;
+    color: white;
+    -unity-font-style: bold;
+}
+
+.tree-return-button--ready {
+    background-color: rgba(143, 230, 255, 0.18);
+    border-color: rgba(143, 230, 255, 0.42);
+}
+
+.tree-pulse-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(125, 240, 255, 0.06);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.tree-pulse-overlay--visible {
+    opacity: 1;
+}

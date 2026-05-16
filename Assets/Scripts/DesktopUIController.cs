@@ -52,6 +52,9 @@ public class DesktopUIController : MonoBehaviour
 
     private void OnEnable()
     {
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+
         _uiDocument = GetComponent<UIDocument>();
         if (_uiDocument == null)
         {

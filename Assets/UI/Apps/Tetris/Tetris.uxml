@@ -5,7 +5,7 @@
             <ui:Label text="Aero Tetris" class="window-title" />
             <ui:Button name="close-button" text="X" class="close-button" />
         </ui:VisualElement>
-        
+
         <ui:VisualElement class="tetris-content">
             <ui:VisualElement name="tetris-board-container" class="tetris-board-container">
                 <ui:VisualElement name="tetris-board" class="tetris-board" />
@@ -50,7 +50,14 @@
                 <ui:Label name="bonus-status-label" text="Clear 5 lines to recover a hidden shard." class="bonus-status-label" />
                 <ui:Label text="WASD / ARROWS to Move" class="control-hint" />
                 <ui:Label text="W / UP to Rotate" class="control-hint" />
-                </ui:VisualElement>
-                </ui:VisualElement>
-                </ui:VisualElement>
-                </ui:UXML>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="fragment-overlay" class="fragment-overlay hidden">
+            <ui:VisualElement class="fragment-panel">
+                <ui:Label name="fragment-title" text="MEMORY FRAGMENT&#10;RECOVERED" class="fragment-title" />
+                <ui:Label name="fragment-body" text="Lab 7 breach record restored." class="fragment-body" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

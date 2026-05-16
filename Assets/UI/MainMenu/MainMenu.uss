@@ -198,21 +198,215 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
 .panel-overlay {
     position: absolute;
     left: 0; top: 0; right: 0; bottom: 0;
-    background-color: rgba(0, 0, 0, 0.9);
+    background-color: rgba(4, 14, 32, 0.62);
     justify-content: center;
     align-items: center;
     display: none;
     opacity: 0;
-    transition-duration: 0.4s;
+    transition-duration: 0.35s;
 }
 
 .panel-content {
-    width: 650px;
-    padding: 50px;
-    background-color: rgba(255, 255, 255, 0.04);
+    width: 700px;
+    padding: 30px 34px 28px 34px;
+    background-color: rgba(185, 219, 255, 0.19);
     border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.2);
-    border-radius: var(--border-radius);
+    border-color: rgba(255, 255, 255, 0.3);
+    border-top-color: rgba(255, 255, 255, 0.52);
+    border-left-color: rgba(255, 255, 255, 0.18);
+    border-radius: 24px;
+    min-height: 320px;
+}
+
+.panel-content--settings {
+    width: 760px;
+}
+
+.panel-content--credits {
+    width: 760px;
+}
+
+.panel-header {
+    font-size: 34px;
+    color: white;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+}
+
+.panel-subtitle {
+    font-size: 15px;
+    color: rgba(227, 242, 255, 0.82);
+    margin-bottom: 24px;
+}
+
+.settings-card,
+.credits-card {
+    background-color: rgba(11, 35, 68, 0.28);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.16);
+    border-radius: 18px;
+    padding: 20px 22px;
+}
+
+.setting-block {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+}
+
+.setting-block--toggle {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.setting-copy {
+    margin-bottom: 14px;
+}
+
+.setting-meta-row {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.setting-meta-label {
+    font-size: 12px;
+    color: rgba(163, 224, 255, 0.75);
+    letter-spacing: 2px;
+    -unity-font-style: bold;
+}
+
+.setting-meta-value {
+    font-size: 17px;
+    color: white;
+    -unity-font-style: bold;
+}
+
+.setting-label {
+    font-size: 23px;
+    color: white;
+    -unity-font-style: bold;
+    margin-bottom: 4px;
+}
+
+.setting-description {
+    font-size: 14px;
+    color: rgba(221, 238, 255, 0.72);
+}
+
+.settings-slider {
+    margin-top: 6px;
+}
+
+.settings-slider .unity-base-slider__tracker {
+    height: 8px;
+    background-color: rgba(255, 255, 255, 0.16);
+    border-radius: 999px;
+}
+
+.settings-slider .unity-base-slider__dragger {
+    width: 18px;
+    height: 18px;
+    background-color: #f1fbff;
+    border-radius: 999px;
+    border-width: 2px;
+    border-color: rgba(0, 210, 255, 0.65);
+}
+
+.settings-slider .unity-base-slider__dragger-border {
+    background-color: transparent;
+}
+
+.settings-toggle {
+    min-width: 88px;
+    margin-left: 18px;
+}
+
+.settings-toggle-row {
+    flex-direction: row;
+    align-items: center;
+}
+
+.settings-toggle .unity-toggle__input {
+    width: 28px;
+    height: 28px;
+    background-color: rgba(255, 255, 255, 0.08);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.35);
+    border-radius: 6px;
+}
+
+.settings-toggle .unity-toggle__checkmark {
+    -unity-background-image-tint-color: white;
+}
+
+.credits-section {
+    background-color: rgba(255, 255, 255, 0.045);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin-bottom: 14px;
+}
+
+.credits-section-title {
+    font-size: 14px;
+    color: var(--color-primary);
+    letter-spacing: 4px;
+    -unity-font-style: bold;
+    margin-bottom: 14px;
+}
+
+.credits-name-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.credits-name {
+    font-size: 28px;
+    color: white;
+    -unity-font-style: bold;
+    margin-right: 22px;
+    margin-bottom: 10px;
+}
+
+.credits-detail {
+    font-size: 18px;
+    color: rgba(236, 246, 255, 0.86);
+}
+
+.panel-footer {
+    margin-top: 18px;
+    align-items: flex-end;
+}
+
+.close-btn {
+    min-width: 170px;
+    height: 46px;
+    padding: 0 24px;
+    background-color: rgba(255, 255, 255, 0.09);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.28);
+    border-radius: 12px;
+    color: white;
+    -unity-font-style: bold;
+    font-size: 16px;
+    -unity-text-align: middle-center;
+}
+
+.close-btn:hover {
+    background-color: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.42);
+}
+
+.close-btn:active {
+    background-color: rgba(120, 209, 255, 0.2);
 }
 
 .fade-overlay {
