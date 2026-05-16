@@ -1,12 +1,10 @@
 fileFormatVersion: 2
-guid: 2897a732cbbab974a98507c0c1e48855
-labels:
-- UnityAI
+guid: 5d48a8819a009ba429b8b8b33206f2e2
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1928200300737814378
-    second: Computer_0
+      213: -2933237878154665561
+    second: Computer_Cropped_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -48,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -102,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Computer_0
+      name: Computer_Cropped_0
       rect:
         serializedVersion: 2
-        x: 73
+        x: 0
         y: 0
-        width: 183
-        height: 170
+        width: 585
+        height: 475
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 690a8b2ea08ad35e0800000000000000
-      internalID: -1928200300737814378
+      spriteID: 7a1eed6d0bb0b47d0800000000000000
+      internalID: -2933237878154665561
       vertices: []
       indices: 
       edges: []
@@ -127,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -137,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Computer_0: -1928200300737814378
+      Computer_Cropped_0: -2933237878154665561
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1,0 +1,38 @@
+{
+    "asset": "9fb102a5beefc0449876d77c108ea4ee",
+    "fileName": "019e3079-123f-7213-a8d3-9879238fc76f.png",
+    "prompt": "A professional computer icon in the Frutiger Aero style, featuring a sleek silver monitor with a glossy blue glass screen and a vertical silver computer tower. The computer setup must FILL THE ENTIRE FRAME, leaving only a tiny margin at the very edges to ensure no parts are cut off. It should be significantly larger than the previous version, taking up almost the entire 1024x1024 space. High-gloss finish, realistic glass reflections, mid-2000s OS aesthetic.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "f40e278f9c3f63341a76efd26b7f1c0c",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

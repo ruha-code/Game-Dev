@@ -1,0 +1,38 @@
+{
+    "asset": "4ca1f609babbf7b4c9718020725a29ca",
+    "fileName": "019e306c-6e5c-7a9d-9e51-9305e9348b37.png",
+    "prompt": "A glossy silver computer monitor and computer tower, Frutiger Aero aesthetic. The monitor has a vibrant blue glass screen with abstract wave patterns and realistic high-gloss reflections. To the left is a matching silver vertical computer tower. The entire computer setup (monitor, stand, and tower) is fully centered and completely visible within the frame, with no parts cut off at the edges. High-quality 3D rendered style, mid-2000s tech aesthetic. 1024x1024.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "2897a732cbbab974a98507c0c1e48855",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

@@ -1,0 +1,38 @@
+{
+    "asset": "c66500dc5060d3a46b930de2076d70e1",
+    "fileName": "019e306e-ac8c-79d7-9716-6023d0279ffd.png",
+    "prompt": "A glossy silver computer monitor and computer tower icon, Frutiger Aero aesthetic. The monitor has a vibrant blue glass screen with abstract waves and realistic high-gloss reflections. Beside it is a matching vertical silver computer tower. IMPORTANT: The entire setup must be SHRUNK slightly and CENTERED with plenty of transparent space around it so that NO PARTS of the monitor, tower, or stand are cut off at the edges. ABSOLUTELY NO TEXT or brand logos on the hardware. High-quality 3D render style. 1024x1024.",
+    "negativePrompt": "",
+    "model": "gemini-3.0-pro",
+    "modelName": "Gemini 3.0 Pro",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "2192cb3cf071e5d49abc29627b6ab683",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

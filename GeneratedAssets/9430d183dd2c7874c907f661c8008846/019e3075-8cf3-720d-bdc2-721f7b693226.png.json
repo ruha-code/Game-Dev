@@ -1,0 +1,38 @@
+{
+    "asset": "9430d183dd2c7874c907f661c8008846",
+    "fileName": "019e3075-8cf3-720d-bdc2-721f7b693226.png",
+    "prompt": "A professional computer icon in the Frutiger Aero style. It features a sleek silver monitor with a glossy blue glass screen showing abstract light waves, and a matching vertical silver computer tower to its left. CRITICAL: The tower must have a clear, sturdy base/stand that is fully visible and not cut off. The monitor also has a glossy silver circular base. The entire setup must be centered with a large amount of empty space on all sides. No clipping. High-gloss finish, realistic glass reflections, mid-2000s OS aesthetic. 1024x1024.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "7f9d005303dae464ea85beb1ebe9718f",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

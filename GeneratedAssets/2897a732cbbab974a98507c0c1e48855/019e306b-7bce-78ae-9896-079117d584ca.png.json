@@ -1,0 +1,38 @@
+{
+    "asset": "2897a732cbbab974a98507c0c1e48855",
+    "fileName": "019e306b-7bce-78ae-9896-079117d584ca.png",
+    "prompt": "Fix the computer monitor icon. The right side of the monitor frame is cut off; redraw the complete monitor frame so it is symmetrical and fully visible. Maintain the glossy blue Frutiger Aero style, with glass reflections and vibrant colors. The entire monitor and its stand should be fully within the frame and centered. High-gloss finish, mid-2000s OS aesthetic.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "2897a732cbbab974a98507c0c1e48855",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

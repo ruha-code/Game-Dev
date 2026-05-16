@@ -80,7 +80,7 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     width: 100%;
 }
 
-#icon-computer { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Computer.png"); }
+#icon-computer { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Computer_Cropped.png"); }
 #icon-documents { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Documents.png"); }
 #icon-pictures { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Pictures.png"); }
 #icon-videos { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Videos.png"); }

@@ -1,12 +1,12 @@
 fileFormatVersion: 2
-guid: 2897a732cbbab974a98507c0c1e48855
+guid: f40e278f9c3f63341a76efd26b7f1c0c
 labels:
 - UnityAI
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -1928200300737814378
-    second: Computer_0
+      213: -9168902973249775495
+    second: Computer_Large_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -53,7 +53,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 1024
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -102,13 +102,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Computer_0
+      name: Computer_Large_0
       rect:
         serializedVersion: 2
-        x: 73
+        x: 0
         y: 0
-        width: 183
-        height: 170
+        width: 1024
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -117,8 +117,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 690a8b2ea08ad35e0800000000000000
-      internalID: -1928200300737814378
+      spriteID: 9789c63235381c080800000000000000
+      internalID: -9168902973249775495
       vertices: []
       indices: 
       edges: []
@@ -137,7 +137,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Computer_0: -1928200300737814378
+      Computer_Large_0: -9168902973249775495
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
