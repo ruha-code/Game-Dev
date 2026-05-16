@@ -2,49 +2,58 @@
     <ui:Style src="AeroDesktop.uss" />
     <ui:Template name="tetris-template" src="project://database/Assets/UI/Apps/Tetris/Tetris.uxml" />
     <ui:VisualElement name="root" class="desktop-root">
-<ui:VisualElement name="background" class="desktop-background" />
+        <ui:VisualElement name="background" class="desktop-background" />
+        <ui:VisualElement name="wallpaper-hotspots" class="wallpaper-hotspots">
+            <ui:Button name="tree-hotspot" text="Tree Anomaly" class="wallpaper-hotspot hidden" />
+            <ui:Button name="city-hotspot" text="City Layer" class="wallpaper-hotspot hidden" />
+            <ui:Button name="balloon-hotspot" text="Balloon Signal" class="wallpaper-hotspot hidden" />
+        </ui:VisualElement>
+        <ui:VisualElement name="objective-panel" class="objective-panel">
+            <ui:Label name="objective-title" text="Current Task" class="objective-title" />
+            <ui:Label name="objective-text" text="Review Documents" class="objective-text" />
+        </ui:VisualElement>
         
         <ui:VisualElement name="main-area" class="desktop-main-area">
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-computer" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-computer" class="desktop-icon" />
                 <ui:Label text="Computer" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-documents" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-documents" class="desktop-icon" />
                 <ui:Label text="Documents" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-pictures" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-pictures" class="desktop-icon" />
                 <ui:Label text="Pictures" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-videos" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-videos" class="desktop-icon" />
                 <ui:Label text="Videos" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-music" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-music" class="desktop-icon" />
                 <ui:Label text="Music" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-network" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-network" class="desktop-icon" />
                 <ui:Label text="Network" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-control-panel" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-control-panel" class="desktop-icon" />
                 <ui:Label text="Control Panel" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-recycle-bin" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-recycle-bin" class="desktop-icon" />
                 <ui:Label text="Recycle Bin" class="desktop-icon-label" />
             </ui:VisualElement>
-            <ui:VisualElement class="desktop-icon-wrapper">
+            <ui:VisualElement name="icon-wrapper-tetris" class="desktop-icon-wrapper">
                 <ui:VisualElement name="icon-tetris" class="desktop-icon" />
                 <ui:Label text="Tetris" class="desktop-icon-label" />
             </ui:VisualElement>
-            </ui:VisualElement>
+        </ui:VisualElement>
 
-            <ui:VisualElement name="start-menu" class="start-menu hidden">
-<ui:VisualElement class="start-menu-left">
+        <ui:VisualElement name="start-menu" class="start-menu hidden">
+            <ui:VisualElement class="start-menu-left">
                 <ui:VisualElement class="start-menu-item">
                     <ui:VisualElement class="start-menu-item-icon" style="background-image: url(&apos;project://database/Assets/Sprites/AeroIcons_Processed/Documents.png&apos;);" />
                     <ui:Label text="Internet Explorer" class="start-menu-item-label" />
@@ -68,7 +77,7 @@
                 <ui:Label text="Control Panel" class="start-menu-right-item" />
                 <ui:VisualElement class="start-menu-right-spacer" />
                 <ui:Button text="Shut Down" class="start-menu-shutdown-btn" />
-                </ui:VisualElement>
+            </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:VisualElement name="taskbar" class="taskbar">
@@ -80,5 +89,5 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:Instance template="tetris-template" name="tetris-app" class="app-container" picking-mode="Ignore" />
-        </ui:VisualElement>
-        </ui:UXML>
+    </ui:VisualElement>
+</ui:UXML>

@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
 
     private void InitializeSystems()
     {
+        _ = ProgressionManager.Instance;
+        _ = AudioManager.Instance;
         Debug.Log("Game Systems Initialized");
         // Add global initialization logic here
     }

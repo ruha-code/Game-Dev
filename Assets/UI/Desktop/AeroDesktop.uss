@@ -31,6 +31,74 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     -unity-background-scale-mode: scale-and-crop;
 }
 
+.wallpaper-hotspots {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: var(--taskbar-height);
+}
+
+.wallpaper-hotspot {
+    position: absolute;
+    min-width: 160px;
+    height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background-color: rgba(120, 220, 255, 0.18);
+    border-width: 1px;
+    border-color: rgba(210, 250, 255, 0.75);
+    color: white;
+    -unity-font-style: bold;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 1);
+}
+
+.wallpaper-hotspot:hover {
+    background-color: rgba(150, 235, 255, 0.3);
+}
+
+#tree-hotspot {
+    right: 110px;
+    bottom: 170px;
+}
+
+#city-hotspot {
+    right: 230px;
+    top: 160px;
+}
+
+#balloon-hotspot {
+    left: 56%;
+    top: 120px;
+}
+
+.objective-panel {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    width: 360px;
+    padding: 18px 20px;
+    background-color: rgba(195, 235, 255, 0.18);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.45);
+    border-radius: 18px;
+}
+
+.objective-title {
+    color: rgba(220, 245, 255, 0.92);
+    font-size: 12px;
+    letter-spacing: 0.8px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+}
+
+.objective-text {
+    color: white;
+    font-size: 16px;
+    -unity-font-style: bold;
+    white-space: normal;
+}
+
 .desktop-main-area {
     flex-grow: 1;
     flex-direction: column;
@@ -71,6 +139,16 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     background-color: rgba(0, 180, 255, 0.22);
     border-width: 1.5px;
     border-color: rgba(170, 255, 255, 0.85);
+}
+
+.desktop-icon-wrapper--objective {
+    background-color: rgba(120, 220, 255, 0.18);
+    border-width: 1.5px;
+    border-color: rgba(210, 250, 255, 0.82);
+}
+
+.desktop-icon-wrapper--locked {
+    opacity: 0.48;
 }
 
 .desktop-icon {
@@ -280,6 +358,10 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 
 .start-menu.hidden {
     translate: 0 650px;
+    display: none;
+}
+
+.hidden {
     display: none;
 }
 

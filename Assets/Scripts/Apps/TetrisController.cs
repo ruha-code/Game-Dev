@@ -44,6 +44,8 @@ public class TetrisController : MonoBehaviour
     private VisualElement _board;
     private Label _scoreLabel;
     private Label _levelLabel;
+    private Label _linesLabel;
+    private Label _bonusStatusLabel;
     private VisualElement _nextPreview;
     private Button _closeButton;
 
@@ -81,8 +83,12 @@ public class TetrisController : MonoBehaviour
 
     private int _score;
     private int _level = 1;
+    private int _totalLinesCleared;
     private bool _isGameOver;
     private bool _isPaused = true;
+    private bool _sessionRewardTriggered;
+
+    private const int BonusRewardLineTarget = 5;
 
     public void Initialize(VisualElement root)
     {
@@ -90,6 +96,8 @@ public class TetrisController : MonoBehaviour
         _board = root.Q<VisualElement>("tetris-board");
         _scoreLabel = root.Q<Label>("score-label");
         _levelLabel = root.Q<Label>("level-label");
+        _linesLabel = root.Q<Label>("lines-label");
+        _bonusStatusLabel = root.Q<Label>("bonus-status-label");
         _nextPreview = root.Q<VisualElement>("next-piece-preview");
         _closeButton = root.Q<Button>("close-button");
 
@@ -224,8 +232,10 @@ public class TetrisController : MonoBehaviour
     {
         _score = 0;
         _level = 1;
+        _totalLinesCleared = 0;
         _dropInterval = 1f;
         _isGameOver = false;
+        _sessionRewardTriggered = false;
         _bag.Clear();
         if (_gameOverOverlay != null) _gameOverOverlay.AddToClassList("hidden");
         
@@ -537,13 +547,34 @@ public class TetrisController : MonoBehaviour
 
         if (linesCleared > 0)
         {
+            _totalLinesCleared += linesCleared;
             _score += linesCleared * 100 * _level;
             if (_score > _level * 500)
             {
                 _level++;
                 _dropInterval = Mathf.Max(0.1f, 1f - (_level * 0.1f));
             }
+            CheckBonusReward();
             UpdateUI();
+        }
+    }
+
+    private void CheckBonusReward()
+    {
+        if (_sessionRewardTriggered || _totalLinesCleared < BonusRewardLineTarget)
+        {
+            return;
+        }
+
+        _sessionRewardTriggered = true;
+
+        if (ProgressionManager.Instance.ClaimTetrisReward())
+        {
+            SetBonusStatus("Hidden shard recovered. AeroOS did not expect that.");
+        }
+        else
+        {
+            SetBonusStatus("Shard already recovered. Keep playing for score.");
         }
     }
 
@@ -691,5 +722,30 @@ public class TetrisController : MonoBehaviour
     {
         _scoreLabel.text = _score.ToString("D6");
         _levelLabel.text = _level.ToString();
+        if (_linesLabel != null)
+        {
+            _linesLabel.text = _totalLinesCleared.ToString();
+        }
+
+        if (!_sessionRewardTriggered)
+        {
+            if (ProgressionManager.Instance.TetrisRewardClaimed)
+            {
+                SetBonusStatus("Shard already recovered. This app now serves as bonus lore.");
+            }
+            else
+            {
+                int remainingLines = Mathf.Max(0, BonusRewardLineTarget - _totalLinesCleared);
+                SetBonusStatus($"Clear {remainingLines} more line(s) to recover a hidden shard.");
+            }
+        }
+    }
+
+    private void SetBonusStatus(string text)
+    {
+        if (_bonusStatusLabel != null)
+        {
+            _bonusStatusLabel.text = text;
+        }
     }
 }

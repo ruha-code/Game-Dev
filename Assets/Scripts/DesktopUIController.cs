@@ -1,7 +1,9 @@
-using UnityEngine;
-using UnityEngine.UIElements;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class DesktopUIController : MonoBehaviour
 {
@@ -28,8 +30,6 @@ public class DesktopUIController : MonoBehaviour
     private VisualElement _mainArea;
     private Label _startMenuUserName;
     private TetrisController _tetrisController;
-    private AudioSource _desktopAudioSource;
-    private AudioSource _ambientAudioSource;
     private bool _hasPlayedDesktopAppearChime;
     private string _playerName;
     private string _stableClockText;
@@ -43,103 +43,220 @@ public class DesktopUIController : MonoBehaviour
     private VisualElement _glassOverlay;
     private VisualElement _chatWindow;
     private Label _chatText;
+    private Label _objectiveText;
+    private Button _treeHotspot;
+    private Button _cityHotspot;
+    private Button _balloonHotspot;
+
+    private readonly Dictionary<string, VisualElement> _iconMap = new Dictionary<string, VisualElement>();
 
     private void OnEnable()
     {
         _uiDocument = GetComponent<UIDocument>();
-        if (_uiDocument == null) return;
+        if (_uiDocument == null)
+        {
+            return;
+        }
+
+        _ = ProgressionManager.Instance;
+        _ = AudioManager.Instance;
 
         _tetrisController = GetComponent<TetrisController>();
         _playerName = PlayerPrefs.GetString("PlayerName", "User");
-
         _root = _uiDocument.rootVisualElement;
 
-        // Query elements
         _startButton = _root.Q<VisualElement>("start-button");
         _startMenu = _root.Q<VisualElement>("start-menu");
         _shutdownButton = _root.Q<Button>(className: "start-menu-shutdown-btn");
         _clockLabel = _root.Q<Label>("tray-clock");
         _mainArea = _root.Q<VisualElement>("main-area");
         _startMenuUserName = _root.Q<Label>(className: "start-menu-user-name");
-
-        if (_desktopAudioSource == null)
-        {
-            _desktopAudioSource = gameObject.AddComponent<AudioSource>();
-            _desktopAudioSource.playOnAwake = false;
-            _desktopAudioSource.loop = false;
-            _desktopAudioSource.spatialBlend = 0f;
-        }
-
-        if (_ambientAudioSource == null)
-        {
-            _ambientAudioSource = gameObject.AddComponent<AudioSource>();
-            _ambientAudioSource.playOnAwake = false;
-            _ambientAudioSource.loop = true;
-            _ambientAudioSource.spatialBlend = 0f;
-            _ambientAudioSource.volume = 0f;
-        }
+        _objectiveText = _root.Q<Label>("objective-text");
+        _treeHotspot = _root.Q<Button>("tree-hotspot");
+        _cityHotspot = _root.Q<Button>("city-hotspot");
+        _balloonHotspot = _root.Q<Button>("balloon-hotspot");
 
         EnsureAnomalyUi();
         ApplyPersonalization();
+        CacheDesktopIcons();
 
-        // Initialize Tetris
         if (_tetrisController != null)
         {
             _tetrisController.Initialize(_root);
         }
 
-        // Register events
+        RegisterUiEvents();
+        RegisterHotspots();
+
+        UpdateClock();
+        InvokeRepeating(nameof(UpdateClock), 1f, 1f);
+        StartCoroutine(PlayDesktopAppearChimeOnce());
+
+        if (_uiAnomalyRoutine != null)
+        {
+            StopCoroutine(_uiAnomalyRoutine);
+        }
+
+        _uiAnomalyRoutine = StartCoroutine(UiAnomalyRoutine());
+        ProgressionManager.Instance.ProgressionChanged += OnProgressionChanged;
+        RefreshDesktopState();
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke(nameof(UpdateClock));
+        if (_uiAnomalyRoutine != null)
+        {
+            StopCoroutine(_uiAnomalyRoutine);
+            _uiAnomalyRoutine = null;
+        }
+
+        if (ProgressionManager.HasInstance)
+        {
+            ProgressionManager.Instance.ProgressionChanged -= OnProgressionChanged;
+        }
+    }
+
+    private void RegisterUiEvents()
+    {
         if (_startButton != null)
         {
             _startButton.RegisterCallback<ClickEvent>(OnStartButtonClicked);
-            _startButton.RegisterCallback<ClickEvent>(evt => PlayClickSound());
+            _startButton.RegisterCallback<ClickEvent>(_ => PlayClickSound());
         }
 
         if (_shutdownButton != null)
         {
             _shutdownButton.RegisterCallback<PointerOverEvent>(OnShutdownButtonHover);
-            _shutdownButton.RegisterCallback<ClickEvent>(evt => PlayClickSound());
+            _shutdownButton.RegisterCallback<ClickEvent>(_ => PlayClickSound());
         }
 
         if (_mainArea != null)
         {
             _mainArea.RegisterCallback<ClickEvent>(OnMainAreaClicked);
-            _mainArea.RegisterCallback<ClickEvent>(evt => PlayClickSound());
+            _mainArea.RegisterCallback<ClickEvent>(_ => PlayClickSound());
         }
 
-        // Initialize clock
-        UpdateClock();
-        InvokeRepeating(nameof(UpdateClock), 1f, 1f);
-        StartCoroutine(PlayDesktopAppearChimeOnce());
-        if (_uiAnomalyRoutine != null) StopCoroutine(_uiAnomalyRoutine);
-        _uiAnomalyRoutine = StartCoroutine(UiAnomalyRoutine());
-
-        // Setup desktop icons
-        var icons = _root.Query<VisualElement>(className: "desktop-icon-wrapper").ToList();
-        foreach (var icon in icons)
+        foreach (VisualElement icon in _iconMap.Values)
         {
-            icon.RegisterCallback<ClickEvent>(evt => {
+            icon.RegisterCallback<ClickEvent>(evt =>
+            {
                 OnIconClicked(icon);
                 PlayClickSound();
+                evt.StopPropagation();
             });
         }
     }
 
+    private void RegisterHotspots()
+    {
+        RegisterHotspot(_treeHotspot, LocationId.TreeScene, "TreeScene");
+        RegisterHotspot(_cityHotspot, LocationId.CityScene, "CityScene");
+        RegisterHotspot(_balloonHotspot, LocationId.BalloonScene, "BalloonScene");
+    }
+
+    private void RegisterHotspot(Button hotspot, LocationId locationId, string sceneName)
+    {
+        if (hotspot == null)
+        {
+            return;
+        }
+
+        hotspot.clicked += () =>
+        {
+            PlayClickSound();
+            if (TryLoadScene(sceneName))
+            {
+                ProgressionManager.Instance.MarkLocationVisited(locationId);
+            }
+        };
+    }
+
+    private void CacheDesktopIcons()
+    {
+        _iconMap.Clear();
+        _iconMap["Computer"] = _root.Q<VisualElement>("icon-wrapper-computer");
+        _iconMap["Documents"] = _root.Q<VisualElement>("icon-wrapper-documents");
+        _iconMap["Pictures"] = _root.Q<VisualElement>("icon-wrapper-pictures");
+        _iconMap["Videos"] = _root.Q<VisualElement>("icon-wrapper-videos");
+        _iconMap["Music"] = _root.Q<VisualElement>("icon-wrapper-music");
+        _iconMap["Network"] = _root.Q<VisualElement>("icon-wrapper-network");
+        _iconMap["Control Panel"] = _root.Q<VisualElement>("icon-wrapper-control-panel");
+        _iconMap["Recycle Bin"] = _root.Q<VisualElement>("icon-wrapper-recycle-bin");
+        _iconMap["Tetris"] = _root.Q<VisualElement>("icon-wrapper-tetris");
+    }
+
+    private void OnProgressionChanged()
+    {
+        RefreshDesktopState();
+    }
+
+    private void RefreshDesktopState()
+    {
+        ProgressionManager progression = ProgressionManager.Instance;
+
+        if (_objectiveText != null)
+        {
+            _objectiveText.text = progression.GetCurrentObjectiveText();
+        }
+
+        UpdateIconState("Documents", true, progression.CurrentObjective == ObjectiveId.ReviewDocuments);
+        UpdateIconState("Pictures", progression.HasKey(GameKey.DocumentsKey), progression.CurrentObjective == ObjectiveId.RecoverTreeMemory && !progression.HasKey(GameKey.PicturesKey));
+        UpdateIconState("Music", progression.HasKey(GameKey.DocumentsKey), progression.CurrentObjective == ObjectiveId.RecoverTreeMemory && !progression.HasKey(GameKey.MusicKey));
+        UpdateIconState("Computer", progression.HasKey(GameKey.PicturesKey) && progression.HasKey(GameKey.MusicKey), progression.CurrentObjective == ObjectiveId.AccessComputer);
+        UpdateIconState("Control Panel", progression.HasKey(GameKey.ComputerKey), progression.CurrentObjective == ObjectiveId.ConfigureControlPanel);
+        UpdateIconState("Network", progression.HasKey(GameKey.ControlPanelKey), progression.CurrentObjective == ObjectiveId.RepairNetwork);
+        UpdateIconState("Videos", progression.HasKey(GameKey.NetworkKey), progression.CurrentObjective == ObjectiveId.RecoverVideoEvidence);
+        UpdateIconState("Recycle Bin", progression.HasKey(GameKey.VideosKey), progression.CurrentObjective == ObjectiveId.SearchRecycleBin);
+        UpdateIconState("Tetris", true, false);
+
+        SetHotspotVisible(_treeHotspot, progression.IsLocationUnlocked(LocationId.TreeScene));
+        SetHotspotVisible(_cityHotspot, progression.IsLocationUnlocked(LocationId.CityScene));
+        SetHotspotVisible(_balloonHotspot, progression.IsLocationUnlocked(LocationId.BalloonScene));
+
+        if (progression.HasUnseenObjectivePopup())
+        {
+            ShowSystemToast("Objective Updated", progression.GetObjectivePopupMessage());
+            progression.AcknowledgeCurrentObjectivePopup();
+        }
+    }
+
+    private void UpdateIconState(string iconName, bool isEnabled, bool isObjective)
+    {
+        if (!_iconMap.TryGetValue(iconName, out VisualElement icon) || icon == null)
+        {
+            return;
+        }
+
+        icon.EnableInClassList("desktop-icon-wrapper--locked", !isEnabled);
+        icon.EnableInClassList("desktop-icon-wrapper--objective", isObjective);
+        icon.SetEnabled(isEnabled || iconName == "Tetris");
+    }
+
+    private void SetHotspotVisible(VisualElement hotspot, bool isVisible)
+    {
+        if (hotspot == null)
+        {
+            return;
+        }
+
+        hotspot.EnableInClassList("hidden", !isVisible);
+        hotspot.SetEnabled(isVisible);
+    }
+
     private void PlayClickSound()
     {
-        if (uiClickSound != null && _desktopAudioSource != null)
+        if (uiClickSound != null)
         {
-            _desktopAudioSource.PlayOneShot(uiClickSound, 0.4f);
+            AudioManager.Instance.PlayUISFX(uiClickSound, 0.4f);
         }
     }
 
     private void OnShutdownButtonHover(PointerOverEvent evt)
     {
-        // Runaway button anomaly logic: only if start menu is visible
-        if (_shutdownButton != null && !_startMenu.ClassListContains("hidden"))
+        if (_shutdownButton != null && _startMenu != null && !_startMenu.ClassListContains("hidden"))
         {
-            // Occasionally "run away"
-            if (UnityEngine.Random.value < 0.3f) 
+            if (UnityEngine.Random.value < 0.3f)
             {
                 float offsetX = UnityEngine.Random.Range(-50f, 50f);
                 float offsetY = UnityEngine.Random.Range(-30f, 30f);
@@ -157,36 +274,23 @@ public class DesktopUIController : MonoBehaviour
         }
     }
 
-    private void OnDisable()
-    {
-        CancelInvoke(nameof(UpdateClock));
-        if (_uiAnomalyRoutine != null)
-        {
-            StopCoroutine(_uiAnomalyRoutine);
-            _uiAnomalyRoutine = null;
-        }
-    }
-
     private IEnumerator PlayDesktopAppearChimeOnce()
     {
-        if (_hasPlayedDesktopAppearChime || desktopAppearChime == null || _desktopAudioSource == null)
+        if (_hasPlayedDesktopAppearChime || desktopAppearChime == null)
         {
             yield break;
         }
 
-        // Wait one frame so the chime lines up with the desktop becoming visible.
         yield return null;
 
-        _desktopAudioSource.PlayOneShot(desktopAppearChime, desktopAppearVolume);
+        AudioManager.Instance.PlayUISFX(desktopAppearChime, desktopAppearVolume);
         _hasPlayedDesktopAppearChime = true;
 
-        // Wait for chime to finish (approximate) + extra 1.5s delay
         yield return new WaitForSeconds(desktopAppearChime.length + 1.5f);
 
-        if (ambientDesktopSound != null && _ambientAudioSource != null)
+        if (ambientDesktopSound != null)
         {
-            _ambientAudioSource.clip = ambientDesktopSound;
-            _ambientAudioSource.Play();
+            AudioManager.Instance.PlayAmbient(ambientDesktopSound, true, 0f);
             yield return StartCoroutine(FadeInAmbient());
         }
     }
@@ -197,10 +301,11 @@ public class DesktopUIController : MonoBehaviour
         while (elapsed < ambientFadeDuration)
         {
             elapsed += Time.deltaTime;
-            _ambientAudioSource.volume = Mathf.Lerp(0f, ambientVolume, elapsed / ambientFadeDuration);
+            AudioManager.Instance.SetAmbientVolume(Mathf.Lerp(0f, ambientVolume, elapsed / ambientFadeDuration));
             yield return null;
         }
-        _ambientAudioSource.volume = ambientVolume;
+
+        AudioManager.Instance.SetAmbientVolume(ambientVolume);
     }
 
     private void UpdateClock()
@@ -214,25 +319,27 @@ public class DesktopUIController : MonoBehaviour
 
     private void OnStartButtonClicked(ClickEvent evt)
     {
-        if (_startMenu != null)
+        if (_startMenu == null)
         {
-            bool isHidden = _startMenu.ClassListContains("hidden");
-            if (isHidden)
-            {
-                _startMenu.RemoveFromClassList("hidden");
-                ResetShutdownButton();
-            }
-            else
-            {
-                _startMenu.AddToClassList("hidden");
-            }
-            evt.StopPropagation();
+            return;
         }
+
+        bool isHidden = _startMenu.ClassListContains("hidden");
+        if (isHidden)
+        {
+            _startMenu.RemoveFromClassList("hidden");
+            ResetShutdownButton();
+        }
+        else
+        {
+            _startMenu.AddToClassList("hidden");
+        }
+
+        evt.StopPropagation();
     }
 
     private void OnMainAreaClicked(ClickEvent evt)
     {
-        // Close start menu when clicking background
         if (_startMenu != null && !_startMenu.ClassListContains("hidden"))
         {
             _startMenu.AddToClassList("hidden");
@@ -241,27 +348,81 @@ public class DesktopUIController : MonoBehaviour
 
     private void OnIconClicked(VisualElement icon)
     {
-        // Deselect others
         var allIcons = _root.Query<VisualElement>(className: "desktop-icon-wrapper").ToList();
-        foreach (var other in allIcons)
+        foreach (VisualElement other in allIcons)
         {
             other.RemoveFromClassList("desktop-icon-wrapper--selected");
         }
 
-        var label = icon.Q<Label>(className: "desktop-icon-label");
+        Label label = icon.Q<Label>(className: "desktop-icon-label");
         string iconName = label != null ? label.text : "Unknown Icon";
-        Debug.Log($"Desktop Icon Clicked: {iconName}");
-        
-        // Add selected visual feedback
         icon.AddToClassList("desktop-icon-wrapper--selected");
 
-        if (iconName == "Tetris")
+        switch (iconName)
         {
-            if (_tetrisController != null)
-            {
-                _tetrisController.Show();
-            }
+            case "Documents":
+                HandleProgramLaunch("DocumentsMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Pictures":
+                HandleProgramLaunch("PicturesMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Music":
+                HandleProgramLaunch("MusicMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Computer":
+                HandleProgramLaunch("ComputerMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Control Panel":
+                HandleProgramLaunch("ControlPanelMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Network":
+                HandleProgramLaunch("NetworkMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Videos":
+                HandleProgramLaunch("VideosMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Recycle Bin":
+                HandleProgramLaunch("RecycleBinMiniGame", IsIconEnabled(iconName));
+                break;
+            case "Tetris":
+                if (_tetrisController != null)
+                {
+                    _tetrisController.Show();
+                }
+                break;
+            default:
+                Debug.Log($"Desktop Icon Clicked: {iconName}");
+                break;
         }
+    }
+
+    private bool IsIconEnabled(string iconName)
+    {
+        return !_iconMap.TryGetValue(iconName, out VisualElement icon) || icon == null || !icon.ClassListContains("desktop-icon-wrapper--locked");
+    }
+
+    private void HandleProgramLaunch(string sceneName, bool canLaunch)
+    {
+        if (!canLaunch)
+        {
+            ShowSystemToast("Recovery Incomplete", "This program is not available yet.");
+            return;
+        }
+
+        TryLoadScene(sceneName);
+    }
+
+    private bool TryLoadScene(string sceneName)
+    {
+        if (Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            SceneManager.LoadScene(sceneName);
+            return true;
+        }
+
+        Debug.Log($"[Desktop] Scene '{sceneName}' is not available yet.");
+        ShowSystemToast("Module Missing", $"Scene '{sceneName}' has not been added yet.");
+        return false;
     }
 
     private void ApplyPersonalization()
@@ -274,7 +435,10 @@ public class DesktopUIController : MonoBehaviour
 
     private void EnsureAnomalyUi()
     {
-        if (_root == null) return;
+        if (_root == null)
+        {
+            return;
+        }
 
         if (_toast == null)
         {
@@ -314,7 +478,10 @@ public class DesktopUIController : MonoBehaviour
             _glassOverlay.AddToClassList("glass-overlay");
             _glassOverlay.pickingMode = PickingMode.Ignore;
             if (brokenGlassSprite != null)
+            {
                 _glassOverlay.style.backgroundImage = new StyleBackground(brokenGlassSprite);
+            }
+
             _root.Add(_glassOverlay);
         }
 
@@ -323,11 +490,15 @@ public class DesktopUIController : MonoBehaviour
             _chatWindow = new VisualElement();
             _chatWindow.AddToClassList("phantom-chat");
             _chatWindow.pickingMode = PickingMode.Ignore;
+
             var icon = new VisualElement();
             icon.AddToClassList("phantom-chat-icon");
             icon.pickingMode = PickingMode.Ignore;
             if (phantomChatIcon != null)
+            {
                 icon.style.backgroundImage = new StyleBackground(phantomChatIcon);
+            }
+
             _chatText = new Label();
             _chatText.AddToClassList("phantom-chat-text");
             _chatText.pickingMode = PickingMode.Ignore;
@@ -337,12 +508,35 @@ public class DesktopUIController : MonoBehaviour
         }
     }
 
+    private void ShowSystemToast(string title, string message)
+    {
+        if (_toast == null || _toastTitle == null || _toastBody == null)
+        {
+            return;
+        }
+
+        StopCoroutine(nameof(HideToastRoutine));
+        _toastTitle.text = title;
+        _toastBody.text = message;
+        _toast.AddToClassList("desktop-toast--visible");
+        StartCoroutine(HideToastRoutine());
+    }
+
+    private IEnumerator HideToastRoutine()
+    {
+        yield return new WaitForSeconds(4f);
+        if (_toast != null)
+        {
+            _toast.RemoveFromClassList("desktop-toast--visible");
+        }
+    }
+
     private IEnumerator UiAnomalyRoutine()
     {
         while (isActiveAndEnabled)
         {
             yield return new WaitForSeconds(UnityEngine.Random.Range(minUiAnomalyInterval, maxUiAnomalyInterval));
-            yield return StartCoroutine(TriggerUiAnomaly(UnityEngine.Random.Range(0, 7)));
+            yield return StartCoroutine(TriggerUiAnomaly(UnityEngine.Random.Range(0, 8)));
         }
     }
 
@@ -358,28 +552,27 @@ public class DesktopUIController : MonoBehaviour
             case 5: yield return StartCoroutine(GlassCrackingAnomaly()); break;
             case 6: yield return StartCoroutine(PhantomChatAnomaly()); break;
             case 7: yield return StartCoroutine(WindowGhostingAnomaly()); break;
-            }
-            }
+        }
+    }
 
-            private IEnumerator WindowGhostingAnomaly()
-            {
-            // Simulate a window "ghosting" or trailing across the screen
-            PlayUiAnomalyCue(0.12f);
-        
-            VisualElement ghost = new VisualElement();
-            ghost.AddToClassList("ghost-window");
-            ghost.pickingMode = PickingMode.Ignore;
-            _root.Add(ghost);
-        
-            float startX = UnityEngine.Random.value > 0.5f ? -400f : Screen.width + 100f;
-            float targetX = startX < 0 ? Screen.width + 100f : -400f;
-            float y = UnityEngine.Random.Range(100f, Screen.height - 300f);
-        
-            float duration = 1.5f;
-            float elapsed = 0f;
-        
-            while (elapsed < duration)
-            {
+    private IEnumerator WindowGhostingAnomaly()
+    {
+        PlayUiAnomalyCue(0.12f);
+
+        VisualElement ghost = new VisualElement();
+        ghost.AddToClassList("ghost-window");
+        ghost.pickingMode = PickingMode.Ignore;
+        _root.Add(ghost);
+
+        float startX = UnityEngine.Random.value > 0.5f ? -400f : Screen.width + 100f;
+        float targetX = startX < 0 ? Screen.width + 100f : -400f;
+        float y = UnityEngine.Random.Range(100f, Screen.height - 300f);
+
+        float duration = 1.5f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
             elapsed += Time.deltaTime;
             float t = elapsed / duration;
             float currentX = Mathf.Lerp(startX, targetX, t);
@@ -387,28 +580,39 @@ public class DesktopUIController : MonoBehaviour
             ghost.style.top = y;
             ghost.style.opacity = Mathf.Sin(t * Mathf.PI);
             yield return null;
-            }
-        
-            _root.Remove(ghost);
-            }
+        }
 
-            private IEnumerator GlassCrackingAnomaly()
-            {
-            if (_glassOverlay == null) yield break;
+        _root.Remove(ghost);
+    }
 
-            if (glassCrackSound != null && _desktopAudioSource != null)
-            _desktopAudioSource.PlayOneShot(glassCrackSound, 0.6f);
-            else
+    private IEnumerator GlassCrackingAnomaly()
+    {
+        if (_glassOverlay == null)
+        {
+            yield break;
+        }
+
+        if (glassCrackSound != null)
+        {
+            AudioManager.Instance.PlaySFX(glassCrackSound, 0.6f);
+        }
+        else
+        {
             PlayUiAnomalyCue(0.3f);
+        }
 
-            _glassOverlay.AddToClassList("glass-overlay--active");
-            yield return new WaitForSeconds(UnityEngine.Random.Range(2f, 5f));
-            _glassOverlay.RemoveFromClassList("glass-overlay--active");
-            }
+        _glassOverlay.AddToClassList("glass-overlay--active");
+        yield return new WaitForSeconds(UnityEngine.Random.Range(2f, 5f));
+        _glassOverlay.RemoveFromClassList("glass-overlay--active");
+    }
 
     private IEnumerator PhantomChatAnomaly()
     {
-        if (_chatWindow == null) yield break;
+        if (_chatWindow == null)
+        {
+            yield break;
+        }
+
         string[] messages = { "Are you still there?", "I remember you.", "Don't look behind.", "System error: Help." };
         _chatText.text = messages[UnityEngine.Random.Range(0, messages.Length)];
         _chatWindow.AddToClassList("phantom-chat--visible");
@@ -419,8 +623,11 @@ public class DesktopUIController : MonoBehaviour
 
     private IEnumerator HauntedIconAnomaly()
     {
-        var icons = _root.Query<VisualElement>(className: "desktop-icon-wrapper").ToList();
-        if (icons.Count == 0) yield break;
+        List<VisualElement> icons = _root.Query<VisualElement>(className: "desktop-icon-wrapper").ToList();
+        if (icons.Count == 0)
+        {
+            yield break;
+        }
 
         VisualElement icon = icons[UnityEngine.Random.Range(0, icons.Count)];
         Label label = icon.Q<Label>(className: "desktop-icon-label");
@@ -449,7 +656,10 @@ public class DesktopUIController : MonoBehaviour
 
     private IEnumerator FalseNotificationAnomaly()
     {
-        if (_toast == null) yield break;
+        if (_toast == null)
+        {
+            yield break;
+        }
 
         _toastTitle.text = "AeroOS Security";
         _toastBody.text = _playerName + ", your deleted files are trying to return.";
@@ -461,15 +671,12 @@ public class DesktopUIController : MonoBehaviour
 
     private IEnumerator ClockCorruptionAnomaly()
     {
-        if (_clockLabel == null) yield break;
+        if (_clockLabel == null)
+        {
+            yield break;
+        }
 
-        string[] glitchTimes = {
-            "7 MISSED",
-            "03:33 AM",
-            "CALL HOME",
-            "--:--"
-        };
-
+        string[] glitchTimes = { "7 MISSED", "03:33 AM", "CALL HOME", "--:--" };
         _clockLabel.AddToClassList("tray-clock--glitch");
         PlayUiAnomalyCue(0.12f);
 
@@ -485,7 +692,10 @@ public class DesktopUIController : MonoBehaviour
 
     private IEnumerator LayoutShiftAnomaly()
     {
-        if (_mainArea == null) yield break;
+        if (_mainArea == null)
+        {
+            yield break;
+        }
 
         PlayUiAnomalyCue(0.1f);
         _mainArea.AddToClassList("desktop-main-area--glitch");
@@ -501,7 +711,10 @@ public class DesktopUIController : MonoBehaviour
 
     private IEnumerator FakeWindowAnomaly()
     {
-        if (_fakeWindow == null) yield break;
+        if (_fakeWindow == null)
+        {
+            yield break;
+        }
 
         _fakeWindowTitle.text = "Session Recovery";
         _fakeWindowBody.text = "Recovered fragment for " + _playerName + ".\nDo you remember closing the last window?";
@@ -513,9 +726,9 @@ public class DesktopUIController : MonoBehaviour
 
     private void PlayUiAnomalyCue(float volume)
     {
-        if (uiAnomalyClip != null && _desktopAudioSource != null)
+        if (uiAnomalyClip != null)
         {
-            _desktopAudioSource.PlayOneShot(uiAnomalyClip, volume);
+            AudioManager.Instance.PlaySFX(uiAnomalyClip, volume);
         }
     }
 }
