@@ -7,7 +7,18 @@
         </ui:VisualElement>
         
         <ui:VisualElement class="tetris-content">
-            <ui:VisualElement name="tetris-board" class="tetris-board" />
+            <ui:VisualElement name="tetris-board-container" class="tetris-board-container">
+                <ui:VisualElement name="tetris-board" class="tetris-board" />
+                <ui:VisualElement name="game-over-overlay" class="game-over-overlay hidden">
+                    <ui:Label text="GAME OVER" class="game-over-title" />
+                    <ui:VisualElement name="name-input-section" class="name-input-section">
+                        <ui:Label text="NEW HIGH SCORE!" class="high-score-alert" />
+                        <ui:TextField name="name-input" label="NAME" class="name-field" />
+                        <ui:Button name="submit-name-button" text="SUBMIT" class="submit-button" />
+                    </ui:VisualElement>
+                    <ui:Button name="restart-button" text="RESTART" class="restart-button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
             
             <ui:VisualElement class="tetris-side-panel">
                 <ui:VisualElement class="stat-container">
@@ -23,6 +34,11 @@
                 <ui:VisualElement class="stat-container">
                     <ui:Label text="NEXT" class="stat-label" />
                     <ui:VisualElement name="next-piece-preview" class="next-piece-preview" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="high-score-container">
+                    <ui:Label text="HIGH SCORES" class="stat-label" />
+                    <ui:VisualElement name="high-score-list" class="high-score-list" />
                 </ui:VisualElement>
 
                 <ui:VisualElement style="flex-grow: 1;" />

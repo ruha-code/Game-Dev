@@ -3,6 +3,7 @@ using UnityEngine.UIElements;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System;
+using Unity.Burst.CompilerServices;
 
 public class TetrisController : MonoBehaviour
 {
@@ -26,6 +27,19 @@ public class TetrisController : MonoBehaviour
         public List<PieceData> pieces;
     }
 
+    [Serializable]
+    public class HighScoreEntry
+    {
+        public string name;
+        public int score;
+    }
+
+    [Serializable]
+    public class HighScoreList
+    {
+        public List<HighScoreEntry> entries;
+    }
+
     private VisualElement _window;
     private VisualElement _board;
     private Label _scoreLabel;
@@ -33,7 +47,15 @@ public class TetrisController : MonoBehaviour
     private VisualElement _nextPreview;
     private Button _closeButton;
 
+    private VisualElement _gameOverOverlay;
+    private TextField _nameInput;
+    private Button _submitNameButton;
+    private Button _restartButton;
+    private VisualElement _highScoreListContainer;
+
     private List<PieceData> _pieceTemplates;
+    private List<PieceData> _bag = new List<PieceData>();
+    private List<HighScoreEntry> _highScores = new List<HighScoreEntry>();
     private int[,] _grid = new int[10, 20];
     private VisualElement[,] _blockElements = new VisualElement[10, 20];
     
@@ -58,7 +80,7 @@ public class TetrisController : MonoBehaviour
     private const float LOCK_DELAY = 0.5f;
 
     private int _score;
-private int _level = 1;
+    private int _level = 1;
     private bool _isGameOver;
     private bool _isPaused = true;
 
@@ -71,9 +93,99 @@ private int _level = 1;
         _nextPreview = root.Q<VisualElement>("next-piece-preview");
         _closeButton = root.Q<Button>("close-button");
 
+        _gameOverOverlay = root.Q<VisualElement>("game-over-overlay");
+        _nameInput = root.Q<TextField>("name-input");
+        _submitNameButton = root.Q<Button>("submit-name-button");
+        _restartButton = root.Q<Button>("restart-button");
+        _highScoreListContainer = root.Q<VisualElement>("high-score-list");
+
         _closeButton.RegisterCallback<ClickEvent>(evt => Hide());
+        _submitNameButton?.RegisterCallback<ClickEvent>(evt => OnSubmitName());
+        _restartButton?.RegisterCallback<ClickEvent>(evt => ResetGame());
 
         LoadPieces();
+        LoadHighScores();
+        ResetGame();
+    }
+
+    private void LoadHighScores()
+    {
+        string json = PlayerPrefs.GetString("TetrisHighScores", "");
+        if (string.IsNullOrEmpty(json))
+        {
+            InitializeDefaultHighScores();
+        }
+        else
+        {
+            _highScores = JsonUtility.FromJson<HighScoreList>(json).entries;
+        }
+        UpdateHighScoreUI();
+    }
+
+    private void InitializeDefaultHighScores()
+    {
+        _highScores = new List<HighScoreEntry>();
+        string[] names = { "Aero", "System", "UserX" };
+        int[] scores = {50100, 150500, 362400};
+        for (int i = 0; i < 3; i++)
+        {
+            _highScores.Add(new HighScoreEntry { name = names[i], score = scores[i] });
+        }
+        for (int i = 3; i < 7; i++)
+        {
+            _highScores.Add(new HighScoreEntry { name = "---", score = 0 });
+        }
+        _highScores.Sort((a, b) => b.score.CompareTo(a.score));
+        SaveHighScores();
+    }
+
+    private void SaveHighScores()
+    {
+        HighScoreList wrapper = new HighScoreList { entries = _highScores };
+        PlayerPrefs.SetString("TetrisHighScores", JsonUtility.ToJson(wrapper));
+        PlayerPrefs.Save();
+    }
+
+    private void UpdateHighScoreUI()
+    {
+        if (_highScoreListContainer == null) return;
+        _highScoreListContainer.Clear();
+
+        for (int i = 0; i < _highScores.Count; i++)
+        {
+            var entry = _highScores[i];
+            VisualElement row = new VisualElement();
+            row.AddToClassList("high-score-row");
+
+            Label rankLabel = new Label((i + 1).ToString() + ".");
+            rankLabel.AddToClassList("high-score-rank");
+            
+            Label nameLabel = new Label(entry.name);
+            nameLabel.AddToClassList("high-score-name");
+
+            Label scoreLabel = new Label(entry.score.ToString());
+            scoreLabel.AddToClassList("high-score-score");
+
+            row.Add(rankLabel);
+            row.Add(nameLabel);
+            row.Add(scoreLabel);
+            _highScoreListContainer.Add(row);
+        }
+    }
+
+    private void OnSubmitName()
+    {
+        string playerName = _nameInput.value;
+        if (string.IsNullOrEmpty(playerName)) playerName = "Anonymous";
+
+        _highScores.Add(new HighScoreEntry { name = playerName, score = _score });
+        _highScores.Sort((a, b) => b.score.CompareTo(a.score));
+        if (_highScores.Count > 7) _highScores.RemoveAt(7);
+
+        _nameInput.value = ""; // Clear input
+        SaveHighScores();
+        UpdateHighScoreUI();
+        _gameOverOverlay.AddToClassList("hidden");
         ResetGame();
     }
 
@@ -110,6 +222,8 @@ private int _level = 1;
         _level = 1;
         _dropInterval = 1f;
         _isGameOver = false;
+        _bag.Clear();
+        if (_gameOverOverlay != null) _gameOverOverlay.AddToClassList("hidden");
         
         for (int x = 0; x < 10; x++)
         {
@@ -142,15 +256,46 @@ private int _level = 1;
             _isGameOver = true;
             _isPaused = true;
             Debug.Log("Game Over");
+            ShowGameOver();
             return;
         }
 
         UpdateNextPreview();
     }
 
+    private void ShowGameOver()
+    {
+        if (_gameOverOverlay == null) return;
+        _gameOverOverlay.RemoveFromClassList("hidden");
+        
+        // Show/hide name input based on if it's a high score
+        bool isHighScore = _score > 0 && (_highScores.Count < 7 || _score > _highScores[_highScores.Count - 1].score);
+        var inputSection = _gameOverOverlay.Q("name-input-section");
+        if (inputSection != null)
+        {
+            if (isHighScore) inputSection.RemoveFromClassList("hidden");
+            else inputSection.AddToClassList("hidden");
+        }
+    }
+
     private PieceData GetRandomPiece()
     {
-        return _pieceTemplates[UnityEngine.Random.Range(0, _pieceTemplates.Count)];
+        if (_bag.Count == 0)
+        {
+            _bag.AddRange(_pieceTemplates);
+            // Shuffle
+            for (int i = 0; i < _bag.Count; i++)
+            {
+                int rnd = UnityEngine.Random.Range(i, _bag.Count);
+                PieceData temp = _bag[i];
+                _bag[i] = _bag[rnd];
+                _bag[rnd] = temp;
+            }
+        }
+
+        PieceData piece = _bag[0];
+        _bag.RemoveAt(0);
+        return piece;
     }
 
     private void Update()
