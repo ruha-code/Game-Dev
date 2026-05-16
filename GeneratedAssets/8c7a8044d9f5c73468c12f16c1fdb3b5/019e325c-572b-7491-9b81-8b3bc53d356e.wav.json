@@ -1,0 +1,15 @@
+{
+    "asset": "8c7a8044d9f5c73468c12f16c1fdb3b5",
+    "fileName": "019e325c-572b-7491-9b81-8b3bc53d356e.wav",
+    "prompt": "A sharp, crystalline glass cracking and shattering sound, high frequency, brittle, impact followed by subtle debris, clean digital recording.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

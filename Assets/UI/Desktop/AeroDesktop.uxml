@@ -66,9 +66,9 @@
                 <ui:Label text="Music" class="start-menu-right-item" />
                 <ui:VisualElement class="start-menu-separator" />
                 <ui:Label text="Control Panel" class="start-menu-right-item" />
-                <ui:VisualElement style="flex-grow: 1;" />
+                <ui:VisualElement class="start-menu-right-spacer" />
                 <ui:Button text="Shut Down" class="start-menu-shutdown-btn" />
-            </ui:VisualElement>
+                </ui:VisualElement>
         </ui:VisualElement>
 
         <ui:VisualElement name="taskbar" class="taskbar">

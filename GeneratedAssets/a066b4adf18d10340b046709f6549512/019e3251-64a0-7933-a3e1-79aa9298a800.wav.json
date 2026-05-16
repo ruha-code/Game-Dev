@@ -1,0 +1,15 @@
+{
+    "asset": "a066b4adf18d10340b046709f6549512",
+    "fileName": "019e3251-64a0-7933-a3e1-79aa9298a800.wav",
+    "prompt": "A soft, clean, glossy UI click sound, Frutiger Aero style, high-pitched glass-like tap, modern and optimistic OS sound effect.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
