@@ -44,8 +44,18 @@ public class TetrisController : MonoBehaviour
     
     private float _dropTimer;
     private float _dropInterval = 1f;
+    
+    // DAS (Delayed Auto Shift) variables
+    private float _dasTimer;
+    private int _dasDir;
+    private const float DAS_DELAY = 0.2f;
+    private const float DAS_INTERVAL = 0.05f;
+    
+    private float _softDropTimer;
+    private const float SOFT_DROP_INTERVAL = 0.05f;
+
     private int _score;
-    private int _level = 1;
+private int _level = 1;
     private bool _isGameOver;
     private bool _isPaused = true;
 
@@ -159,10 +169,53 @@ public class TetrisController : MonoBehaviour
         var keyboard = Keyboard.current;
         if (keyboard == null) return;
 
-        if (keyboard.leftArrowKey.wasPressedThisFrame || keyboard.aKey.wasPressedThisFrame) MoveSide(-1);
-        if (keyboard.rightArrowKey.wasPressedThisFrame || keyboard.dKey.wasPressedThisFrame) MoveSide(1);
+        // Horizontal movement with DAS (Delayed Auto Shift)
+        int inputX = 0;
+        if (keyboard.leftArrowKey.isPressed || keyboard.aKey.isPressed) inputX = -1;
+        else if (keyboard.rightArrowKey.isPressed || keyboard.dKey.isPressed) inputX = 1;
+
+        if (inputX != 0)
+        {
+            if (inputX != _dasDir)
+            {
+                // New direction or initial press
+                _dasDir = inputX;
+                _dasTimer = DAS_DELAY;
+                MoveSide(inputX);
+            }
+            else
+            {
+                _dasTimer -= Time.deltaTime;
+                if (_dasTimer <= 0)
+                {
+                    _dasTimer = DAS_INTERVAL;
+                    MoveSide(inputX);
+                }
+            }
+        }
+        else
+        {
+            _dasDir = 0;
+        }
+
+        // Soft Drop (Holding Down)
+        if (keyboard.downArrowKey.isPressed || keyboard.sKey.isPressed)
+        {
+            _softDropTimer -= Time.deltaTime;
+            if (_softDropTimer <= 0)
+            {
+                _softDropTimer = SOFT_DROP_INTERVAL;
+                MoveDown();
+            }
+        }
+        else
+        {
+            // Reset timer so the next press is immediate
+            _softDropTimer = 0;
+        }
+
+        // One-shot inputs
         if (keyboard.upArrowKey.wasPressedThisFrame || keyboard.wKey.wasPressedThisFrame) Rotate();
-        if (keyboard.downArrowKey.wasPressedThisFrame || keyboard.sKey.wasPressedThisFrame) MoveDown();
         if (keyboard.spaceKey.wasPressedThisFrame) HardDrop();
     }
 
