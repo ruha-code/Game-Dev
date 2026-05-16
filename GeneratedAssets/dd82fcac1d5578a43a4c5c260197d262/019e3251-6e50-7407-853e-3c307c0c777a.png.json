@@ -1,0 +1,28 @@
+{
+    "asset": "dd82fcac1d5578a43a4c5c260197d262",
+    "fileName": "019e3251-6e50-7407-853e-3c307c0c777a.png",
+    "prompt": "A realistic cracked glass overlay, transparent background, sharp web-like fractures, glossy highlights, 2D game asset, high detail.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

@@ -11,16 +11,25 @@ public class DesktopUIController : MonoBehaviour
     [SerializeField] private AudioClip uiAnomalyClip;
     [SerializeField] private float minUiAnomalyInterval = 12f;
     [SerializeField] private float maxUiAnomalyInterval = 24f;
+    [SerializeField] private AudioClip ambientDesktopSound;
+    [SerializeField, Range(0f, 1f)] private float ambientVolume = 0.25f;
+    [SerializeField] private float ambientFadeDuration = 4f;
+    [SerializeField] private AudioClip uiClickSound;
+    [SerializeField] private AudioClip glassCrackSound;
+    [SerializeField] private Sprite brokenGlassSprite;
+    [SerializeField] private Sprite phantomChatIcon;
 
     private UIDocument _uiDocument;
     private VisualElement _root;
     private VisualElement _startButton;
+    private Button _shutdownButton;
     private VisualElement _startMenu;
     private Label _clockLabel;
     private VisualElement _mainArea;
     private Label _startMenuUserName;
     private TetrisController _tetrisController;
     private AudioSource _desktopAudioSource;
+    private AudioSource _ambientAudioSource;
     private bool _hasPlayedDesktopAppearChime;
     private string _playerName;
     private string _stableClockText;
@@ -31,6 +40,9 @@ public class DesktopUIController : MonoBehaviour
     private VisualElement _fakeWindow;
     private Label _fakeWindowTitle;
     private Label _fakeWindowBody;
+    private VisualElement _glassOverlay;
+    private VisualElement _chatWindow;
+    private Label _chatText;
 
     private void OnEnable()
     {
@@ -45,6 +57,7 @@ public class DesktopUIController : MonoBehaviour
         // Query elements
         _startButton = _root.Q<VisualElement>("start-button");
         _startMenu = _root.Q<VisualElement>("start-menu");
+        _shutdownButton = _root.Q<Button>(className: "start-menu-shutdown-btn");
         _clockLabel = _root.Q<Label>("tray-clock");
         _mainArea = _root.Q<VisualElement>("main-area");
         _startMenuUserName = _root.Q<Label>(className: "start-menu-user-name");
@@ -55,6 +68,15 @@ public class DesktopUIController : MonoBehaviour
             _desktopAudioSource.playOnAwake = false;
             _desktopAudioSource.loop = false;
             _desktopAudioSource.spatialBlend = 0f;
+        }
+
+        if (_ambientAudioSource == null)
+        {
+            _ambientAudioSource = gameObject.AddComponent<AudioSource>();
+            _ambientAudioSource.playOnAwake = false;
+            _ambientAudioSource.loop = true;
+            _ambientAudioSource.spatialBlend = 0f;
+            _ambientAudioSource.volume = 0f;
         }
 
         EnsureAnomalyUi();
@@ -70,11 +92,19 @@ public class DesktopUIController : MonoBehaviour
         if (_startButton != null)
         {
             _startButton.RegisterCallback<ClickEvent>(OnStartButtonClicked);
+            _startButton.RegisterCallback<ClickEvent>(evt => PlayClickSound());
+        }
+
+        if (_shutdownButton != null)
+        {
+            _shutdownButton.RegisterCallback<PointerOverEvent>(OnShutdownButtonHover);
+            _shutdownButton.RegisterCallback<ClickEvent>(evt => PlayClickSound());
         }
 
         if (_mainArea != null)
         {
             _mainArea.RegisterCallback<ClickEvent>(OnMainAreaClicked);
+            _mainArea.RegisterCallback<ClickEvent>(evt => PlayClickSound());
         }
 
         // Initialize clock
@@ -88,7 +118,42 @@ public class DesktopUIController : MonoBehaviour
         var icons = _root.Query<VisualElement>(className: "desktop-icon-wrapper").ToList();
         foreach (var icon in icons)
         {
-            icon.RegisterCallback<ClickEvent>(evt => OnIconClicked(icon));
+            icon.RegisterCallback<ClickEvent>(evt => {
+                OnIconClicked(icon);
+                PlayClickSound();
+            });
+        }
+    }
+
+    private void PlayClickSound()
+    {
+        if (uiClickSound != null && _desktopAudioSource != null)
+        {
+            _desktopAudioSource.PlayOneShot(uiClickSound, 0.4f);
+        }
+    }
+
+    private void OnShutdownButtonHover(PointerOverEvent evt)
+    {
+        // Runaway button anomaly logic: only if start menu is visible
+        if (_shutdownButton != null && !_startMenu.ClassListContains("hidden"))
+        {
+            // Occasionally "run away"
+            if (UnityEngine.Random.value < 0.3f) 
+            {
+                float offsetX = UnityEngine.Random.Range(-50f, 50f);
+                float offsetY = UnityEngine.Random.Range(-30f, 30f);
+                _shutdownButton.style.translate = new Translate(offsetX, offsetY, 0);
+                PlayUiAnomalyCue(0.05f);
+            }
+        }
+    }
+
+    private void ResetShutdownButton()
+    {
+        if (_shutdownButton != null)
+        {
+            _shutdownButton.style.translate = new Translate(0, 0, 0);
         }
     }
 
@@ -114,6 +179,28 @@ public class DesktopUIController : MonoBehaviour
 
         _desktopAudioSource.PlayOneShot(desktopAppearChime, desktopAppearVolume);
         _hasPlayedDesktopAppearChime = true;
+
+        // Wait for chime to finish (approximate) + extra 1.5s delay
+        yield return new WaitForSeconds(desktopAppearChime.length + 1.5f);
+
+        if (ambientDesktopSound != null && _ambientAudioSource != null)
+        {
+            _ambientAudioSource.clip = ambientDesktopSound;
+            _ambientAudioSource.Play();
+            yield return StartCoroutine(FadeInAmbient());
+        }
+    }
+
+    private IEnumerator FadeInAmbient()
+    {
+        float elapsed = 0f;
+        while (elapsed < ambientFadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            _ambientAudioSource.volume = Mathf.Lerp(0f, ambientVolume, elapsed / ambientFadeDuration);
+            yield return null;
+        }
+        _ambientAudioSource.volume = ambientVolume;
     }
 
     private void UpdateClock()
@@ -133,6 +220,7 @@ public class DesktopUIController : MonoBehaviour
             if (isHidden)
             {
                 _startMenu.RemoveFromClassList("hidden");
+                ResetShutdownButton();
             }
             else
             {
@@ -192,10 +280,13 @@ public class DesktopUIController : MonoBehaviour
         {
             _toast = new VisualElement();
             _toast.AddToClassList("desktop-toast");
+            _toast.pickingMode = PickingMode.Ignore;
             _toastTitle = new Label();
             _toastTitle.AddToClassList("desktop-toast-title");
+            _toastTitle.pickingMode = PickingMode.Ignore;
             _toastBody = new Label();
             _toastBody.AddToClassList("desktop-toast-body");
+            _toastBody.pickingMode = PickingMode.Ignore;
             _toast.Add(_toastTitle);
             _toast.Add(_toastBody);
             _root.Add(_toast);
@@ -205,13 +296,44 @@ public class DesktopUIController : MonoBehaviour
         {
             _fakeWindow = new VisualElement();
             _fakeWindow.AddToClassList("desktop-fake-window");
+            _fakeWindow.pickingMode = PickingMode.Ignore;
             _fakeWindowTitle = new Label();
             _fakeWindowTitle.AddToClassList("desktop-fake-window-title");
+            _fakeWindowTitle.pickingMode = PickingMode.Ignore;
             _fakeWindowBody = new Label();
             _fakeWindowBody.AddToClassList("desktop-fake-window-body");
+            _fakeWindowBody.pickingMode = PickingMode.Ignore;
             _fakeWindow.Add(_fakeWindowTitle);
             _fakeWindow.Add(_fakeWindowBody);
             _root.Add(_fakeWindow);
+        }
+
+        if (_glassOverlay == null)
+        {
+            _glassOverlay = new VisualElement();
+            _glassOverlay.AddToClassList("glass-overlay");
+            _glassOverlay.pickingMode = PickingMode.Ignore;
+            if (brokenGlassSprite != null)
+                _glassOverlay.style.backgroundImage = new StyleBackground(brokenGlassSprite);
+            _root.Add(_glassOverlay);
+        }
+
+        if (_chatWindow == null)
+        {
+            _chatWindow = new VisualElement();
+            _chatWindow.AddToClassList("phantom-chat");
+            _chatWindow.pickingMode = PickingMode.Ignore;
+            var icon = new VisualElement();
+            icon.AddToClassList("phantom-chat-icon");
+            icon.pickingMode = PickingMode.Ignore;
+            if (phantomChatIcon != null)
+                icon.style.backgroundImage = new StyleBackground(phantomChatIcon);
+            _chatText = new Label();
+            _chatText.AddToClassList("phantom-chat-text");
+            _chatText.pickingMode = PickingMode.Ignore;
+            _chatWindow.Add(icon);
+            _chatWindow.Add(_chatText);
+            _root.Add(_chatWindow);
         }
     }
 
@@ -220,7 +342,7 @@ public class DesktopUIController : MonoBehaviour
         while (isActiveAndEnabled)
         {
             yield return new WaitForSeconds(UnityEngine.Random.Range(minUiAnomalyInterval, maxUiAnomalyInterval));
-            yield return StartCoroutine(TriggerUiAnomaly(UnityEngine.Random.Range(0, 5)));
+            yield return StartCoroutine(TriggerUiAnomaly(UnityEngine.Random.Range(0, 7)));
         }
     }
 
@@ -228,22 +350,71 @@ public class DesktopUIController : MonoBehaviour
     {
         switch (type)
         {
-            case 0:
-                yield return StartCoroutine(HauntedIconAnomaly());
-                break;
-            case 1:
-                yield return StartCoroutine(FalseNotificationAnomaly());
-                break;
-            case 2:
-                yield return StartCoroutine(ClockCorruptionAnomaly());
-                break;
-            case 3:
-                yield return StartCoroutine(LayoutShiftAnomaly());
-                break;
-            default:
-                yield return StartCoroutine(FakeWindowAnomaly());
-                break;
-        }
+            case 0: yield return StartCoroutine(HauntedIconAnomaly()); break;
+            case 1: yield return StartCoroutine(FalseNotificationAnomaly()); break;
+            case 2: yield return StartCoroutine(ClockCorruptionAnomaly()); break;
+            case 3: yield return StartCoroutine(LayoutShiftAnomaly()); break;
+            case 4: yield return StartCoroutine(FakeWindowAnomaly()); break;
+            case 5: yield return StartCoroutine(GlassCrackingAnomaly()); break;
+            case 6: yield return StartCoroutine(PhantomChatAnomaly()); break;
+            case 7: yield return StartCoroutine(WindowGhostingAnomaly()); break;
+            }
+            }
+
+            private IEnumerator WindowGhostingAnomaly()
+            {
+            // Simulate a window "ghosting" or trailing across the screen
+            PlayUiAnomalyCue(0.12f);
+        
+            VisualElement ghost = new VisualElement();
+            ghost.AddToClassList("ghost-window");
+            ghost.pickingMode = PickingMode.Ignore;
+            _root.Add(ghost);
+        
+            float startX = UnityEngine.Random.value > 0.5f ? -400f : Screen.width + 100f;
+            float targetX = startX < 0 ? Screen.width + 100f : -400f;
+            float y = UnityEngine.Random.Range(100f, Screen.height - 300f);
+        
+            float duration = 1.5f;
+            float elapsed = 0f;
+        
+            while (elapsed < duration)
+            {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            float currentX = Mathf.Lerp(startX, targetX, t);
+            ghost.style.left = currentX;
+            ghost.style.top = y;
+            ghost.style.opacity = Mathf.Sin(t * Mathf.PI);
+            yield return null;
+            }
+        
+            _root.Remove(ghost);
+            }
+
+            private IEnumerator GlassCrackingAnomaly()
+            {
+            if (_glassOverlay == null) yield break;
+
+            if (glassCrackSound != null && _desktopAudioSource != null)
+            _desktopAudioSource.PlayOneShot(glassCrackSound, 0.6f);
+            else
+            PlayUiAnomalyCue(0.3f);
+
+            _glassOverlay.AddToClassList("glass-overlay--active");
+            yield return new WaitForSeconds(UnityEngine.Random.Range(2f, 5f));
+            _glassOverlay.RemoveFromClassList("glass-overlay--active");
+            }
+
+    private IEnumerator PhantomChatAnomaly()
+    {
+        if (_chatWindow == null) yield break;
+        string[] messages = { "Are you still there?", "I remember you.", "Don't look behind.", "System error: Help." };
+        _chatText.text = messages[UnityEngine.Random.Range(0, messages.Length)];
+        _chatWindow.AddToClassList("phantom-chat--visible");
+        PlayUiAnomalyCue(0.1f);
+        yield return new WaitForSeconds(4f);
+        _chatWindow.RemoveFromClassList("phantom-chat--visible");
     }
 
     private IEnumerator HauntedIconAnomaly()
