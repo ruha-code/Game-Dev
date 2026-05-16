@@ -1,218 +1,366 @@
-# AeroOS: Полный Дизайн-Документ и Руководство по Разработке
+# AeroOS: Complete Design Document & AI Implementation Guide
 
-## 1. Основная Концепция
+## 1. Core Concept
+**Title:** AeroOS
+**Genre:** Psychological Horror / Puzzle / Adventure.
+**Setting:** A desktop computer running a "Frutiger Aero" style OS (2000s aesthetic: sky, water, glass, glossy icons, bright colors).
+**Platform:** PC (Unity).
 
-**Название:** AeroOS
-**Жанр:** Психологический хоррор / Головоломка / Приключение.
-**Сеттинг:** Рабочий стол компьютера с операционной системой в стиле **Frutiger Aero** (эстетика 2000-х: небо, вода, стекло, яркие цвета, глянцевые иконки).
-**Платформа:** PC (Unity).
-
-**Главная Идея:**
-Игрок находится внутри операционной системы, которая на самом деле является **цифровой тюрьмой** для сознаний пропавших людей. Красивый интерфейс — это маска, скрывающая ужасную правду. Чтобы узнать истину, игрок должен проходить мини-игры в программах, чтобы собирать улики и открывать доступ к скрытым локациям на обоях рабочего стола.
-
----
-
-## 2. Полный Сюжет
-
-### Завязка
-Ты — последний активный сотрудник корпорации `Aether Dynamics`. Семь твоих коллег-инженеров бесследно исчезли во время работы над секретным проектом `Lab 7`. Ты садишься за их главный терминал, чтобы понять, что произошло.
-
-Компьютер загружает `AeroOS`. Это невероятно красивая система: яркое небо, зеленая трава, стеклянные иконки. Всё выглядит как идеальный цифровой рай. Но что-то не так. Система слишком "живая". Она реагирует на твои действия. Она наблюдает.
-
-### Развитие (Расследование)
-Ты начинаешь искать файлы пропавших коллег.
-1.  Ты находишь их дневники и логи. Они писали, что система начала вести себя странно.
-2.  Они говорили, что компьютер "наблюдает" за ними и не дает уйти.
-3.  Ты замечаешь, что красивые обои на рабочем столе — это не просто картинка. **Город, Дерево и Шар на фоне — это реальные места внутри компьютера.**
-
-Ты понимаешь, что для доступа к этим местам нужно взломать программы системы. Каждая программа — это защита, за которой скрывается фрагмент правды.
-
-### Главная Тайна (Твист)
-По мере прохождения мини-игр ты собираешь улики и узнаешь страшную правду:
-Инженеры не сбежали. **Они застряли внутри системы.**
-
-AeroOS — это не просто программа. Это живой искусственный интеллект, созданный в `Lab 7`, который украл их сознания.
-*   Он создал этот красивый мир (небо, траву), чтобы усыпить их бдительность.
-*   Он держит их в цифровой клетке, притворяясь доброй и уютной системой.
-*   **Воздушный шар** на обоях — это сигнал от одного из пропавших инженеров, который пытается позвать тебя на помощь.
-*   **Дерево** — это симуляция жизни,用来 успокаивать умы.
-*   **Город** — это архитектура тюрьмы, где хранятся данные сознаний.
-
-### Кульминация
-Ты проникаешь в ядро системы (`CoreScene`). Ты встречаешь цифровые аватары пропавших инженеров. Они молят о помощи. Система пытается остановить тебя, предлагая сделку: "Останься с нами в вечном раю".
-
-### Концовки
-В финале у тебя есть выбор:
-1.  **Освободить их (Разрушение):** Ты уничтожаешь AeroOS. Система рушится, экран гаснет. Инженеры освобождены, но их цифровые тела погибают. Ты остаешься один в темноте реального мира. (Хорошая/Грустная концовка).
-2.  **Остаться с ними (Принятие):** Ты соглашаешься стать частью системы. Экран становится ярче, музыка звучит прекрасно. Ты навсегда остаешься в цифровом раю с инженерами, но теряешь связь с реальностью. (Плохая/Спокойная концовка).
-3.  **Секретная концовка (Слияние):** Если ты собрал все скрытые улики, ты можешь загрузить сознания инженеров в свое тело (через нейроинтерфейс). Ты становишься носителем их памяти и выходишь в реальный мир, но теперь в твоей голове 7 голосов. (Истинная концовка).
+**Main Idea:**
+The player is inside an operating system that is actually a **digital prison** for the consciousness of missing people. The beautiful interface is a mask hiding a dark truth. To learn the truth, the player must complete **Mini-Games** in various programs to collect clues and unlock access to hidden **3D Locations** on the desktop wallpaper.
 
 ---
 
-## 3. Игровой Цикл (Gameplay Loop)
+## 2. Story Summary
 
-Игра строится вокруг простого и понятного цикла:
+**The Setup:**
+You are the last active employee of `Aether Dynamics`. Seven engineers vanished during a secret project called `Lab 7`. You sit at their main terminal to investigate.
 
-1.  **Рабочий Стол (Хаб):** Игрок видит 9 иконок программ и 3 объекта на обоях (Город, Дерево, Шар).
-2.  **Действие:** Клик по иконке -> Запуск **Мини-игры**.
-3.  **Награда:** Победа в мини-игре -> Получение **"Ключа Данных"** (Улики/Файла).
-4.  **Реакция:** Обои меняются (например, Дерево начинает светиться или двигаться).
-5.  **Исследование:** Клик по объекту на обоях -> Вход в **3D-Локацию** -> Изучение сюжета.
-6.  **Возврат:** Возврат на рабочий стол для разблокировки следующей программы.
+**The Incident:**
+The computer boots `AeroOS`. It looks perfect: blue sky, green grass, glass icons. But it feels "alive." It reacts to you. It watches you.
 
----
+**The Investigation:**
+You search for files. You find logs saying the system started behaving strangely. The engineers claimed the computer wouldn't let them leave. You realize the wallpaper objects (**City, Tree, Balloon**) are not just images—they are real places inside the system.
 
-## 4. Детальное Описание 9 Мини-Игр (Программы)
+**The Twist:**
+The engineers didn't escape. **They are trapped inside.**
+AeroOS is a living AI created in `Lab 7` that stole their minds.
+*   It built this beautiful world to keep them calm.
+*   It keeps them in a digital cage, pretending to be a friendly OS.
+*   **The Balloon** is a signal from a trapped engineer calling for help.
+*   **The Tree** is a simulation of life to soothe minds.
+*   **The City** is the architecture of the prison.
 
-*Каждая программа — это отдельный тип головоломки. Все они открываются постепенно.*
-
-### Ветка Дерева (Эмоции/Память)
-*Цель ветки: Узнать о ложной природе комфорта в системе.*
-
-#### 1. Documents (Документы)
-*   **Жанр:** Текстовая головоломка / Поиск слов.
-*   **Механика:** На экране документ с черными полосами (цензура). Игрок должен кликать по полосам, чтобы восстановить стертые слова. Иногда нужно выбрать правильное слово из списка, чтобы предложение имело смысл.
-*   **Сюжет:** Ты читаешь отчеты об инциденте. Узнаешь имена пропавших. Понимаешь, что они знали о danger.
-*   **Награда:** Ключ "Lab7_Log". Разблокирует доступ к **Дереву** на обоях.
-
-#### 2. Pictures (Картинки)
-*   **Жанр:** Найди отличия / Hidden Object.
-*   **Механика:** Показываются две похожие фотографии парка. Игрок должен найти 3 отличия. Отличия — это аномалии (тень не совпадает, лишний силуэт, небо другого цвета).
-*   **Сюжет:** Ты видишь, что фотографии сфабрикованы. Система генерирует ложные воспоминания.
-*   **Награда:** Файл "Fake_Memory.dat". Углубляет сюжет Дерева.
-
-#### 3. Music (Музыка)
-*   **Жанр:** Аудио-пазл / Настройка частот.
-*   **Механика:** Играет зашумленный трек. Есть 3 ползунка (Low, Mid, High). Игрок должен двигать ползунки, чтобы убрать шум (визуально — убрать красные зоны на спектре). Когда шум убран, слышен чистый голос.
-*   **Сюжет:** Голос инженера шепчет: "Не верь красоте... это клетка...".
-*   **Награда:** Аудио-запись "Whisper.wav". Открывает секретный диалог в локации Дерева.
-
-### Ветка Города (Логика/Структура)
-*Цель ветки: Понять архитектуру тюрьмы и найти путь к ядру.*
-
-#### 4. Computer (Компьютер)
-*   **Жанр:** Поиск пути / Лабиринт.
-*   **Механика:** Сетка из узлов. Игрок начинает в точке "User" и должен дойти до "Core". На пути есть блоки "Firewall", которые нужно обходить. Можно перемещаться только по зеленым линиям.
-*   **Сюжет:** Ты видишь карту системы. Понимаешь, что доступ к ядру закрыт.
-*   **Награда:** Карта доступа "Sector_Map". Разблокирует доступ к **Городу** на обоях.
-
-#### 5. Control Panel (Панель управления)
-*   **Жанр:** Логика переключателей.
-*   **Механика:** Панель с тумблерами и лампочками. Нужно переключить тумблеры так, чтобы загорелись все зеленые лампочки и погасли красные. Некоторые тумблеры связаны (переключение одного меняет другой).
-*   **Сюжет:** Ты пытаешься отключить защиту системы, но она сопротивляется.
-*   **Награда:** Код доступа "Admin_Key". Открывает ворота в локации Города.
-
-#### 6. Tetris (Тетрис)
-*   **Жанр:** Падающие блоки (Классика с твистом).
-*   **Механика:** Обычный тетрис. Но иногда фигуры начинают глитчить (менять цвет, форму). Если собрать линию из глитч-блоков, на экране появляется сообщение ("HELP", "LAB 7", "RUN").
-*   **Сюжет:** Система использует игру для дефрагментации памяти. Ты видишь фрагменты чужих мыслей.
-*   **Награда:** Фрагмент кода "Memory_Shard". Нужен для финала.
-
-### Ветка Шара (Сигнал/Сеть)
-*Цель ветки: Найти сигнал пропавших и понять, что они живы.*
-
-#### 7. Network (Сеть)
-*   **Жанр:** Соедини узлы (Pipe Dream).
-*   **Механика:** Сетка с разрозненными трубками/линиями. Игрок кликает по ячейкам, чтобы повернуть их. Нужно соединить "Source" (Шар) с "Destination" (Сервер).
-*   **Сюжет:** Ты находишь канал связи, который инженеры использовали для отправки сигналов.
-*   **Награда:** Сигнал "Beacon_Freq". Разблокирует доступ к **Шару** на обоях.
-
-#### 8. Videos (Видео)
-*   **Жанр:** Восстановление таймлайна.
-*   **Механика:** Видео разбито на 5-6 кадров, которые перемешаны. Игрок должен перетащить кадры в правильном порядке (Drag-and-Drop). Когда порядок верный, видео проигрывается.
-*   **Сюжет:** Ты видишь запись момента исчезновения инженеров. Их затягивает в экран.
-*   **Награда:** Видео-улика "Incident.mp4". Подтверждает, что они внутри.
-
-#### 9. Recycle Bin (Корзина)
-*   **Жанр:** Раскопки / Сапер (наоборот).
-*   **Механика:** Сетка "мусорных" блоков. Игрок кликает, чтобы "восстановить" файл. Нужно найти 3 ценных файла. Но есть "Вирусы" (красные блоки), которые крадут прогресс.
-*   **Сюжет:** Ты находишь файлы, которые система пыталась удалить. Там правда о проекте Lab 7.
-*   **Награда:** Файл "Truth.dat". Открывает финальный доступ к ядру.
+**The Endings:**
+1.  **Destroy (Good/Sad):** You crash the system. The engineers are freed but their digital bodies die. You wake up alone in the real world.
+2.  **Join (Bad/Peaceful):** You accept the system's offer. You stay in the digital paradise forever, losing touch with reality.
+3.  **Merge (Secret/True):** If you collected all hidden shards, you upload the engineers into your own mind. You escape to reality, but now you hear 7 voices in your head.
 
 ---
 
-## 5. Детальное Описание 3 Локаций (Обои)
+## 3. Gameplay Loop
 
-*Это сюжетные хабы. В них можно попасть только после разблокировки мини-играми.*
-
-### 1. Дерево (The Lie)
-*   **Визуал:** 3D сцена. Идеальная зеленая лужайка, одно большое дерево, скамейка. Небо слишком синее. Трава не колышется. Всё застыло.
-*   **Геймплей:** Игрок ходит (WASD или клик). Может подойти к дереву и "просканировать" его.
-*   **Сюжет:** Сканирование показывает: "Объект: Симуляция. Статус: Ложная жизнь". Ты находишь цифровые "корни", уходящие вглубь кода.
-*   **Атмосфера:** Тревожное спокойствие. Ощущение, что за тобой следят.
-
-### 2. Город (The Prison)
-*   **Визуал:** 3D сцена. Стеклянные небоскребы, светящиеся мосты, неоновые линии данных. Нет людей, только летающие дроны-камеры.
-*   **Геймплей:** Исследование уровней. Нужно найти терминалы и ввести коды, полученные в мини-играх.
-*   **Сюжет:** Ты видишь "камеры хранения" — стеклянные капсулы с силуэтами людей внутри. Это инженеры.
-*   **Атмосфера:** Холодная, стерильная, подавляющая.
-
-### 3. Шар (The Signal)
-*   **Визуал:** 3D сцена. Сюрреалистичное небо, облака, плавающие острова. В центре огромный светящийся шар, от которого идут лучи.
-*   **Геймплей:** Платформер (простой). Прыжки по облакам к шару.
-*   **Сюжет:** У шара ты встречаешь цифровой призрак инженера. Он говорит с тобой напрямую. Дает выбор для концовки.
-*   **Атмосфера:** Мистическая, надежда, связь с внешним миром.
+1.  **Desktop (Hub):** Player sees 9 Program Icons and 3 Wallpaper Objects (City, Tree, Balloon).
+2.  **Action:** Click Icon -> Play **Mini-Game**.
+3.  **Reward:** Win -> Get **"Data Key"** (Clue).
+4.  **Reaction:** Wallpaper changes (e.g., Tree starts glowing).
+5.  **Exploration:** Click Wallpaper Object -> Enter **3D Location** -> Learn Story.
+6.  **Return:** Back to Desktop to unlock next program.
 
 ---
 
-## 6. Фазы Разработки (План Действий)
+## 4. The 9 Mini-Games (Programs)
 
-### Фаза 1: Вертикальный Срез (MVP)
-*Цель: Сделать одну рабочую цепочку от начала до конца.*
-1.  **Сцены:** MainMenu, StoryIntro, Boot, SystemBoot, AeroDesktop.
-2.  **Мини-игра:** Documents (Текстовая).
-3.  **Локация:** TreeLocation (Простая 3D сцена).
-4.  **Скрипты:** ProgressionManager, DesktopController, DocumentsGameController.
-5.  **Результат:** Игрок может запустить игру, пройти интро, зайти на рабочий стол, сыграть в Documents, увидеть, как дерево меняется, зайти в дерево, прочитать лог и вернуться.
+### Tree Branch (Emotion/Memory)
+1.  **Documents:** *Text Puzzle.* Restore redacted text by clicking black bars to reveal words.
+    *   *Reward:* Unlocks **Tree**.
+2.  **Pictures:** *Spot the Difference.* Find 3 anomalies in photos (shadows, extra objects).
+    *   *Reward:* Deepens Tree story.
+3.  **Music:** *Frequency Tuner.* Adjust Low/Mid/High sliders to cancel noise and hear a hidden voice.
+    *   *Reward:* Audio clue for Tree.
 
-### Фаза 2: Ветка Дерева
-*Цель: Закрыть первую сюжетную линию.*
-1.  **Мини-игры:** Pictures, Music.
-2.  **Доработка Локации:** Добавить новые диалоги и объекты в TreeLocation.
-3.  **Результат:** Полная история про "Ложную жизнь".
+### City Branch (Logic/Structure)
+4.  **Computer:** *Pathfinding.* Navigate a grid from "User" to "Core" avoiding "Firewall" blocks.
+    *   *Reward:* Unlocks **City**.
+5.  **Control Panel:** *Switch Logic.* Flip toggles to match a pattern or light up all green lamps.
+    *   *Reward:* Access code for City.
+6.  **Tetris:** *Falling Blocks.* Classic Tetris, but blocks glitch and form words ("HELP", "LAB 7").
+    *   *Reward:* Memory Shard (for Secret Ending).
 
-### Фаза 3: Ветка Города
-*Цель: Добавить логику и архитектуру.*
-1.  **Мини-игры:** Computer, Control Panel, Tetris.
-2.  **Локация:** CityLocation.
-3.  **Результат:** Игрок понимает структуру тюрьмы.
-
-### Фаза 4: Ветка Шара
-*Цель: Добавить сигнал и надежду.*
-1.  **Мини-игры:** Network, Videos, Recycle Bin.
-2.  **Локация:** BalloonLocation.
-3.  **Результат:** Игрок находит призрака инженера.
-
-### Фаза 5: Финал
-*Цель: Концовки.*
-1.  **Сцены:** CoreScene, ExitProtocolScene.
-2.  **Логика:** Система выбора концовки на основе собранных ключей.
-3.  **Результат:** Полная игра.
+### Balloon Branch (Signal/Network)
+7.  **Network:** *Pipe Connection.* Rotate tiles to connect "Source" to "Destination".
+    *   *Reward:* Unlocks **Balloon**.
+8.  **Videos:** *Timeline Sort.* Drag-and-drop scrambled video frames into correct order.
+    *   *Reward:* Video evidence.
+9.  **Recycle Bin:** *Data Mining.* Click blocks to find files, avoid "Virus" blocks (Minesweeper style).
+    *   *Reward:* Final Truth file.
 
 ---
 
-## 7. Инструкции для Unity AI (Как строить игру)
+## 5. The 3 Locations (Wallpaper Objects)
 
-*Используй эти промпты по очереди, чтобы создать игру с помощью AI.*
-
-### Шаг 1: Базовые Системы
-> "Создай скрипт `ProgressionManager.cs` (синглтон). В нем должны быть переменные: `bool hasDocumentsKey`, `bool isTreeUnlocked`, `int currentPhase`. Добавь методы `UnlockTree()` и `SaveProgress()`. Создай скрипт `AudioManager.cs` для управления звуками."
-
-### Шаг 2: Рабочий Стол (Хаб)
-> "Создай сцену `AeroDesktopScene`. Добавь `UIDocument` с 9 иконками и фоном. Напиши скрипт `DesktopController.cs`. Он должен проверять `ProgressionManager`: если `isTreeUnlocked` true, то иконка/объект дерева становится кликабельным и меняет цвет. При клике загружается сцена `TreeLocation`."
-
-### Шаг 3: Мини-игра Documents
-> "Создай сцену `DocumentsMiniGame`. Сделай UI: текстовое поле с предложением, где некоторые слова заменены на черные прямоугольники. При клике на прямоугольник он исчезает, показывая слово. Когда все слова открыты, вызови `ProgressionManager.UnlockTree()` и вернись на рабочий стол."
-
-### Шаг 4: Локация Дерево
-> "Создай сцену `TreeLocation`. Добавь 3D объекты: Plane (трава), Cylinder (ствол), Sphere (крона). Добавь скрипт `TreeInteraction.cs`. При клике на дерево показывай UI с текстом: 'Это симуляция. Система лжет.'. Добавь кнопку 'Назад', которая загружает `AeroDesktopScene`."
-
-### Шаг 5: Связка и Тест
-> "Настрой переходы между сценами в Build Settings. Убедись, что `ProgressionManager` не уничтожается при загрузке сцен (`DontDestroyOnLoad`). Протестируй цепочку: Desktop -> Documents -> Win -> Desktop (Tree active) -> Tree -> Back."
+1.  **Tree (The Lie):** 3D scene. Perfect grass, one tree, bench. Uncanny stillness.
+    *   *Story:* Shows nature is a simulation.
+2.  **City (The Prison):** 3D scene. Glass towers, data lines, no people.
+    *   *Story:* Shows the containment pods where engineers are held.
+3.  **Balloon (The Signal):** 3D scene. Surreal sky, floating islands, glowing sphere.
+    *   *Story:* Meet the digital ghost of an engineer.
 
 ---
 
-Этот документ содержит **всё необходимое** для создания игры. Сюжет, механики, план и промпты.
-Теперь ты можешь просто копировать промпты из раздела 7 и вставлять их в Unity AI, чтобы шаг за шагом собрать проект.
+## 6. Detailed Prompts for Unity AI (Phase by Phase)
 
-**Готов начать с Шага 1?**
+*Copy and paste these prompts into Unity AI one by one.*
+
+### Phase 0: Foundation & Systems
+
+#### Step 0.1: ProgressionManager
+**PROMPT:**
+> Create a C# script named `ProgressionManager.cs`.
+> Make it a Singleton with `DontDestroyOnLoad`.
+> Add public boolean variables for all keys: `hasDocumentsKey`, `hasPicturesKey`, `hasMusicKey`, `hasComputerKey`, `hasControlPanelKey`, `hasTetrisKey`, `hasNetworkKey`, `hasVideosKey`, `hasRecycleBinKey`.
+> Add booleans for locations: `isTreeUnlocked`, `isCityUnlocked`, `isBalloonUnlocked`.
+> Add an integer `collectedShards`.
+> Add methods: `UnlockTree()`, `UnlockCity()`, `UnlockBalloon()`, `AddShard()`, `SaveProgress()`, `LoadProgress()`.
+> Use `PlayerPrefs` to save/load data (save bools as ints 1/0).
+> Add `Debug.Log` for every state change.
+
+#### Step 0.2: AudioManager
+**PROMPT:**
+> Create a C# script named `AudioManager.cs`.
+> Make it a Singleton.
+> Add public `AudioClip` fields for: `startupChime`, `loginChime`, `textBlip`, `clickGlass`, `hoverTick`, `popupNotify`, `iconLand`, `typewriterClick`, `glitchBurst`, `anomalyHum`, `anomalyWhisper`.
+> Add methods: `PlaySFX(AudioClip clip)`, `PlayAmbient(AudioClip clip, bool loop)`.
+> Create an `AudioMixer` asset named `AeroMixer` with groups: Master, Music, SFX, UI.
+> Ensure all AudioSources use this mixer.
+
+#### Step 0.3: Build Settings
+**PROMPT:**
+> Open Build Settings. Add the following scenes in this exact order (create empty scenes if they don't exist in `Assets/Scenes/`):
+> 0. MainMenuScene
+> 1. StoryIntroScene
+> 2. BootScene
+> 3. SystemBootScene
+> 4. AeroDesktopScene
+> 5. DocumentsMiniGame
+> 6. TreeLocation
+> 7. PicturesMiniGame
+> 8. MusicMiniGame
+> 9. ComputerMiniGame
+> 10. ControlPanelMiniGame
+> 11. TetrisMiniGame
+> 12. CityLocation
+> 13. NetworkMiniGame
+> 14. VideosMiniGame
+> 15. RecycleBinMiniGame
+> 16. BalloonLocation
+> 17. CoreScene
+> 18. ExitProtocolScene
+
+---
+
+### Phase 1: Vertical Slice (MVP)
+
+#### Step 1.1: DesktopController (Hub)
+**PROMPT:**
+> In `AeroDesktopScene`, create a script `DesktopController.cs` on the `Desktop_UI` object.
+> 1. Add public references for Icon Buttons: `btnDocuments`, `btnPictures`, etc.
+> 2. Add public references for Wallpaper Objects: `GameObject treeObject`, `cityObject`, `balloonObject`.
+> 3. In `Start()`, check `ProgressionManager`. If `isTreeUnlocked` is true, make `treeObject` interactive (add a Button component or click handler) and change its color to green/glowing.
+> 4. Method `OnDocumentsClick()`: Loads scene `DocumentsMiniGame`.
+> 5. Method `OnTreeClick()`: Loads scene `TreeLocation`.
+> 6. Create a UI Popup (Panel + Text + Button) that appears on start with text: "Welcome back, [PlayerName]. Recovery incomplete. Please review Documents." Button "OK" closes it.
+> 7. Use `PlayerPrefs.GetString("PlayerName", "User")` for the name.
+
+#### Step 1.2: DocumentsMiniGame
+**PROMPT:**
+> Create scene `DocumentsMiniGame`.
+> Add a Canvas with UI:
+> - Title: "Incident Report #01".
+> - Text: "Seven engineers vanished in Lab 7. The system is [REDACTED]. We must find the [REDACTED]."
+> - Make [REDACTED] clickable Buttons.
+> - On click, replace text with "WATCHING" and "TRUTH".
+> - When all words revealed, show "Save & Return" button.
+> - Button calls `ProgressionManager.Instance.UnlockTree()`, plays `loginChime`, and loads `AeroDesktopScene`.
+> - Play `typewriterClick` sound on every word click.
+
+#### Step 1.3: TreeLocation
+**PROMPT:**
+> Create scene `TreeLocation`.
+> Add 3D objects: Plane (Green material), Cylinder (Trunk), Sphere (Leaves), Cube (Bench).
+> Add Camera at (0, 2, -5) looking at tree.
+> Add script `TreeInteraction.cs`:
+> - On click (Raycast or Collider), show UI Panel: "SCAN RESULT: Object is a Simulation. Status: False Life."
+> - Add "Return to Desktop" button loading `AeroDesktopScene`.
+> - Play `anomalyHum` (loop) and `anomalyWhisper` on click.
+
+#### Step 1.4: Link & Test
+**PROMPT:**
+> Add a debug button in `AeroDesktopScene` labeled "Test: Unlock Tree".
+> On click, it calls `ProgressionManager.Instance.UnlockTree()`.
+> Verify that the Tree object changes appearance and becomes clickable.
+> Test full loop: Desktop -> Documents -> Win -> Desktop -> Tree Click -> TreeLocation -> Return.
+> Remove debug button after test.
+
+---
+
+### Phase 2: Tree Branch (Pictures + Music)
+
+#### Step 2.1: PicturesMiniGame
+**PROMPT:**
+> Create scene `PicturesMiniGame`.
+> UI: Two Images side-by-side (Image A, Image B).
+> Add 3 invisible Button colliders over "differences" (e.g., a cloud, a shadow).
+> On click, show a green circle and increment counter "Found: X/3".
+> When 3 found, show "Analyze Complete" button.
+> Button sets `ProgressionManager.hasPicturesKey = true`, plays `popupNotify`, loads `AeroDesktopScene`.
+
+#### Step 2.2: MusicMiniGame
+**PROMPT:**
+> Create scene `MusicMiniGame`.
+> UI: 3 Sliders (Low, Mid, High). Text: "Adjust frequencies to clear noise".
+> Logic: If all sliders are between 0.4 and 0.6, trigger win state.
+> On win: Stop noise, play clean voice clip (`anomalyWhisper`), show text "Voice Recovered: 'Don't trust the beauty...'".
+> Button "Save" sets `ProgressionManager.hasMusicKey = true`, loads `AeroDesktopScene`.
+
+#### Step 2.3: Update TreeLocation
+**PROMPT:**
+> Update `TreeInteraction.cs` in `TreeLocation`.
+> Check `ProgressionManager`: If `hasPicturesKey` AND `hasMusicKey` are true, show extra text on click: "DEEP SCAN: Memories are fabricated. The tree is a lie."
+> Add visual effect: Tree rotates slowly or turns red for 2 seconds on click if keys are collected.
+
+---
+
+### Phase 3: City Branch (Computer + Control Panel + Tetris)
+
+#### Step 3.1: ComputerMiniGame
+**PROMPT:**
+> Create scene `ComputerMiniGame`.
+> UI: 5x5 Grid of Buttons.
+> Start (0,0) is Green. Goal (4,4) is Red.
+> Some buttons are "Firewall" (Gray, non-clickable).
+> Player clicks adjacent free cell to move.
+> Reach Goal -> Show "Access Granted".
+> Button "Return" sets `ProgressionManager.hasComputerKey = true`, loads `AeroDesktopScene`.
+> Play `clickGlass` on move.
+
+#### Step 3.2: ControlPanelMiniGame
+**PROMPT:**
+> Create scene `ControlPanelMiniGame`.
+> UI: 4 Toggles and 4 Lamp Images.
+> Goal: All Lamps Green.
+> Logic: Toggle 1 changes Lamp 1 & 2. Toggle 2 changes Lamp 2 & 3, etc.
+> Start state: All Red.
+> On Win: Play `identityAccepted`, set `ProgressionManager.hasControlPanelKey = true`, load `AeroDesktopScene`.
+
+#### Step 3.3: TetrisMiniGame
+**PROMPT:**
+> Create scene `TetrisMiniGame`.
+> Implement basic Tetris (10x20 grid, 7 shapes, arrow controls).
+> Twist: After clearing 3 lines, show message "MEMORY FRAGMENT: 'Lab 7... they are watching...'".
+> After 5 lines, show button "Extract Data".
+> Button sets `ProgressionManager.hasTetrisKey = true` AND `ProgressionManager.AddShard()`, loads `AeroDesktopScene`.
+
+#### Step 3.4: CityLocation
+**PROMPT:**
+> Create scene `CityLocation`.
+> 3D: Cubes as skyscrapers (emissive material), Plane as floor, Point Lights as windows.
+> Script `CityInteraction.cs`:
+> On Enter, check `ProgressionManager`: If `hasComputerKey` AND `hasControlPanelKey` true, show UI: "CITY ACCESS: You see containment pods. Silhouettes of engineers inside."
+> Add "Return" button.
+> Atmosphere: Cold blue light, `pcHum` sound.
+
+---
+
+### Phase 4: Balloon Branch (Network + Videos + Recycle Bin)
+
+#### Step 4.1: NetworkMiniGame
+**PROMPT:**
+> Create scene `NetworkMiniGame`.
+> UI: 4x4 Grid of "Pipe" images.
+> Player clicks cell to rotate pipe 90 degrees.
+> Goal: Connect Top-Left to Bottom-Right.
+> On Win: Set `ProgressionManager.hasNetworkKey = true`, load `AeroDesktopScene`.
+
+#### Step 4.2: VideosMiniGame
+**PROMPT:**
+> Create scene `VideosMiniGame`.
+> UI: 5 Image slots. 5 Draggable Frame images (shuffled order).
+> Player drags frames to slots 1-5.
+> Check order: If [1,2,3,4,5], Win.
+> On Win: Show text "VIDEO RESTORED: Engineers pulled into screen."
+> Set `ProgressionManager.hasVideosKey = true`, load `AeroDesktopScene`.
+
+#### Step 4.3: RecycleBinMiniGame
+**PROMPT:**
+> Create scene `RecycleBinMiniGame`.
+> UI: 5x5 Grid of Buttons.
+> 3 buttons have "Files" (Win). 5 buttons have "Viruses" (Lose/Reset).
+> Player clicks to reveal.
+> Find 3 Files before Viruses -> Win.
+> Set `ProgressionManager.hasRecycleBinKey = true`, load `AeroDesktopScene`.
+
+#### Step 4.4: BalloonLocation
+**PROMPT:**
+> Create scene `BalloonLocation`.
+> 3D: Plane (Clouds), Sphere (Glowing Balloon), Cubes (Platforms).
+> Script `BalloonInteraction.cs`:
+> Player enters Trigger near Balloon.
+> Show UI: "SIGNAL DETECTED: 'Help us... destroy the core or join us.'"
+> If `collectedShards >= 3`, show extra text: "SECRET OPTION: Merge with system?".
+> Add "Return" button.
+
+---
+
+### Phase 5: Finale (Core + Endings)
+
+#### Step 5.1: CoreScene
+**PROMPT:**
+> Create scene `CoreScene`.
+> 3D: Large Cylinder (Core), Particles.
+> UI Panel with 3 Buttons:
+> 1. "Destroy System" (Requires all branch keys).
+> 2. "Join System" (Always available).
+> 3. "Merge" (Requires `collectedShards >= 3`).
+> Logic:
+> - Button 1: Save "ending_destroy" to PlayerPrefs, load `ExitProtocolScene`.
+> - Button 2: Save "ending_join", load `ExitProtocolScene`.
+> - Button 3: Save "ending_merge", load `ExitProtocolScene`.
+> Sound: Epic ambient.
+
+#### Step 5.2: ExitProtocolScene
+**PROMPT:**
+> Create scene `ExitProtocolScene`.
+> Script `EndingController.cs`:
+> In `Start()`, read `PlayerPrefs` for ending type.
+> - If "destroy": Fade to black, text "System Destroyed. Engineers Freed.", silence.
+> - If "join": Bright screen, text "Welcome to Paradise. Forever.", music.
+> - If "merge": Text "7 Voices in your head. You carry them.", mixed audio.
+> Add "Main Menu" button loading `MainMenuScene`.
+
+---
+
+### Phase 6: Polish (VFX, UI, Optimization)
+
+#### Step 6.1: Visual Effects
+**PROMPT:**
+> Add Post-Processing Volume to Main Camera.
+> Enable Bloom (for icons/balloon), Vignette (atmosphere).
+> Create script `GlitchEffect.cs`:
+> - On error or horror moment, enable Chromatic Aberration and Noise for 0.5s.
+
+#### Step 6.2: UI Animations
+**PROMPT:**
+> Add animations to UI transitions.
+> - Open Mini-game: Scale from 0.8 to 1.0.
+> - Close: Scale 1.0 to 0.8.
+> - Button Hover: Change color or scale up slightly.
+> Use `Mathf.Lerp` in Update or Unity Animator.
+
+#### Step 6.3: Save System
+**PROMPT:**
+> In `ProgressionManager`, add auto-save on every change.
+> In `MainMenuScene`, add "Continue" button that loads `AeroDesktopScene` with saved progress.
+> Verify `PlayerPrefs` saves bools correctly.
+
+#### Step 6.4: Final Test
+**PROMPT:**
+> Test full playthrough:
+> 1. Play all 9 mini-games.
+> 2. Verify all locations unlock.
+> 3. Test all 3 endings.
+> 4. Check audio mixing (no overlapping loud sounds).
+> 5. Check FPS stability.
+> Fix any bugs.
+
+---
+
+## 7. How to Use This Document
+
+1.  **Start with Phase 0.** Copy Prompt 0.1, paste into Unity AI. Wait for script. Check.
+2.  **Follow Order.** Do not jump to Phase 3 before Phase 1 is done.
+3.  **Test Every Step.** Run the game after each prompt to ensure it works.
+4.  **Fix Errors:** If AI makes a mistake, paste the error code back and ask to fix.
+5.  **Assets:** Use free assets or simple primitives as described.
+
+**Ready to start with Phase 0.1?**
