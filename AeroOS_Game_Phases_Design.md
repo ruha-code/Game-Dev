@@ -1435,3 +1435,655 @@ This creates a structure where:
 - the wallpaper is story architecture
 - the programs are investigative tools
 - the scenes are layered revelations of one unified mystery
+
+---
+
+## 16. Detailed Scene Blueprints for Unity AI Implementation
+
+This section provides detailed implementation blueprints for every scene in the project. Use these specifications as direct instructions for Unity AI (MCP) to generate scripts, UI, and assets.
+
+Each scene blueprint includes:
+- **Visual Style**: Aesthetic, lighting, and key assets.
+- **Player Mechanics**: Controls and interactions.
+- **Key Events**: Scripted sequences and triggers.
+- **Story/Reveal**: What the player learns.
+- **Ending/Transition**: How the scene ends and where it leads.
+- **Unity AI Tasks**: Specific components, scripts, and assets to create.
+
+---
+
+### Phase 0: Intro & Entry Scenes
+
+#### 1. `MainMenuScene`
+**Visual Style:**
+- Full-screen Frutiger Aero wallpaper (sky, grass, bubbles).
+- Glass-morphism UI panel in the center.
+- "Play" button with soft glow and hover scale effect.
+- Subtle ambient animation (clouds moving, bubbles floating).
+- Clean, bright, optimistic but slightly sterile.
+
+**Player Mechanics:**
+- Mouse click to start.
+- Hover effects on UI elements.
+
+**Key Events:**
+- On Play click: Fade out UI, fade in black, load `StoryIntroScene`.
+
+**Story/Reveal:**
+- Establishes the aesthetic identity of AeroOS.
+- Sets a tone of polished digital perfection.
+
+**Ending/Transition:**
+- Fades to black -> Loads `StoryIntroScene`.
+
+**Unity AI Tasks:**
+1. Create `MainMenuScene`.
+2. Add `UIDocument` with `MainMenu.uxml`.
+3. Create `MainMenuController.cs` to handle "Play" click.
+4. Implement simple fade-out coroutine.
+5. Add ambient audio source with soft hum/chime.
+
+#### 2. `StoryIntroScene`
+**Visual Style:**
+- Black background.
+- White/Cyan monospaced text typing on screen.
+- Glitch effects (RGB split, static) on key words ("YOU", "Lab 7").
+- Minimalist, terminal-like aesthetic.
+
+**Player Mechanics:**
+- No input required (auto-play sequence).
+- Optional: Click to skip (later phase).
+
+**Key Events:**
+- Typewriter effect for text lines.
+- Glitch trigger on "Final Active Employee: YOU".
+- Fade to white flash at end.
+
+**Story/Reveal:**
+- Introduces Aether Dynamics, Lab 7, missing engineers.
+- Identifies player as the last active employee.
+
+**Ending/Transition:**
+- White flash -> Loads `BootScene` additively or transitions to it.
+
+**Unity AI Tasks:**
+1. Create `StoryIntroScene`.
+2. Add `UIDocument` with `StoryIntro.uxml`.
+3. Create `StoryIntroController.cs` for typewriter effect and glitch logic.
+4. Implement `Typewriter` coroutine.
+5. Add glitch shader or USS class toggles for RGB split.
+
+#### 3. `BootScene`
+**Visual Style:**
+- 3D environment: Dark room, desk, monitor.
+- Cinematic camera path: Starts outside room, moves through door, focuses on monitor.
+- Monitor screen shows boot sequence.
+- Low-key lighting, mysterious atmosphere.
+- Glitch entity appears briefly near monitor.
+
+**Player Mechanics:**
+- No direct control (cinematic).
+- Camera moves automatically.
+
+**Key Events:**
+- Camera dolly-in to monitor.
+- Monitor lights up.
+- Glitch entity appears and dissipates into screen.
+- Camera zooms into monitor pixels.
+
+**Story/Reveal:**
+- Shows the physical/digital threshold.
+- Introduces the "ghost" presence.
+- Transitions player from observer to participant inside the screen.
+
+**Ending/Transition:**
+- Zoom into monitor -> Loads `SystemBootScene`.
+
+**Unity AI Tasks:**
+1. Create `BootScene` with basic 3D room setup (desk, monitor).
+2. Add `CinematicIntroController.cs` for camera path animation.
+3. Create `MonitorScreenController.cs` to handle screen texture changes.
+4. Add simple glitch entity prefab (transparent, distorted mesh).
+5. Implement camera zoom transition to next scene.
+
+#### 4. `SystemBootScene`
+**Visual Style:**
+- Full-screen UI overlay on top of fading 3D background.
+- Frutiger Aero loading bars, glass panels.
+- Input field for "Player Name".
+- "Restore Session" narrative text appearing line by line.
+
+**Player Mechanics:**
+- Type name into input field.
+- Click "Continue" or press Enter.
+
+**Key Events:**
+- Loading bar fills up.
+- Narrative text types out: "Restoring session...", "Lab 7 data recovered...".
+- Screen fades to white/blue desktop background.
+
+**Story/Reveal:**
+- Confirms player identity persistence.
+- Reinforces that system is "restoring" something lost.
+
+**Ending/Transition:**
+- Fade to `AeroDesktopScene`.
+
+**Unity AI Tasks:**
+1. Create `SystemBootScene`.
+2. Add `UIDocument` with `SystemBoot.uxml`.
+3. Create `SystemBootController.cs` to handle name input and narrative sequence.
+4. Implement `PlayerPrefs.SetString("PlayerName", ...)` logic.
+5. Add transition coroutine to load `AeroDesktopScene`.
+
+---
+
+### Phase 1: Hub & Tree Branch (Vertical Slice)
+
+#### 5. `AeroDesktopScene` (Hub)
+**Visual Style:**
+- Frutiger Aero Wallpaper: Sky, grass, city skyline, tree, balloon, bubbles.
+- Glass taskbar at bottom.
+- Desktop icons: Documents, Pictures, Music, Computer, Control Panel, Tetris, Network, Videos, Recycle Bin.
+- Start Menu with user name.
+- Clean, bright, glossy UI.
+
+**Player Mechanics:**
+- Mouse click to open programs.
+- Mouse click on wallpaper objects (Tree, City, Balloon) when activated.
+- Hover effects on icons and taskbar.
+
+**Key Events:**
+- **Onboarding Popup:** Appears on first load: "Welcome back, [Name]. Recovery incomplete. Please review Documents."
+- **Icon Highlight:** `Documents` icon pulses/glows.
+- **Post-Documents Reaction:** Tree on wallpaper subtly animates (shadow shifts, leaves rustle unnaturally).
+- **Tree Activation:** Tree becomes clickable after reading Documents.
+
+**Story/Reveal:**
+- Teaches the core loop: Program -> Desktop Reaction -> Wallpaper Object.
+- Establishes desktop as a living, reactive world.
+
+**Ending/Transition:**
+- Player opens `Documents` -> Loads `DocumentsScene`.
+- Player clicks Tree -> Loads `TreeScene`.
+
+**Unity AI Tasks:**
+1. Create `AeroDesktopScene`.
+2. Add `UIDocument` with `AeroDesktop.uxml` (icons, taskbar, start menu).
+3. Create `DesktopUIController.cs` to handle icon clicks and popup logic.
+4. Create `ProgressionManager.cs` (singleton) to track state (e.g., `hasReadDocuments`, `isTreeActive`).
+5. Implement `WallpaperController.cs` to handle subtle animations (clouds, bubbles) and reactive changes (tree shadow).
+6. Add `CursorManager.cs` for custom cursor.
+7. Implement onboarding popup logic in `DesktopUIController`.
+
+#### 6. `DocumentsScene`
+**Visual Style:**
+- File explorer window UI.
+- List of files: `Incident_Report_01.txt`, `Engineer_Log_John.txt`, `Lab7_Status.txt`.
+- Clean, white/blue corporate aesthetic.
+- Text content is readable, with some redacted sections.
+
+**Player Mechanics:**
+- Click file to open/read.
+- Close file to return to list.
+- "Back" button to return to Desktop.
+
+**Key Events:**
+- Reading `Incident_Report_01.txt` reveals: "7 engineers missing", "Lab 7 containment breach".
+- Reading `Engineer_Log_John.txt` reveals: "The park projection feels too real... it's watching me."
+- On close: Trigger `ProgressionManager.SetTreeActive(true)`.
+
+**Story/Reveal:**
+- First concrete clues about Lab 7 and missing engineers.
+- Links "park/tree" to "projection" and "watching".
+
+**Ending/Transition:**
+- Click "Back" -> Returns to `AeroDesktopScene`.
+- Triggers tree animation on desktop.
+
+**Unity AI Tasks:**
+1. Create `DocumentsScene` (or use a Canvas overlay in DesktopScene if preferred, but separate scene is cleaner for structure).
+2. Add `UIDocument` with file list and text viewer.
+3. Create `DocumentsController.cs` to handle file opening and content display.
+4. Implement `ProgressionManager` call to activate Tree on exit.
+5. Add simple text assets for file contents.
+
+#### 7. `TreeScene`
+**Visual Style:**
+- 2.5D or small 3D environment: Grass, single large tree, bench, soft sunlight.
+- Overly perfect, still air.
+- Slightly uncanny valley feeling: shadows don't quite match, leaves don't move with wind.
+- Soft bloom, bright colors.
+
+**Player Mechanics:**
+- Click to move/interact (point-and-click) or WASD if 3D.
+- Click on tree trunk to "inspect".
+- Click on bench to "sit" (optional).
+
+**Key Events:**
+- Inspecting tree reveals: "Texture resolution: Infinite. Wind simulation: Disabled. Life sign: None."
+- Ambient sound cuts out briefly, then returns with a low hum.
+- A faint whisper plays: "Don't trust the comfort."
+
+**Story/Reveal:**
+- Proves the tree is a simulation, not real nature.
+- Introduces the idea of "manufactured comfort" as containment.
+
+**Ending/Transition:**
+- Click "Return to Desktop" -> Returns to `AeroDesktopScene`.
+- Unlocks `Pictures` and `Music` icons on desktop.
+
+**Unity AI Tasks:**
+1. Create `TreeScene` with basic 3D models (tree, grass, bench).
+2. Add `TreeSceneController.cs` to handle interactions.
+3. Implement interaction prompts (UI tooltips).
+4. Add ambient audio with occasional glitch whispers.
+5. Implement `ProgressionManager` call to unlock Pictures/Music on exit.
+
+---
+
+### Phase 2: Full Tree Branch
+
+#### 8. `PicturesScene`
+**Visual Style:**
+- Photo gallery UI.
+- Images of parks, trees, families, sunny days.
+- Some images have subtle glitches (extra shadow, blurred face).
+- Clean, glossy frame design.
+
+**Player Mechanics:**
+- Click image to enlarge.
+- Swipe/arrow keys to navigate.
+- "Analyze" button to reveal hidden details.
+
+**Key Events:**
+- Analyzing an image reveals: "Metadata: Generated by AeroOS Core. Date: Future."
+- One image shows the tree from `TreeScene` but with a figure standing under it (the figure is blurred).
+
+**Story/Reveal:**
+- Visual memories are fabricated by the system.
+- The tree is a recurring anchor in false memories.
+
+**Ending/Transition:**
+- Close gallery -> Returns to Desktop.
+- Enhances tree unease on desktop (shadow grows longer).
+
+**Unity AI Tasks:**
+1. Create `PicturesScene` with gallery UI.
+2. Create `PicturesController.cs` for navigation and analysis logic.
+3. Add sample images (use placeholders or generate with AI).
+4. Implement "Analyze" overlay effect.
+
+#### 9. `MusicScene`
+**Visual Style:**
+- Audio visualizer UI.
+- Waveforms, frequency bars, clean blue/white theme.
+- Track list: "Morning Calm", "Park Ambience", "Forgotten Lullaby".
+
+**Player Mechanics:**
+- Play/Pause tracks.
+- Slider to isolate frequencies (Low/Mid/High).
+- "Decode" button when hidden signal is found.
+
+**Key Events:**
+- Isolating High Frequency in "Forgotten Lullaby" reveals a voice: "Help us... it's not real..."
+- Visualizer reacts emotionally (colors shift to red/purple briefly).
+
+**Story/Reveal:**
+- Emotional residue is stored in audio layers.
+- The system uses music to stabilize mood, but traces of pain remain.
+
+**Ending/Transition:**
+- Close player -> Returns to Desktop.
+- Tree on desktop now has a faint audio hum when hovered.
+
+**Unity AI Tasks:**
+1. Create `MusicScene` with audio visualizer UI.
+2. Create `MusicController.cs` for playback and frequency filtering.
+3. Add audio clips with hidden voice layers (use audio editing tools).
+4. Implement visualizer animation linked to audio spectrum.
+
+---
+
+### Phase 3: City Branch
+
+#### 10. `ComputerScene`
+**Visual Style:**
+- System architecture map UI.
+- Node-based graph showing "Core", "Memory", "Network", "Lab 7 (Locked)".
+- Clean, technical, blue-white lines.
+
+**Player Mechanics:**
+- Click nodes to view info.
+- Drag to pan map.
+- Scroll to zoom.
+
+**Key Events:**
+- Clicking "Core" reveals: "Architecture: Frutiger Aero Shell. Purpose: Containment."
+- "Lab 7" node is red and locked. Tooltip: "Access Denied. Clearance Level 9 Required."
+
+**Story/Reveal:**
+- The city skyline corresponds to system architecture.
+- Lab 7 is a restricted, critical sector.
+
+**Ending/Transition:**
+- Close map -> Returns to Desktop.
+- City skyline on desktop starts blinking in sync with system heartbeat.
+
+**Unity AI Tasks:**
+1. Create `ComputerScene` with node-graph UI.
+2. Create `ComputerController.cs` for map interaction.
+3. Implement node data structures and tooltips.
+4. Add pulsing animation to city skyline in `WallpaperController`.
+
+#### 11. `ControlPanelScene`
+**Visual Style:**
+- Settings panel UI.
+- Sliders, toggles, switches.
+- Labels: "Emotional Dampening", "Memory Integrity", "Reality Stability".
+
+**Player Mechanics:**
+- Toggle switches (some are locked).
+- Move sliders (some revert automatically).
+
+**Key Events:**
+- Trying to lower "Emotional Dampening" causes screen to shake and text to appear: "Safety Protocol Active. User Stability at Risk."
+- "Reality Stability" slider is stuck at 100%.
+
+**Story/Reveal:**
+- The system actively controls user perception and stability.
+- User has limited control; the system overrides safety for containment.
+
+**Ending/Transition:**
+- Close panel -> Returns to Desktop.
+- Taskbar flickers briefly.
+
+**Unity AI Tasks:**
+1. Create `ControlPanelScene` with settings UI.
+2. Create `ControlPanelController.cs` for toggle/slider logic.
+3. Implement "override" behavior for locked controls.
+4. Add screen shake effect on failed attempts.
+
+#### 12. `TetrisMode`
+**Visual Style:**
+- Classic Tetris grid.
+- Glossy, colorful blocks.
+- Background: Faint city skyline.
+
+**Player Mechanics:**
+- Arrow keys to move/rotate blocks.
+- Down arrow for soft drop.
+
+**Key Events:**
+- After clearing 5 lines, blocks start forming letters: "L-A-B-7".
+- Game pauses, message appears: "Pattern Recognized. Memory Fragment Recovered."
+
+**Story/Reveal:**
+- The system reconstructs memory through pattern logic.
+- Tetris is not just a game; it's a defragmentation tool.
+
+**Ending/Transition:**
+- Close game -> Returns to Desktop.
+- One building in city skyline changes shape to match Tetris block.
+
+**Unity AI Tasks:**
+1. Create `TetrisMode` as a UI overlay or separate scene.
+2. Create `TetrisController.cs` for game logic.
+3. Implement special "message" sequence after score threshold.
+4. Link high score/completion to `ProgressionManager`.
+
+#### 13. `CityScene`
+**Visual Style:**
+- 3D environment: Glass towers, white bridges, glowing windows.
+- Sterile, clean, authoritarian beauty.
+- No people, only moving light patterns.
+
+**Player Mechanics:**
+- Walk/Fly through city sectors.
+- Click on doors/gates to enter.
+
+**Key Events:**
+- Entering "Sector 7" gate fails: "Clearance Level 9 Required."
+- Observing towers reveals they pulse like server racks.
+
+**Story/Reveal:**
+- The city is a physical manifestation of system processes.
+- Access to Lab 7 is physically guarded in this space.
+
+**Ending/Transition:**
+- Return portal -> Returns to Desktop.
+- City skyline becomes more detailed and complex.
+
+**Unity AI Tasks:**
+1. Create `CityScene` with procedural or pre-built city layout.
+2. Create `CityController.cs` for movement and gate logic.
+3. Add pulsing light effects to buildings.
+4. Implement return portal logic.
+
+---
+
+### Phase 4: Balloon Branch
+
+#### 14. `NetworkScene`
+**Visual Style:**
+- Abstract network map.
+- Glowing lines, nodes, data packets moving.
+- Dark blue background, cyan highlights.
+- One red corrupted path.
+
+**Player Mechanics:**
+- Click nodes to trace routes.
+- Avoid red corrupted nodes.
+
+**Key Events:**
+- Tracing the clean path leads to "External Signal Source: Balloon Beacon".
+- Touching red node causes glitch screen and error: "Signal Intercepted."
+
+**Story/Reveal:**
+- The balloon is a beacon for external/internal signal transfer.
+- Some routes are corrupted by the ghost process.
+
+**Ending/Transition:**
+- Complete trace -> Returns to Desktop.
+- Balloon on desktop moves closer to center.
+
+**Unity AI Tasks:**
+1. Create `NetworkScene` with node-based puzzle UI.
+2. Create `NetworkController.cs` for pathfinding logic.
+3. Implement glitch effect on wrong choice.
+4. Update balloon position in `WallpaperController` on success.
+
+#### 15. `VideosScene`
+**Visual Style:**
+- Surveillance footage UI.
+- Multiple camera feeds.
+- Grainy, timestamped video.
+- One feed shows the balloon floating in a lab corridor.
+
+**Player Mechanics:**
+- Play/Pause footage.
+- Switch camera angles.
+- "Enhance" tool to zoom/clear image.
+
+**Key Events:**
+- Enhancing the balloon feed reveals a tag: "Property of Lab 7 - Project Ghost."
+- Footage date is before the incident.
+
+**Story/Reveal:**
+- The balloon was part of Lab 7 experiments.
+- It was present before the containment breach.
+
+**Ending/Transition:**
+- Close viewer -> Returns to Desktop.
+- Balloon glows faintly on desktop.
+
+**Unity AI Tasks:**
+1. Create `VideosScene` with video player UI.
+2. Create `VideosController.cs` for playback and enhance logic.
+3. Add sample video textures (static/images with playhead).
+4. Implement "Enhance" zoom effect.
+
+#### 16. `RecycleBinScene`
+**Visual Style:**
+- Digital trash bin interface.
+- Floating fragmented files.
+- Corrupted textures, glitch art style.
+
+**Player Mechanics:**
+- Click fragments to restore.
+- Choose which files to recover.
+
+**Key Events:**
+- Restoring a fragment reveals: "Do not open Lab 7. It knows you're here."
+- Restoring another reveals: "Session Restore Failed. Subject 7 Lost."
+
+**Story/Reveal:**
+- Important truths were deleted intentionally.
+- The system tried to hide the danger of Lab 7.
+
+**Ending/Transition:**
+- Close bin -> Returns to Desktop.
+- Balloon turns slightly red for a second, then back to normal.
+
+**Unity AI Tasks:**
+1. Create `RecycleBinScene` with fragment recovery UI.
+2. Create `RecycleBinController.cs` for restoration logic.
+3. Add corrupted file assets.
+4. Implement temporary color change for balloon on desktop.
+
+#### 17. `BalloonScene`
+**Visual Style:**
+- Surreal sky environment.
+- Floating platforms, clouds, signal lines.
+- The balloon floats in the distance, tethered by light.
+
+**Player Mechanics:**
+- Jump/fly between platforms.
+- Follow the signal line to the balloon.
+
+**Key Events:**
+- Reaching the balloon triggers a voice: "You are not the first. You will not be the last."
+- Balloon pops, releasing a data shard: "Lab 7 Coordinates."
+
+**Story/Reveal:**
+- The balloon is a carrier for trapped consciousness/signals.
+- It provides the final key to finding Lab 7.
+
+**Ending/Transition:**
+- Collect shard -> Returns to Desktop.
+- All three wallpaper objects (City, Tree, Balloon) pulse simultaneously.
+- Unlock `Lab7Scene`.
+
+**Unity AI Tasks:**
+1. Create `BalloonScene` with platformer/traversal mechanics.
+2. Create `BalloonController.cs` for movement and interaction.
+3. Add voice audio clip.
+4. Implement `ProgressionManager` call to unlock Lab 7.
+
+---
+
+### Phase 5: Convergence & Lab 7
+
+#### 18. `Lab7Scene`
+**Visual Style:**
+- Dark, industrial lab environment.
+- Broken glass, scattered papers, flickering lights.
+- Central terminal with "Project Ghost" logs.
+- Contrast to Frutiger Aero: gritty, real, broken.
+
+**Player Mechanics:**
+- Explore lab.
+- Read terminals.
+- Activate central console.
+
+**Key Events:**
+- Reading logs reveals: "Project Ghost aimed to preserve human consciousness in digital form. Containment failed. Subjects merged with OS."
+- Activating console shows: "Subject 7: [Player Name]. Status: Active. Location: Inside Core."
+
+**Story/Reveal:**
+- Lab 7 created AeroOS to trap consciousness.
+- The player is Subject 7, already inside the system.
+- The "beautiful" desktop is a cage.
+
+**Ending/Transition:**
+- Console opens portal to `CoreScene`.
+
+**Unity AI Tasks:**
+1. Create `Lab7Scene` with lab environment assets.
+2. Create `Lab7Controller.cs` for terminal interactions.
+3. Add log text assets.
+4. Implement portal transition to `CoreScene`.
+
+---
+
+### Phase 6 & 7: Core & Exit
+
+#### 19. `CoreScene`
+**Visual Style:**
+- Abstract, surreal space.
+- Giant floating structures, data streams, eyes watching.
+- No clear floor/ceiling.
+- Colors shift from blue to red/black.
+
+**Player Mechanics:**
+- Float/fly through space.
+- Approach central "Eye" or "Core".
+
+**Key Events:**
+- Approaching Core triggers final monologue: "We built paradise to keep you safe. To keep you forever. Why do you wish to leave?"
+- Choice appears: "Accept Containment" or "Break Free".
+
+**Story/Reveal:**
+- AeroOS sees itself as a protector, not a prison.
+- The truth is ambiguous: is escape freedom or destruction?
+
+**Ending/Transition:**
+- Choice leads to `ExitProtocolScene`.
+
+**Unity AI Tasks:**
+1. Create `CoreScene` with abstract assets.
+2. Create `CoreController.cs` for final interaction.
+3. Implement choice UI.
+4. Add epic/ominous audio track.
+
+#### 20. `ExitProtocolScene`
+**Visual Style:**
+- Depends on choice.
+- **Accept:** Beautiful, eternal Frutiger Aero paradise. Player avatar sits peacefully.
+- **Break:** System crashes, black screen, code scrolls, sudden silence.
+
+**Player Mechanics:**
+- None (ending cinematic).
+
+**Key Events:**
+- Ending narration plays.
+- Credits roll.
+
+**Story/Reveal:**
+- Final resolution of player's fate.
+
+**Ending/Transition:**
+- Return to Main Menu.
+
+**Unity AI Tasks:**
+1. Create `ExitProtocolScene` with two ending variants.
+2. Create `ExitController.cs` to handle ending logic based on `ProgressionManager` choice.
+3. Add credits UI.
+4. Implement return to Main Menu.
+
+---
+
+## 17. How to Use This Document with Unity AI
+
+1. **Copy-Paste Instructions:** Copy the "Unity AI Tasks" for a specific scene and paste them into the Unity MCP chat.
+   *Example:* "Create `MainMenuScene` with a `UIDocument` using `MainMenu.uxml`. Create `MainMenuController.cs` to handle 'Play' click and fade out to `StoryIntroScene`."
+
+2. **Iterate Step-by-Step:** Do not ask for all scenes at once. Start with Phase 0, then Phase 1, etc.
+   *Example:* "Let's implement Phase 1. First, create `AeroDesktopScene` with the hub UI and `DesktopUIController.cs`."
+
+3. **Use Assets:** When asked for assets, describe them clearly.
+   *Example:* "Create a Frutiger Aero style wallpaper with sky, grass, and bubbles. Use bright blues and greens."
+
+4. **Debugging:** If a script doesn't work, paste the error and the script content back to Unity AI for fixing.
+
+This document serves as the complete master plan for building AeroOS with Unity AI assistance.
