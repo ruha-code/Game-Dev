@@ -69,15 +69,8 @@
         <ui:VisualElement name="taskbar" class="taskbar">
             <ui:VisualElement name="start-button" class="taskbar-start-button" />
             <ui:VisualElement name="app-list" class="taskbar-app-list">
-                <ui:VisualElement name="app-my-files" class="taskbar-app-icon" />
-                <ui:VisualElement name="app-mail" class="taskbar-app-icon" />
-                <ui:VisualElement name="app-media" class="taskbar-app-icon" />
-                <ui:VisualElement name="app-network" class="taskbar-app-icon" />
             </ui:VisualElement>
             <ui:VisualElement name="system-tray" class="taskbar-system-tray">
-                <ui:VisualElement name="tray-wifi" class="tray-icon" />
-                <ui:VisualElement name="tray-volume" class="tray-icon" />
-                <ui:VisualElement name="tray-battery" class="tray-icon" />
                 <ui:Label name="tray-clock" text="12:00 PM" class="tray-clock" />
             </ui:VisualElement>
         </ui:VisualElement>

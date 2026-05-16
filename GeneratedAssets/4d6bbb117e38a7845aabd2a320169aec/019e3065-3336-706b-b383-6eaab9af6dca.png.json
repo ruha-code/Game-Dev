@@ -1,0 +1,38 @@
+{
+    "asset": "4d6bbb117e38a7845aabd2a320169aec",
+    "fileName": "019e3065-3336-706b-b383-6eaab9af6dca.png",
+    "prompt": "A glossy blue glass orb icon for a computer start button, Frutiger Aero aesthetic. The orb is vibrant blue with realistic glass reflections and a high-gloss finish. In the center, there is a clean, white, minimalist abstract logo representing a cloud. The style matches a mid-2000s operating system. 1024x1024.",
+    "negativePrompt": "",
+    "model": "gemini-3.1-flash",
+    "modelName": "Gemini 3.1 Nano Banana 2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": [
+            {
+                "doodleReferenceType": 7,
+                "doodle": [],
+                "label": "Image",
+                "strength": 0.25,
+                "invertStrength": false,
+                "assetReferenceGuid": "ab02c1d0835f9934a9f8a676890956c4",
+                "unlabeledIndex": -1
+            }
+        ]
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}
