@@ -106,6 +106,10 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     border-radius: 4px;
 }
 
+.ghost-block {
+    opacity: 0.35;
+}
+
 .hidden {
     display: none;
 }

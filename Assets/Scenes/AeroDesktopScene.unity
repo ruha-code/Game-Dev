@@ -130,6 +130,7 @@ GameObject:
   - component: {fileID: 124660612}
   - component: {fileID: 124660611}
   - component: {fileID: 124660613}
+  - component: {fileID: 124660614}
   m_Layer: 0
   m_Name: Desktop_UI
   m_TagString: Untagged
@@ -199,6 +200,18 @@ MonoBehaviour:
   glassCrackSound: {fileID: 8300000, guid: 8c7a8044d9f5c73468c12f16c1fdb3b5, type: 3}
   brokenGlassSprite: {fileID: 21300000, guid: dd82fcac1d5578a43a4c5c260197d262, type: 3}
   phantomChatIcon: {fileID: 21300000, guid: 4788d2649ae9f984cb82d2315209cf28, type: 3}
+--- !u!114 &124660614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124660610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdd9639164c22394c8860e00ee0d0e20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TetrisController
 --- !u!1 &893316266
 GameObject:
   m_ObjectHideFlags: 0
