@@ -67,6 +67,6 @@
         "*.sln": "*.csproj",
         "*.slnx": "*.csproj"
     },
-    "dotnet.defaultSolution": "Game-Dev.slnx",
+    "dotnet.defaultSolution": "gamedev-final.slnx",
     "dotnet.enableWorkspaceBasedDevelopment": false
 }
