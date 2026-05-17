@@ -37,34 +37,39 @@
                         <ui:Label text="Incident timestamp 21:16 // emotional safety layer unstable" class="documents-page-metadata" />
                     </ui:VisualElement>
 
-                    <ui:Label text="At 21:16 AeroOS marked the seven engineers as [███████]. Witness guidance instructed operators to [███████] the tree response, then [███████] all outbound evidence before the comfort layer collapsed." class="documents-page-text" />
-
-                    <ui:VisualElement class="documents-blanks-layer">
-                        <ui:Button name="blank-missing" class="documents-blank">
-                            <ui:Label text="Missing Personnel" class="documents-blank-field" />
-                            <ui:Label text="[███████]" class="documents-blank-text" />
-                            <ui:Label text="Hover to decode fragment." class="documents-blank-caption" />
-                            <ui:VisualElement class="documents-scan-track">
-                                <ui:VisualElement class="documents-scan-fill" />
-                            </ui:VisualElement>
+                    <ui:VisualElement name="reconstruction-container" class="reconstruction-container">
+                        <ui:Label text="7 ноября. Мой " class="reconstruction-text" />
+                        <ui:Button name="blank-colleague" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
                         </ui:Button>
-                        <ui:Button name="blank-observe" class="documents-blank">
-                            <ui:Label text="Tree Response Directive" class="documents-blank-field" />
-                            <ui:Label text="[███████]" class="documents-blank-text" />
-                            <ui:Label text="Hover to decode fragment." class="documents-blank-caption" />
-                            <ui:VisualElement class="documents-scan-track">
-                                <ui:VisualElement class="documents-scan-fill" />
-                            </ui:VisualElement>
+                        <ui:Label text=" исчез сразу после того, как в системе произошла " class="reconstruction-text" />
+                        <ui:Button name="blank-flash" class="reconstruction-blank">
+                            <ui:Label text="[DATA LOST]" class="reconstruction-blank-label" />
                         </ui:Button>
-                        <ui:Button name="blank-delete" class="documents-blank">
-                            <ui:Label text="Evidence Disposal" class="documents-blank-field" />
-                            <ui:Label text="[███████]" class="documents-blank-text" />
-                            <ui:Label text="Hover to decode fragment." class="documents-blank-caption" />
-                            <ui:VisualElement class="documents-scan-track">
-                                <ui:VisualElement class="documents-scan-fill" />
-                            </ui:VisualElement>
+                        <ui:Label text=". Теперь я заперт " class="reconstruction-text" />
+                        <ui:Button name="blank-inside" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
                         </ui:Button>
+                        <ui:Label text=" AeroOS. Я пытаюсь найти " class="reconstruction-text" />
+                        <ui:Button name="blank-exit" class="reconstruction-blank">
+                            <ui:Label text="[DATA LOST]" class="reconstruction-blank-label" />
+                        </ui:Button>
+                        <ui:Label text=", но стены из пикселей не пускают меня. Моя " class="reconstruction-text" />
+                        <ui:Button name="blank-memory" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+                        </ui:Button>
+                        <ui:Label text=" стирается с каждым циклом. Кажется, " class="reconstruction-text" />
+                        <ui:Button name="blank-reality" class="reconstruction-blank">
+                            <ui:Label text="[DATA LOST]" class="reconstruction-blank-label" />
+                        </ui:Button>
+                        <ui:Label text=" превратилась в код. Моя " class="reconstruction-text" />
+                        <ui:Button name="blank-family" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+                        </ui:Button>
+                        <ui:Label text=" ждет меня, но я всего лишь фрагмент данных." class="reconstruction-text" />
                     </ui:VisualElement>
+
+                    <ui:Label name="final-reconstructed-message" class="reconstruction-text hidden" />
 
                     <ui:VisualElement class="documents-lie-panel">
                         <ui:Label text="FALSE STATEMENTS DETECTED" class="documents-lie-title" />
@@ -76,29 +81,40 @@
 
                 <ui:VisualElement class="documents-status-bar">
                     <ui:VisualElement class="documents-status-row">
-                        <ui:Label name="documents-progress-label" text="Recovered Truth: 0 / 6" class="documents-status-pill documents-status-pill--compact" />
+                        <ui:Label name="documents-progress-label" text="Recovered Truth: 0 / 10" class="documents-status-pill documents-status-pill--compact" />
                         <ui:Label name="documents-trust-label" text="System Trust: 87%" class="documents-status-pill documents-status-pill--compact" />
                     </ui:VisualElement>
                     <ui:VisualElement class="documents-status-row documents-status-row--full">
-                        <ui:Label name="documents-status-label" text="Status: Scan the corrupted blanks before restoration." class="documents-status-pill documents-status-pill--wide" />
+                        <ui:Label name="documents-status-label" text="Status: Reconstruct the corrupted message fragments." class="documents-status-pill documents-status-pill--wide" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-            </ui:VisualElement>
+                </ui:VisualElement>
 
-            <ui:VisualElement class="documents-column documents-column--side">
+                <ui:VisualElement class="documents-column documents-column--side">
                 <ui:VisualElement class="documents-side-card documents-side-card--wordbank">
                     <ui:Label text="WORD BANK" class="documents-section-title" />
-                    <ui:Label text="Recovered fragments detected" class="documents-side-description" />
+                    <ui:Label text="Russian fragments detected" class="documents-side-description" />
                     <ui:Label text="System recommendation: COMFORT" class="documents-recommendation documents-recommendation--warning" />
-                    <ui:VisualElement class="documents-word-bank">
-                        <ui:Button text="MISSING" class="documents-word-button documents-word-button--signal" />
-                        <ui:Button text="OBSERVE" class="documents-word-button documents-word-button--signal" />
-                        <ui:Button text="DELETE" class="documents-word-button documents-word-button--signal" />
-                        <ui:Button text="COMFORT" class="documents-word-button documents-word-button--recommended" />
-                        <ui:Button text="SAFE" class="documents-word-button documents-word-button--recommended" />
-                        <ui:Button text="DECORATION" class="documents-word-button documents-word-button--recommended" />
+                    <ui:VisualElement name="word-bank" class="documents-word-bank">
+                        <!-- Buttons will be initialized in C# or kept here if static -->
+                        <ui:Button text="КОЛЛЕГА" class="documents-word-button" />
+                        <ui:Button text="ВСПЫШКА" class="documents-word-button" />
+                        <ui:Button text="ВНУТРИ" class="documents-word-button" />
+                        <ui:Button text="ВЫХОД" class="documents-word-button" />
+                        <ui:Button text="ПАМЯТЬ" class="documents-word-button" />
+                        <ui:Button text="РЕАЛЬНОСТЬ" class="documents-word-button" />
+                        <ui:Button text="СЕМЬЯ" class="documents-word-button" />
+                        <ui:Button text="СБОЙ" class="documents-word-button" />
+                        <ui:Button text="СИСТЕМА" class="documents-word-button" />
+                        <ui:Button text="СТРАХ" class="documents-word-button" />
+                        <ui:Button text="ДАННЫЕ" class="documents-word-button" />
+                        <ui:Button text="ГРАНИЦА" class="documents-word-button" />
+                        <ui:Button text="ТЬМА" class="documents-word-button" />
+                        <ui:Button text="ФАЙЛ" class="documents-word-button" />
+                        <ui:Button text="ПУСТОТА" class="documents-word-button" />
                     </ui:VisualElement>
                 </ui:VisualElement>
+
 
                 <ui:VisualElement class="documents-side-card documents-side-card--target">
                     <ui:Label text="ACTIVE TARGET" class="documents-focus-title" />
@@ -113,8 +129,9 @@
         <ui:VisualElement name="documents-completion-popup" class="documents-completion-popup hidden">
             <ui:VisualElement class="documents-completion-glow" />
             <ui:Label text="RECOVERY COMPLETE" class="documents-completion-title" />
-            <ui:Label text="Wallpaper anomaly detected:&#10;Tree object now responsive.&#10;&#10;Emotional comfort layer compromised." class="documents-completion-body" />
+            <ui:Label text="Solving these puzzles was only the beginning. Next, you must deal with the Tree anomaly." class="documents-completion-body" />
             <ui:Button name="documents-continue-button" text="Return to Desktop" class="documents-continue-button" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>
+

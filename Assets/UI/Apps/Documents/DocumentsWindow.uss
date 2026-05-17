@@ -256,83 +256,66 @@
     font-size: 11px;
 }
 
-.documents-page-text {
-    color: #24354c;
-    font-size: 19px;
-    line-height: 27px;
-    white-space: normal;
-    margin-bottom: 18px;
+.reconstruction-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 12px;
+    margin-bottom: 20px;
 }
 
-.documents-blanks-layer {
-    margin-bottom: 18px;
-}
-
-.documents-blank {
-    min-height: 94px;
-    margin-bottom: 10px;
-    padding: 12px 14px 10px 14px;
-    background-color: rgba(16, 35, 65, 0.05);
-    border-width: 1px;
-    border-color: rgba(50, 82, 122, 0.16);
-    border-radius: 14px;
-    -unity-text-align: upper-left;
-}
-
-.documents-blank:hover {
-    background-color: rgba(97, 222, 255, 0.1);
-    border-color: rgba(97, 222, 255, 0.4);
-}
-
-.documents-blank-field {
-    color: rgba(46, 68, 97, 0.75);
-    font-size: 12px;
-    -unity-font-style: bold;
-    margin-bottom: 4px;
-}
-
-.documents-blank-text {
+.reconstruction-text {
     color: #1e2f46;
-    font-size: 20px;
+    font-size: 18px;
+    -unity-font-style: normal;
+    white-space: normal;
+}
+
+.reconstruction-blank {
+    min-width: 100px;
+    min-height: 28px;
+    margin: 2px 5px;
+    padding: 2px 8px;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-width: 1px;
+    border-color: rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    justify-content: center;
+    align-items: center;
+}
+
+.reconstruction-blank:hover {
+    background-color: rgba(97, 222, 255, 0.15);
+}
+
+.reconstruction-blank--selected {
+    border-color: #52a7ff;
+    background-color: rgba(82, 167, 255, 0.1);
+}
+
+.reconstruction-blank--restored {
+    background-color: rgba(116, 224, 184, 0.15);
+    border-color: #76e4bc;
+}
+
+.reconstruction-blank--restored .reconstruction-blank-label {
+    color: #186057;
     -unity-font-style: bold;
-    margin-bottom: 6px;
 }
 
-.documents-blank-caption {
-    color: rgba(49, 72, 101, 0.76);
-    font-size: 12px;
-    margin-bottom: 8px;
+.reconstruction-blank--error {
+    background-color: rgba(214, 78, 88, 0.15);
+    border-color: #d64e58;
 }
 
-.documents-scan-track {
-    width: 100%;
-    height: 7px;
-    background-color: rgba(20, 42, 72, 0.08);
-    border-radius: 999px;
-    overflow: hidden;
+.reconstruction-blank-label {
+    color: #4a6786;
+    font-size: 14px;
+    -unity-text-align: middle-center;
 }
 
-.documents-scan-fill {
-    height: 100%;
-    width: 0;
-    background-color: linear-gradient(to right, rgba(116, 207, 255, 0.74), rgba(75, 121, 255, 0.84));
-}
-
-.documents-blank--selected {
-    border-color: rgba(82, 167, 255, 0.78);
-    background-color: rgba(70, 156, 255, 0.09);
-    box-shadow: 0 0 0 2px rgba(114, 184, 255, 0.2);
-}
-
-.documents-blank--scanned {
-    border-color: rgba(128, 232, 255, 0.62);
-}
-
-.documents-blank--restored {
-    border-color: rgba(118, 228, 188, 0.78);
-    background-color: rgba(116, 224, 184, 0.16);
-    box-shadow: 0 0 0 2px rgba(118, 228, 188, 0.14);
-}
 
 .documents-blank--restored .documents-blank-text {
     color: #186057;
@@ -483,21 +466,25 @@
 }
 
 .documents-word-bank {
-    flex-direction: column;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .documents-word-button {
-    min-height: 32px;
-    margin-bottom: 5px;
-    padding: 6px 8px;
+    min-height: 28px;
+    margin: 2px;
+    padding: 4px 8px;
     background-color: rgba(255, 255, 255, 0.1);
     border-width: 1px;
     border-color: rgba(255, 255, 255, 0.18);
-    border-radius: 14px;
+    border-radius: 10px;
     color: white;
-    font-size: 12px;
+    font-size: 10px;
     -unity-font-style: bold;
     -unity-text-align: middle-center;
+    flex-grow: 1;
+    min-width: 70px;
 }
 
 .documents-word-button:hover {
