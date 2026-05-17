@@ -7,6 +7,8 @@ using UnityEngine.UIElements;
 
 public class DesktopUIController : MonoBehaviour
 {
+    private const string MainMenuSceneName = "MainMenuScene";
+
     [Header("Desktop Audio")]
     [SerializeField] private AudioClip desktopAppearChime;
     [SerializeField, Range(0f, 1f)] private float desktopAppearVolume = 0.8f;
@@ -55,8 +57,18 @@ public class DesktopUIController : MonoBehaviour
     private Label _toastTitle;
     private Label _toastBody;
     private VisualElement _fakeWindow;
+    private VisualElement _fakeWindowHeader;
+    private VisualElement _fakeWindowIcon;
+    private VisualElement _fakeWindowHeaderText;
     private Label _fakeWindowTitle;
+    private Label _fakeWindowStatus;
+    private VisualElement _fakeWindowProgressTrack;
+    private VisualElement _fakeWindowProgressFill;
     private Label _fakeWindowBody;
+    private VisualElement _fakeWindowModule;
+    private VisualElement _fakeWindowActions;
+    private Button _fakeWindowPrimaryButton;
+    private Button _fakeWindowSecondaryButton;
     private VisualElement _glassOverlay;
     private VisualElement _sceneTransitionOverlay;
     private VisualElement _chatWindow;
@@ -67,6 +79,28 @@ public class DesktopUIController : MonoBehaviour
     private Button _balloonHotspot;
     private Coroutine _sceneTransitionRoutine;
     private bool _isSceneTransitionInProgress;
+    private float _lastShutdownRequestTime = -99f;
+    private bool _desktopMemoryHintShown;
+    private Coroutine _fakeWindowRoutine;
+
+    private sealed class FakeProgramWindowData
+    {
+        public string Title;
+        public string Status;
+        public string Body;
+        public string[] StatusFrames;
+        public string[] BodyLines;
+        public string ThemeClass;
+        public string IconClass;
+        public bool TriggerBackgroundGlitch;
+        public bool TriggerGlassFlash;
+        public float ProgressValue = 0.72f;
+        public string[] DetailItems;
+        public string PrimaryButtonText;
+        public string SecondaryButtonText;
+        public string FollowupToastTitle;
+        public string FollowupToastBody;
+    }
 
     private readonly Dictionary<string, VisualElement> _iconMap = new Dictionary<string, VisualElement>();
 
@@ -200,7 +234,7 @@ public class DesktopUIController : MonoBehaviour
         if (_shutdownButton != null)
         {
             _shutdownButton.RegisterCallback<PointerOverEvent>(OnShutdownButtonHover);
-            _shutdownButton.RegisterCallback<ClickEvent>(_ => PlayClickSound());
+            _shutdownButton.RegisterCallback<ClickEvent>(OnShutdownClicked);
         }
 
         if (_mainArea != null)
@@ -218,6 +252,13 @@ public class DesktopUIController : MonoBehaviour
                 evt.StopPropagation();
             });
         }
+
+        RegisterStartMenuShortcut("Documents", "Documents");
+        RegisterStartMenuShortcut("Pictures", "Pictures");
+        RegisterStartMenuShortcut("Music", "Music");
+        RegisterStartMenuShortcut("Control Panel", "Control Panel");
+        RegisterStartMenuShortcut("Internet Explorer", "Computer");
+        RegisterStartMenuShortcut("E-mail", "Music");
     }
 
     private void RegisterHotspots()
@@ -329,6 +370,8 @@ public class DesktopUIController : MonoBehaviour
             ShowSystemToast("Objective Updated", progression.GetObjectivePopupMessage());
             progression.AcknowledgeCurrentObjectivePopup();
         }
+
+        TryShowDesktopMemoryHint(progression);
     }
 
     private void UpdateIconState(string iconName, bool isEnabled, bool isObjective)
@@ -340,7 +383,7 @@ public class DesktopUIController : MonoBehaviour
 
         icon.EnableInClassList("desktop-icon-wrapper--locked", !isEnabled);
         icon.EnableInClassList("desktop-icon-wrapper--objective", isObjective);
-        icon.SetEnabled(isEnabled || iconName == "Documents");
+        icon.SetEnabled(true);
     }
 
     private void SetHotspotVisible(VisualElement hotspot, bool isVisible)
@@ -433,6 +476,22 @@ public class DesktopUIController : MonoBehaviour
             if (_clockPanelDay != null) _clockPanelDay.text = now.ToString("dddd");
             if (_clockPanelDate != null) _clockPanelDate.text = now.ToString("d MMMM yyyy");
         }
+    }
+
+    private void OnShutdownClicked(ClickEvent evt)
+    {
+        PlayClickSound();
+        evt.StopPropagation();
+
+        _lastShutdownRequestTime = Time.unscaledTime;
+        ResetShutdownButton();
+        if (_startMenu != null)
+        {
+            _startMenu.AddToClassList("hidden");
+        }
+
+        ShowSystemToast("Shutting Down", "AeroOS is closing the current session...");
+        StartCoroutine(ReturnToMainMenuRoutine());
     }
 
     private void OnStartButtonClicked(ClickEvent evt)
@@ -561,11 +620,15 @@ public class DesktopUIController : MonoBehaviour
         Label label = icon.Q<Label>(className: "desktop-icon-label");
         string iconName = label != null ? label.text : "Unknown Icon";
         icon.AddToClassList("desktop-icon-wrapper--selected");
+        HandleDesktopEntry(iconName);
+    }
 
-        switch (iconName)
+    private void HandleDesktopEntry(string entryName)
+    {
+        switch (entryName)
         {
             case "Documents":
-                if (!IsIconEnabled(iconName))
+                if (!IsIconEnabled(entryName))
                 {
                     ShowSystemToast("Recovery Incomplete", "This program is not available yet.");
                     break;
@@ -581,25 +644,25 @@ public class DesktopUIController : MonoBehaviour
                 }
                 break;
             case "Pictures":
-                HandleProgramLaunch("PicturesMiniGame", IsIconEnabled(iconName));
+                HandleProgramLaunch(entryName, "PicturesMiniGame", IsIconEnabled(entryName));
                 break;
             case "Music":
-                HandleProgramLaunch("MusicMiniGame", IsIconEnabled(iconName));
+                HandleProgramLaunch(entryName, "MusicMiniGame", IsIconEnabled(entryName));
                 break;
             case "Computer":
-                HandleProgramLaunch("ComputerMiniGame", IsIconEnabled(iconName));
+                HandleProgramLaunch(entryName, "ComputerMiniGame", IsIconEnabled(entryName));
                 break;
             case "Control Panel":
-                HandleProgramLaunch("ControlPanelMiniGame", IsIconEnabled(iconName));
+                HandleProgramLaunch(entryName, "ControlPanelMiniGame", IsIconEnabled(entryName));
                 break;
             case "Network":
-                HandleProgramLaunch("NetworkMiniGame", IsIconEnabled(iconName));
+                HandleProgramLaunch(entryName, "NetworkMiniGame", IsIconEnabled(entryName));
                 break;
             case "Videos":
-                HandleProgramLaunch("VideosMiniGame", IsIconEnabled(iconName));
+                HandleProgramLaunch(entryName, "VideosMiniGame", IsIconEnabled(entryName));
                 break;
             case "Recycle Bin":
-                if (!IsIconEnabled(iconName))
+                if (!IsIconEnabled(entryName))
                 {
                     ShowSystemToast("Recovery Incomplete", "The Recycle Bin is still sealed behind the Tetris fragment.");
                     break;
@@ -611,7 +674,7 @@ public class DesktopUIController : MonoBehaviour
                 }
                 break;
             case "Tetris":
-                if (!IsIconEnabled(iconName))
+                if (!IsIconEnabled(entryName))
                 {
                     ShowSystemToast("Recovery Incomplete", "Documents must be restored before Tetris becomes usable.");
                     break;
@@ -623,8 +686,56 @@ public class DesktopUIController : MonoBehaviour
                 }
                 break;
             default:
-                Debug.Log($"Desktop Icon Clicked: {iconName}");
+                Debug.Log($"Desktop Entry Clicked: {entryName}");
                 break;
+        }
+    }
+
+    private void RegisterStartMenuShortcut(string labelText, string desktopEntryName)
+    {
+        if (_root == null)
+        {
+            return;
+        }
+
+        List<Label> labels = _root.Query<Label>().ToList();
+        foreach (Label label in labels)
+        {
+            if (label == null || label.text != labelText)
+            {
+                continue;
+            }
+
+            if (!label.ClassListContains("start-menu-right-item") && !label.ClassListContains("start-menu-item-label"))
+            {
+                continue;
+            }
+
+            label.RegisterCallback<ClickEvent>(evt =>
+            {
+                PlayClickSound();
+                HandleDesktopEntry(desktopEntryName);
+                if (_startMenu != null)
+                {
+                    _startMenu.AddToClassList("hidden");
+                }
+                evt.StopPropagation();
+            });
+
+            VisualElement clickableTarget = label.parent;
+            if (clickableTarget != null)
+            {
+                clickableTarget.RegisterCallback<ClickEvent>(evt =>
+                {
+                    PlayClickSound();
+                    HandleDesktopEntry(desktopEntryName);
+                    if (_startMenu != null)
+                    {
+                        _startMenu.AddToClassList("hidden");
+                    }
+                    evt.StopPropagation();
+                });
+            }
         }
     }
 
@@ -633,15 +744,145 @@ public class DesktopUIController : MonoBehaviour
         return !_iconMap.TryGetValue(iconName, out VisualElement icon) || icon == null || !icon.ClassListContains("desktop-icon-wrapper--locked");
     }
 
-    private void HandleProgramLaunch(string sceneName, bool canLaunch)
+    private void HandleProgramLaunch(string iconName, string sceneName, bool canLaunch)
     {
         if (!canLaunch)
         {
-            ShowSystemToast("Recovery Incomplete", "This program is not available yet.");
+            TriggerLockedProgramEasterEgg(iconName);
             return;
         }
 
         TryLoadScene(sceneName);
+    }
+
+    private void TriggerLockedProgramEasterEgg(string iconName)
+    {
+        FakeProgramWindowData data = null;
+
+        switch (iconName)
+        {
+            case "Music":
+                data = new FakeProgramWindowData
+                {
+                    Title = "Music Library",
+                    Status = "Signal Recovery: Partial",
+                    Body = "Playlist index restored.\nTrack 01: 'Last Voice Memo'\nTrack 02: metadata replaced with breathing static.",
+                    StatusFrames = new[] { "Indexing cached tracks...", "Decoding analogue hiss...", "Signal Recovery: Partial" },
+                    BodyLines = new[] { "Playlist index restored.", "Track 01: 'Last Voice Memo'", "Track 02: metadata replaced with breathing static." },
+                    ThemeClass = "desktop-fake-window--echo",
+                    IconClass = "desktop-fake-window-icon--music",
+                    TriggerBackgroundGlitch = true,
+                    ProgressValue = 0.58f,
+                    DetailItems = new[] { "Track 01  | Last Voice Memo      | 03:33", "Track 02  | static_breathing     | 00:47", "Track 03  | [filename corrupted] | --:--" },
+                    PrimaryButtonText = "Scan Tracks",
+                    SecondaryButtonText = "Mute",
+                    FollowupToastTitle = "Audio Trace",
+                    FollowupToastBody = "AeroOS muted the damaged playlist before it could auto-play."
+                };
+                break;
+            case "Computer":
+                data = new FakeProgramWindowData
+                {
+                    Title = "My Computer",
+                    Status = "Filesystem Integrity: Unstable",
+                    Body = "Drive C: responds with one damaged sector.\nA hidden directory appears as /employees/final_session and vanishes before AeroOS can open it.",
+                    StatusFrames = new[] { "Mounting local volumes...", "Repairing orphaned sectors...", "Filesystem Integrity: Unstable" },
+                    BodyLines = new[] { "Drive C: responds with one damaged sector.", "A hidden directory appears as /employees/final_session", "It vanishes before AeroOS can open it." },
+                    ThemeClass = "desktop-fake-window--critical",
+                    IconClass = "desktop-fake-window-icon--computer",
+                    TriggerBackgroundGlitch = true,
+                    ProgressValue = 0.41f,
+                    DetailItems = new[] { "C:\\  Healthy", "D:\\  Missing label", "/employees/final_session  ACCESS DENIED" },
+                    PrimaryButtonText = "Retry Scan",
+                    SecondaryButtonText = "Close",
+                    FollowupToastTitle = "Disk Response",
+                    FollowupToastBody = "The hidden directory dropped one clue, then hid itself again."
+                };
+                break;
+            case "Network":
+                data = new FakeProgramWindowData
+                {
+                    Title = "Network Connections",
+                    Status = "External Access: Offline",
+                    Body = "No external network detected.\nOne internal node keeps pinging from 'LAB-7/echo' with impossible round-trip times.",
+                    StatusFrames = new[] { "Refreshing adapters...", "Loopback anomaly detected...", "External Access: Offline" },
+                    BodyLines = new[] { "No external network detected.", "One internal node keeps pinging from 'LAB-7/echo'.", "Round-trip times exceed the clock itself." },
+                    ThemeClass = "desktop-fake-window--echo",
+                    IconClass = "desktop-fake-window-icon--network",
+                    ProgressValue = 0.33f,
+                    DetailItems = new[] { "Loopback      127.0.0.1      stable", "LAB-7/echo    0.0.0.0        impossible", "Gateway       unavailable    silent" },
+                    PrimaryButtonText = "Trace Node",
+                    SecondaryButtonText = "Ignore",
+                    FollowupToastTitle = "Network Trace",
+                    FollowupToastBody = "Trace cancelled. The internal ping moved before AeroOS could isolate it."
+                };
+                break;
+            case "Control Panel":
+                data = new FakeProgramWindowData
+                {
+                    Title = "Control Panel",
+                    Status = "Administrative Lockout",
+                    Body = "System settings are locked by policy.\nFlagged administrator override detected at 03:33.\nThe approval name has been scrubbed.",
+                    StatusFrames = new[] { "Loading policy map...", "Reading override ledger...", "Administrative Lockout" },
+                    BodyLines = new[] { "System settings are locked by policy.", "Flagged administrator override detected at 03:33.", "The approval name has been scrubbed." },
+                    ThemeClass = "desktop-fake-window--warning",
+                    IconClass = "desktop-fake-window-icon--control",
+                    ProgressValue = 0.86f,
+                    DetailItems = new[] { "Policy: ADMIN_OVERRIDE.lock", "Timestamp: 03:33", "Owner: [scrubbed by AeroOS]" },
+                    PrimaryButtonText = "View Policy",
+                    SecondaryButtonText = "Back",
+                    FollowupToastTitle = "Policy Viewer",
+                    FollowupToastBody = "The override record is there, but the owner field is blank."
+                };
+                break;
+            case "Videos":
+                data = new FakeProgramWindowData
+                {
+                    Title = "Video Archive",
+                    Status = "Playback Blocked",
+                    Body = "Recovered thumbnails show an office corridor.\nEvery clip ends one second before someone enters frame.\nOne filename keeps renaming itself to YOU_WERE_HERE.",
+                    StatusFrames = new[] { "Collecting thumbnails...", "Buffering protected footage...", "Playback Blocked" },
+                    BodyLines = new[] { "Recovered thumbnails show an office corridor.", "Every clip ends one second before someone enters frame.", "One filename keeps renaming itself to YOU_WERE_HERE." },
+                    ThemeClass = "desktop-fake-window--critical",
+                    IconClass = "desktop-fake-window-icon--videos",
+                    TriggerGlassFlash = true,
+                    ProgressValue = 0.67f,
+                    DetailItems = new[] { "corridor_cam_01.mp4    protected", "elevator_lobby.avi     ends early", "YOU_WERE_HERE.mov      self-renaming" },
+                    PrimaryButtonText = "Preview",
+                    SecondaryButtonText = "Delete",
+                    FollowupToastTitle = "Preview Error",
+                    FollowupToastBody = "Video playback was denied. A single frame was marked as protected evidence."
+                };
+                break;
+            case "Pictures":
+                data = new FakeProgramWindowData
+                {
+                    Title = "Pictures",
+                    Status = "Gallery Restored: 6/7",
+                    Body = "Six family-safe wallpapers restored.\nOne extra image exists, but AeroOS refuses to preview it.\nIts capture date is tomorrow.",
+                    StatusFrames = new[] { "Restoring gallery cache...", "Sorting capture dates...", "Gallery Restored: 6/7" },
+                    BodyLines = new[] { "Six family-safe wallpapers restored.", "One extra image exists, but AeroOS refuses to preview it.", "Its capture date is tomorrow." },
+                    ThemeClass = "desktop-fake-window--warning",
+                    IconClass = "desktop-fake-window-icon--pictures",
+                    ProgressValue = 0.74f,
+                    DetailItems = new[] { "Wallpaper_01.jpg     restored", "Wallpaper_02.jpg     restored", "capture_tomorrow.png quarantined" },
+                    PrimaryButtonText = "Open Gallery",
+                    SecondaryButtonText = "Skip",
+                    FollowupToastTitle = "Gallery Warning",
+                    FollowupToastBody = "The hidden picture remains quarantined behind a broken timestamp."
+                };
+                break;
+            default:
+                ShowSystemToast("Recovery Incomplete", "This program is not available yet.");
+                break;
+        }
+
+        if (data != null)
+        {
+            ShowFakeProgramWindow(data);
+        }
+
+        PlayUiAnomalyCue(0.1f);
     }
 
     private bool TryLoadScene(string sceneName)
@@ -812,15 +1053,47 @@ public class DesktopUIController : MonoBehaviour
         {
             _fakeWindow = new VisualElement();
             _fakeWindow.AddToClassList("desktop-fake-window");
-            _fakeWindow.pickingMode = PickingMode.Ignore;
+            _fakeWindow.pickingMode = PickingMode.Position;
+            _fakeWindowHeader = new VisualElement();
+            _fakeWindowHeader.AddToClassList("desktop-fake-window-header");
+            _fakeWindowIcon = new VisualElement();
+            _fakeWindowIcon.AddToClassList("desktop-fake-window-icon");
+            _fakeWindowHeaderText = new VisualElement();
+            _fakeWindowHeaderText.AddToClassList("desktop-fake-window-header-text");
             _fakeWindowTitle = new Label();
             _fakeWindowTitle.AddToClassList("desktop-fake-window-title");
-            _fakeWindowTitle.pickingMode = PickingMode.Ignore;
+            _fakeWindowTitle.pickingMode = PickingMode.Position;
+            _fakeWindowStatus = new Label();
+            _fakeWindowStatus.AddToClassList("desktop-fake-window-status");
+            _fakeWindowStatus.pickingMode = PickingMode.Position;
+            _fakeWindowProgressTrack = new VisualElement();
+            _fakeWindowProgressTrack.AddToClassList("desktop-fake-window-progress-track");
+            _fakeWindowProgressFill = new VisualElement();
+            _fakeWindowProgressFill.AddToClassList("desktop-fake-window-progress-fill");
+            _fakeWindowProgressTrack.Add(_fakeWindowProgressFill);
             _fakeWindowBody = new Label();
             _fakeWindowBody.AddToClassList("desktop-fake-window-body");
-            _fakeWindowBody.pickingMode = PickingMode.Ignore;
-            _fakeWindow.Add(_fakeWindowTitle);
+            _fakeWindowBody.pickingMode = PickingMode.Position;
+            _fakeWindowModule = new VisualElement();
+            _fakeWindowModule.AddToClassList("desktop-fake-window-module");
+            _fakeWindowActions = new VisualElement();
+            _fakeWindowActions.AddToClassList("desktop-fake-window-actions");
+            _fakeWindowPrimaryButton = new Button();
+            _fakeWindowPrimaryButton.AddToClassList("desktop-fake-window-button");
+            _fakeWindowSecondaryButton = new Button();
+            _fakeWindowSecondaryButton.AddToClassList("desktop-fake-window-button");
+            _fakeWindowSecondaryButton.AddToClassList("desktop-fake-window-button--secondary");
+            _fakeWindowHeaderText.Add(_fakeWindowTitle);
+            _fakeWindowHeaderText.Add(_fakeWindowStatus);
+            _fakeWindowHeader.Add(_fakeWindowIcon);
+            _fakeWindowHeader.Add(_fakeWindowHeaderText);
+            _fakeWindow.Add(_fakeWindowHeader);
+            _fakeWindow.Add(_fakeWindowProgressTrack);
             _fakeWindow.Add(_fakeWindowBody);
+            _fakeWindow.Add(_fakeWindowModule);
+            _fakeWindowActions.Add(_fakeWindowPrimaryButton);
+            _fakeWindowActions.Add(_fakeWindowSecondaryButton);
+            _fakeWindow.Add(_fakeWindowActions);
             _root.Add(_fakeWindow);
         }
 
@@ -892,6 +1165,230 @@ public class DesktopUIController : MonoBehaviour
         StartCoroutine(HideToastRoutine());
     }
 
+    private void ShowFakeWindow(string title, string body, float visibleDuration = 3.6f)
+    {
+        if (_fakeWindow == null || _fakeWindowTitle == null || _fakeWindowBody == null)
+        {
+            ShowSystemToast(title, body);
+            return;
+        }
+
+        if (_fakeWindowRoutine != null)
+        {
+            StopCoroutine(_fakeWindowRoutine);
+            _fakeWindowRoutine = null;
+        }
+
+        _fakeWindowTitle.text = title;
+        if (_fakeWindowStatus != null)
+        {
+            _fakeWindowStatus.text = "Session Fragment";
+        }
+        _fakeWindowBody.text = body;
+        if (_fakeWindowPrimaryButton != null)
+        {
+            _fakeWindowPrimaryButton.text = "Dismiss";
+            _fakeWindowPrimaryButton.clicked -= OnFakeWindowButtonClicked;
+            _fakeWindowPrimaryButton.clicked += OnFakeWindowButtonClicked;
+        }
+        if (_fakeWindowSecondaryButton != null)
+        {
+            _fakeWindowSecondaryButton.text = "Close";
+            _fakeWindowSecondaryButton.clicked -= OnFakeWindowButtonClicked;
+            _fakeWindowSecondaryButton.clicked += OnFakeWindowButtonClicked;
+        }
+        _fakeWindow.AddToClassList("desktop-fake-window--visible");
+        _fakeWindowRoutine = StartCoroutine(HideFakeWindowRoutine(visibleDuration));
+    }
+
+    private void ShowFakeProgramWindow(FakeProgramWindowData data)
+    {
+        if (data == null)
+        {
+            return;
+        }
+
+        if (_fakeWindow == null || _fakeWindowTitle == null || _fakeWindowBody == null)
+        {
+            ShowSystemToast(data.Title, data.Body);
+            return;
+        }
+
+        if (_fakeWindowRoutine != null)
+        {
+            StopCoroutine(_fakeWindowRoutine);
+            _fakeWindowRoutine = null;
+        }
+
+        _fakeWindowTitle.text = data.Title;
+        if (_fakeWindowStatus != null)
+        {
+            _fakeWindowStatus.text = string.Empty;
+        }
+        if (_fakeWindowIcon != null)
+        {
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--music");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--computer");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--network");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--control");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--videos");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--pictures");
+            if (!string.IsNullOrWhiteSpace(data.IconClass))
+            {
+                _fakeWindowIcon.AddToClassList(data.IconClass);
+            }
+        }
+        if (_fakeWindowProgressFill != null)
+        {
+            _fakeWindowProgressFill.style.width = Length.Percent(0f);
+        }
+        _fakeWindowBody.text = string.Empty;
+        if (_fakeWindowModule != null)
+        {
+            _fakeWindowModule.Clear();
+        }
+        _fakeWindow.RemoveFromClassList("desktop-fake-window--warning");
+        _fakeWindow.RemoveFromClassList("desktop-fake-window--critical");
+        _fakeWindow.RemoveFromClassList("desktop-fake-window--echo");
+        if (!string.IsNullOrWhiteSpace(data.ThemeClass))
+        {
+            _fakeWindow.AddToClassList(data.ThemeClass);
+        }
+
+        if (_fakeWindowPrimaryButton != null)
+        {
+            _fakeWindowPrimaryButton.text = string.IsNullOrWhiteSpace(data.PrimaryButtonText) ? "Open" : data.PrimaryButtonText;
+            _fakeWindowPrimaryButton.userData = data;
+            _fakeWindowPrimaryButton.clicked -= OnFakeWindowPrimaryButtonClicked;
+            _fakeWindowPrimaryButton.clicked += OnFakeWindowPrimaryButtonClicked;
+        }
+
+        if (_fakeWindowSecondaryButton != null)
+        {
+            _fakeWindowSecondaryButton.text = string.IsNullOrWhiteSpace(data.SecondaryButtonText) ? "Close" : data.SecondaryButtonText;
+            _fakeWindowSecondaryButton.userData = data;
+            _fakeWindowSecondaryButton.clicked -= OnFakeWindowSecondaryButtonClicked;
+            _fakeWindowSecondaryButton.clicked += OnFakeWindowSecondaryButtonClicked;
+        }
+
+        _fakeWindow.AddToClassList("desktop-fake-window--visible");
+        if (_fakeWindowActions != null)
+        {
+            _fakeWindowActions.style.display = DisplayStyle.None;
+        }
+        _fakeWindowRoutine = StartCoroutine(PresentFakeProgramWindowRoutine(data));
+    }
+
+    private IEnumerator PresentFakeProgramWindowRoutine(FakeProgramWindowData data)
+    {
+        if (data.TriggerBackgroundGlitch && _mainArea != null)
+        {
+            _mainArea.AddToClassList("desktop-main-area--glitch");
+        }
+
+        if (data.TriggerGlassFlash && _glassOverlay != null)
+        {
+            _glassOverlay.AddToClassList("glass-overlay--active");
+            _glassOverlay.style.opacity = 0.45f;
+        }
+
+        string[] statusFrames = data.StatusFrames != null && data.StatusFrames.Length > 0
+            ? data.StatusFrames
+            : new[] { data.Status };
+
+        foreach (string frame in statusFrames)
+        {
+            if (_fakeWindowStatus != null)
+            {
+                _fakeWindowStatus.text = frame;
+            }
+
+            if (_fakeWindowProgressFill != null)
+            {
+                float frameProgress = (System.Array.IndexOf(statusFrames, frame) + 1f) / statusFrames.Length;
+                _fakeWindowProgressFill.style.width = Length.Percent(Mathf.Lerp(18f, data.ProgressValue * 100f, frameProgress));
+            }
+
+            if (_fakeWindowTitle != null)
+            {
+                _fakeWindowTitle.text = UnityEngine.Random.value > 0.65f ? data.Title.ToUpperInvariant() : data.Title;
+            }
+
+            yield return new WaitForSeconds(0.32f);
+        }
+
+        if (_fakeWindowTitle != null)
+        {
+            _fakeWindowTitle.text = data.Title;
+        }
+        if (_fakeWindowProgressFill != null)
+        {
+            _fakeWindowProgressFill.style.width = Length.Percent(Mathf.Clamp01(data.ProgressValue) * 100f);
+        }
+
+        string[] bodyLines = data.BodyLines != null && data.BodyLines.Length > 0
+            ? data.BodyLines
+            : data.Body.Split('\n');
+
+        string builtBody = string.Empty;
+        foreach (string line in bodyLines)
+        {
+            builtBody = string.IsNullOrEmpty(builtBody) ? line : builtBody + "\n" + line;
+            _fakeWindowBody.text = builtBody;
+            yield return new WaitForSeconds(0.24f);
+        }
+
+        PopulateFakeWindowModule(data);
+
+        if (_fakeWindowActions != null)
+        {
+            _fakeWindowActions.style.display = DisplayStyle.Flex;
+        }
+
+        yield return new WaitForSeconds(5.5f);
+
+        if (_mainArea != null)
+        {
+            _mainArea.RemoveFromClassList("desktop-main-area--glitch");
+        }
+
+        if (_glassOverlay != null)
+        {
+            _glassOverlay.RemoveFromClassList("glass-overlay--active");
+            _glassOverlay.style.opacity = 0f;
+        }
+
+        if (_fakeWindow != null)
+        {
+            _fakeWindow.RemoveFromClassList("desktop-fake-window--visible");
+        }
+
+        _fakeWindowRoutine = null;
+    }
+
+    private void PopulateFakeWindowModule(FakeProgramWindowData data)
+    {
+        if (_fakeWindowModule == null)
+        {
+            return;
+        }
+
+        _fakeWindowModule.Clear();
+        if (data?.DetailItems == null || data.DetailItems.Length == 0)
+        {
+            _fakeWindowModule.style.display = DisplayStyle.None;
+            return;
+        }
+
+        _fakeWindowModule.style.display = DisplayStyle.Flex;
+        foreach (string item in data.DetailItems)
+        {
+            Label row = new Label(item);
+            row.AddToClassList("desktop-fake-window-module-row");
+            _fakeWindowModule.Add(row);
+        }
+    }
+
     private IEnumerator HideToastRoutine()
     {
         yield return new WaitForSeconds(4f);
@@ -899,6 +1396,88 @@ public class DesktopUIController : MonoBehaviour
         {
             _toast.RemoveFromClassList("desktop-toast--visible");
         }
+    }
+
+    private IEnumerator HideFakeWindowRoutine(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (_fakeWindow != null)
+        {
+            _fakeWindow.RemoveFromClassList("desktop-fake-window--visible");
+        }
+
+        _fakeWindowRoutine = null;
+    }
+
+    private void OnFakeWindowButtonClicked()
+    {
+        if (_fakeWindowRoutine != null)
+        {
+            StopCoroutine(_fakeWindowRoutine);
+            _fakeWindowRoutine = null;
+        }
+
+        if (_fakeWindow != null)
+        {
+            _fakeWindow.RemoveFromClassList("desktop-fake-window--visible");
+            _fakeWindow.RemoveFromClassList("desktop-fake-window--warning");
+            _fakeWindow.RemoveFromClassList("desktop-fake-window--critical");
+            _fakeWindow.RemoveFromClassList("desktop-fake-window--echo");
+        }
+
+        if (_fakeWindowIcon != null)
+        {
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--music");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--computer");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--network");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--control");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--videos");
+            _fakeWindowIcon.RemoveFromClassList("desktop-fake-window-icon--pictures");
+        }
+
+        if (_fakeWindowActions != null)
+        {
+            _fakeWindowActions.style.display = DisplayStyle.None;
+        }
+
+        if (_fakeWindowModule != null)
+        {
+            _fakeWindowModule.Clear();
+            _fakeWindowModule.style.display = DisplayStyle.None;
+        }
+
+        if (_mainArea != null)
+        {
+            _mainArea.RemoveFromClassList("desktop-main-area--glitch");
+        }
+
+        if (_glassOverlay != null)
+        {
+            _glassOverlay.RemoveFromClassList("glass-overlay--active");
+            _glassOverlay.style.opacity = 0f;
+        }
+    }
+
+    private void OnFakeWindowPrimaryButtonClicked()
+    {
+        HandleFakeWindowAction(_fakeWindowPrimaryButton);
+    }
+
+    private void OnFakeWindowSecondaryButtonClicked()
+    {
+        HandleFakeWindowAction(_fakeWindowSecondaryButton);
+    }
+
+    private void HandleFakeWindowAction(Button sourceButton)
+    {
+        PlayClickSound();
+
+        if (sourceButton?.userData is FakeProgramWindowData data && !string.IsNullOrWhiteSpace(data.FollowupToastTitle))
+        {
+            ShowSystemToast(data.FollowupToastTitle, data.FollowupToastBody);
+        }
+
+        OnFakeWindowButtonClicked();
     }
 
     private IEnumerator UiAnomalyRoutine()
@@ -1189,17 +1768,9 @@ public class DesktopUIController : MonoBehaviour
 
     private IEnumerator FakeWindowAnomaly()
     {
-        if (_fakeWindow == null)
-        {
-            yield break;
-        }
-
-        _fakeWindowTitle.text = "Session Recovery";
-        _fakeWindowBody.text = "Recovered fragment for " + _playerName + ".\nDo you remember closing the last window?";
-        _fakeWindow.AddToClassList("desktop-fake-window--visible");
+        ShowFakeWindow("Session Recovery", "Recovered fragment for " + _playerName + ".\nDo you remember closing the last window?");
         PlayUiAnomalyCue(0.15f);
         yield return new WaitForSeconds(3.5f);
-        _fakeWindow.RemoveFromClassList("desktop-fake-window--visible");
     }
 
     private void PlayUiAnomalyCue(float volume)
@@ -1207,6 +1778,30 @@ public class DesktopUIController : MonoBehaviour
         if (uiAnomalyClip != null)
         {
             AudioManager.Instance.PlaySFX(uiAnomalyClip, volume);
+        }
+    }
+
+    private void TryShowDesktopMemoryHint(ProgressionManager progression)
+    {
+        if (_desktopMemoryHintShown || progression == null)
+        {
+            return;
+        }
+
+        if (progression.HasKey(GameKey.DocumentsKey) && !progression.HasKey(GameKey.ComputerKey))
+        {
+            _desktopMemoryHintShown = true;
+            ShowSystemToast("Wallpaper Memory", "The glass bubbles distort near Pictures and Music, like they are hiding warmer fragments.");
+        }
+    }
+
+    private IEnumerator ReturnToMainMenuRoutine()
+    {
+        yield return new WaitForSeconds(0.8f);
+
+        if (!TryLoadScene(MainMenuSceneName))
+        {
+            ShowSystemToast("Shutdown Failed", "Main menu scene is missing from the build profile.");
         }
     }
 }

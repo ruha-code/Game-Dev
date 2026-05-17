@@ -415,19 +415,20 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 
 .desktop-fake-window {
     position: absolute;
-    width: 420px;
+    width: 500px;
     left: 50%;
-    top: 20%;
-    margin-left: -210px;
-    padding: 20px 22px;
-    background-color: rgba(210, 238, 255, 0.2);
-    border-width: 1px;
-    border-color: rgba(255, 255, 255, 0.6);
-    border-radius: 16px;
+    top: 16%;
+    margin-left: -250px;
+    padding: 22px 24px;
+    background-color: rgba(16, 33, 58, 0.94);
+    border-width: 1.5px;
+    border-color: rgba(198, 234, 255, 0.82);
+    border-radius: 18px;
     opacity: 0;
     scale: 0.94 0.94;
     transition-property: opacity, scale;
     transition-duration: 0.28s;
+    box-shadow: 0 18px 60px rgba(0, 12, 32, 0.46);
 }
 
 .desktop-fake-window--visible {
@@ -435,17 +436,130 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     scale: 1 1;
 }
 
+.desktop-fake-window-header {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.desktop-fake-window-header-text {
+    flex-grow: 1;
+}
+
+.desktop-fake-window-icon {
+    width: 52px;
+    height: 52px;
+    margin-right: 14px;
+    border-radius: 12px;
+    background-color: rgba(120, 210, 255, 0.16);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.34);
+    -unity-background-scale-mode: scale-to-fit;
+}
+
 .desktop-fake-window-title {
     color: white;
-    font-size: 18px;
+    font-size: 20px;
     -unity-font-style: bold;
-    margin-bottom: 10px;
+    margin-bottom: 4px;
+}
+
+.desktop-fake-window-status {
+    color: rgba(196, 242, 255, 0.95);
+    font-size: 12px;
+    -unity-font-style: bold;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+}
+
+.desktop-fake-window-progress-track {
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    margin-bottom: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+.desktop-fake-window-progress-fill {
+    height: 100%;
+    width: 0;
+    background-color: rgba(131, 227, 255, 0.92);
+    border-radius: 999px;
 }
 
 .desktop-fake-window-body {
-    color: rgba(235, 248, 255, 0.94);
-    font-size: 14px;
+    color: rgba(245, 250, 255, 0.98);
+    font-size: 15px;
     white-space: normal;
+    line-height: 1.25;
+    margin-bottom: 12px;
+}
+
+.desktop-fake-window-module {
+    background-color: rgba(255, 255, 255, 0.06);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
+}
+
+.desktop-fake-window-module-row {
+    color: rgba(228, 244, 255, 0.96);
+    font-size: 13px;
+    margin-bottom: 6px;
+    unity-font-definition: none;
+}
+
+.desktop-fake-window-actions {
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.desktop-fake-window-button {
+    min-width: 118px;
+    height: 36px;
+    margin-left: 10px;
+    border-radius: 10px;
+    background-color: rgba(110, 190, 255, 0.34);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.58);
+    color: white;
+}
+
+.desktop-fake-window-button--secondary {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.desktop-fake-window--warning {
+    background-color: rgba(71, 52, 14, 0.96);
+    border-color: rgba(255, 225, 128, 0.8);
+}
+
+.desktop-fake-window--critical {
+    background-color: rgba(64, 20, 31, 0.96);
+    border-color: rgba(255, 163, 181, 0.78);
+}
+
+.desktop-fake-window--echo {
+    background-color: rgba(11, 43, 76, 0.96);
+    border-color: rgba(184, 229, 255, 0.82);
+}
+
+.desktop-fake-window-icon--music { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Music.png"); }
+.desktop-fake-window-icon--computer { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Computer_Cropped.png"); }
+.desktop-fake-window-icon--network { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Network.png"); }
+.desktop-fake-window-icon--control { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/ControlPanel.png"); }
+.desktop-fake-window-icon--videos { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Videos.png"); }
+.desktop-fake-window-icon--pictures { background-image: url("project://database/Assets/Sprites/AeroIcons_Processed/Pictures.png"); }
+
+.desktop-fake-window--warning .desktop-fake-window-progress-fill {
+    background-color: rgba(255, 223, 120, 0.96);
+}
+
+.desktop-fake-window--critical .desktop-fake-window-progress-fill {
+    background-color: rgba(255, 140, 167, 0.96);
 }
 
 .glass-overlay {
