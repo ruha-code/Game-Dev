@@ -503,3 +503,97 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     border-color: rgba(255, 255, 255, 0.8);
     border-radius: 10px;
 }
+
+/* Expanded Clock Panel */
+.clock-panel {
+    position: absolute;
+    bottom: var(--taskbar-height);
+    right: 12px;
+    width: 300px;
+    background-color: rgba(35, 115, 200, 0.94);
+    border-width: 2px;
+    border-color: rgba(255, 255, 255, 0.7);
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    padding: 20px;
+    transition-duration: 0.3s;
+}
+
+.clock-panel.hidden {
+    translate: 0 450px;
+    opacity: 0;
+    display: none;
+}
+
+.clock-panel-time {
+    color: white;
+    font-size: 32px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.clock-panel-day {
+    color: rgba(220, 245, 255, 0.9);
+    font-size: 16px;
+    -unity-text-align: middle-center;
+    margin-top: 4px;
+}
+
+.clock-panel-date {
+    color: white;
+    font-size: 18px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    margin-bottom: 12px;
+}
+
+.clock-panel-separator {
+    height: 1px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin: 10px 0;
+}
+
+.calendar-container {
+    margin-top: 10px;
+}
+
+.calendar-header {
+    flex-direction: row;
+    justify-content: space-around;
+    margin-bottom: 8px;
+}
+
+.calendar-day-header {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 12px;
+    width: 30px;
+    -unity-text-align: middle-center;
+}
+
+.calendar-grid {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.calendar-day {
+    color: white;
+    font-size: 13px;
+    width: 30px;
+    height: 30px;
+    -unity-text-align: middle-center;
+    margin: 2px;
+    border-radius: 4px;
+}
+
+.calendar-day--current {
+    background-color: rgba(255, 255, 255, 0.3);
+    -unity-font-style: bold;
+    border-width: 1px;
+    border-color: white;
+}
+
+.calendar-day--other-month {
+    color: rgba(255, 255, 255, 0.3);
+}
+

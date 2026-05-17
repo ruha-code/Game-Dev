@@ -27,6 +27,11 @@ public class DesktopUIController : MonoBehaviour
     private Button _shutdownButton;
     private VisualElement _startMenu;
     private Label _clockLabel;
+    private VisualElement _clockExpandedPanel;
+    private Label _clockPanelTime;
+    private Label _clockPanelDay;
+    private Label _clockPanelDate;
+    private VisualElement _calendarGrid;
     private VisualElement _mainArea;
     private Label _startMenuUserName;
     private DocumentsAppController _documentsController;
@@ -75,6 +80,12 @@ public class DesktopUIController : MonoBehaviour
         _startMenu = _root.Q<VisualElement>("start-menu");
         _shutdownButton = _root.Q<Button>(className: "start-menu-shutdown-btn");
         _clockLabel = _root.Q<Label>("tray-clock");
+        _clockExpandedPanel = _root.Q<VisualElement>("clock-expanded-panel");
+        _clockPanelTime = _root.Q<Label>("clock-panel-time");
+        _clockPanelDay = _root.Q<Label>("clock-panel-day");
+        _clockPanelDate = _root.Q<Label>("clock-panel-date");
+        _calendarGrid = _root.Q<VisualElement>("calendar-grid");
+
         _mainArea = _root.Q<VisualElement>("main-area");
         _startMenuUserName = _root.Q<Label>(className: "start-menu-user-name");
         _objectiveText = _root.Q<Label>("objective-text");
@@ -145,6 +156,17 @@ public class DesktopUIController : MonoBehaviour
         {
             _startButton.RegisterCallback<ClickEvent>(OnStartButtonClicked);
             _startButton.RegisterCallback<ClickEvent>(_ => PlayClickSound());
+        }
+
+        if (_clockLabel != null)
+        {
+            _clockLabel.RegisterCallback<ClickEvent>(OnClockClicked);
+            _clockLabel.RegisterCallback<ClickEvent>(_ => PlayClickSound());
+        }
+
+        if (_clockExpandedPanel != null)
+        {
+            _clockExpandedPanel.RegisterCallback<ClickEvent>(evt => evt.StopPropagation());
         }
 
         if (_shutdownButton != null)
@@ -337,6 +359,14 @@ public class DesktopUIController : MonoBehaviour
             _stableClockText = DateTime.Now.ToString("h:mm tt");
             _clockLabel.text = _stableClockText;
         }
+
+        if (_clockExpandedPanel != null && !_clockExpandedPanel.ClassListContains("hidden"))
+        {
+            DateTime now = DateTime.Now;
+            if (_clockPanelTime != null) _clockPanelTime.text = now.ToString("h:mm:ss tt");
+            if (_clockPanelDay != null) _clockPanelDay.text = now.ToString("dddd");
+            if (_clockPanelDate != null) _clockPanelDate.text = now.ToString("d MMMM yyyy");
+        }
     }
 
     private void OnStartButtonClicked(ClickEvent evt)
@@ -351,10 +381,42 @@ public class DesktopUIController : MonoBehaviour
         {
             _startMenu.RemoveFromClassList("hidden");
             ResetShutdownButton();
+
+            if (_clockExpandedPanel != null && !_clockExpandedPanel.ClassListContains("hidden"))
+            {
+                _clockExpandedPanel.AddToClassList("hidden");
+            }
         }
         else
         {
             _startMenu.AddToClassList("hidden");
+        }
+
+        evt.StopPropagation();
+    }
+
+    private void OnClockClicked(ClickEvent evt)
+    {
+        if (_clockExpandedPanel == null)
+        {
+            return;
+        }
+
+        bool isHidden = _clockExpandedPanel.ClassListContains("hidden");
+        if (isHidden)
+        {
+            _clockExpandedPanel.RemoveFromClassList("hidden");
+            PopulateCalendar();
+            UpdateClock();
+
+            if (_startMenu != null && !_startMenu.ClassListContains("hidden"))
+            {
+                _startMenu.AddToClassList("hidden");
+            }
+        }
+        else
+        {
+            _clockExpandedPanel.AddToClassList("hidden");
         }
 
         evt.StopPropagation();
@@ -365,6 +427,60 @@ public class DesktopUIController : MonoBehaviour
         if (_startMenu != null && !_startMenu.ClassListContains("hidden"))
         {
             _startMenu.AddToClassList("hidden");
+        }
+
+        if (_clockExpandedPanel != null && !_clockExpandedPanel.ClassListContains("hidden"))
+        {
+            _clockExpandedPanel.AddToClassList("hidden");
+        }
+    }
+
+    private void PopulateCalendar()
+    {
+        if (_calendarGrid == null)
+        {
+            return;
+        }
+
+        _calendarGrid.Clear();
+
+        DateTime now = DateTime.Now;
+        DateTime firstDayOfMonth = new DateTime(now.Year, now.Month, 1);
+        int daysInMonth = DateTime.DaysInMonth(now.Year, now.Month);
+        int startDayOfWeek = (int)firstDayOfMonth.DayOfWeek;
+
+        DateTime prevMonth = firstDayOfMonth.AddMonths(-1);
+        int daysInPrevMonth = DateTime.DaysInMonth(prevMonth.Year, prevMonth.Month);
+        for (int i = startDayOfWeek - 1; i >= 0; i--)
+        {
+            Label dayLabel = new Label((daysInPrevMonth - i).ToString());
+            dayLabel.AddToClassList("calendar-day");
+            dayLabel.AddToClassList("calendar-day--other-month");
+            _calendarGrid.Add(dayLabel);
+        }
+
+        for (int i = 1; i <= daysInMonth; i++)
+        {
+            Label dayLabel = new Label(i.ToString());
+            dayLabel.AddToClassList("calendar-day");
+            if (i == now.Day)
+            {
+                dayLabel.AddToClassList("calendar-day--current");
+            }
+
+            _calendarGrid.Add(dayLabel);
+        }
+
+        int totalCells = _calendarGrid.childCount;
+        int nextMonthDay = 1;
+        while (totalCells % 7 != 0 || totalCells < 42)
+        {
+            Label dayLabel = new Label(nextMonthDay.ToString());
+            dayLabel.AddToClassList("calendar-day");
+            dayLabel.AddToClassList("calendar-day--other-month");
+            _calendarGrid.Add(dayLabel);
+            nextMonthDay++;
+            totalCells++;
         }
     }
 

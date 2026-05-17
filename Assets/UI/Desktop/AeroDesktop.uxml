@@ -89,6 +89,27 @@
                 <ui:Label name="tray-clock" text="12:00 PM" class="tray-clock" />
             </ui:VisualElement>
         </ui:VisualElement>
+
+        <ui:VisualElement name="clock-expanded-panel" class="clock-panel hidden">
+            <ui:Label name="clock-panel-time" text="12:00:00 PM" class="clock-panel-time" />
+            <ui:Label name="clock-panel-day" text="Monday" class="clock-panel-day" />
+            <ui:Label name="clock-panel-date" text="1 January" class="clock-panel-date" />
+            <ui:VisualElement class="clock-panel-separator" />
+            <ui:VisualElement name="calendar-container" class="calendar-container">
+                <ui:VisualElement class="calendar-header">
+                    <ui:Label text="S" class="calendar-day-header" />
+                    <ui:Label text="M" class="calendar-day-header" />
+                    <ui:Label text="T" class="calendar-day-header" />
+                    <ui:Label text="W" class="calendar-day-header" />
+                    <ui:Label text="T" class="calendar-day-header" />
+                    <ui:Label text="F" class="calendar-day-header" />
+                    <ui:Label text="S" class="calendar-day-header" />
+                </ui:VisualElement>
+                <ui:VisualElement name="calendar-grid" class="calendar-grid">
+                    <!-- Days will be populated or static for now -->
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
         <ui:Instance template="documents-template" name="documents-app" class="app-container" picking-mode="Ignore" />
         <ui:Instance template="tetris-template" name="tetris-app" class="app-container" picking-mode="Ignore" />
     </ui:VisualElement>
