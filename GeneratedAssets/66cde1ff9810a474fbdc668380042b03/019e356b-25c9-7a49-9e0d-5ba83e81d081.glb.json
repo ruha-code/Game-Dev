@@ -1,0 +1,23 @@
+{
+    "asset": "66cde1ff9810a474fbdc668380042b03",
+    "fileName": "019e356b-25c9-7a49-9e0d-5ba83e81d081.glb",
+    "prompt": "low poly park tree mesh, vibrant green leaves, brown trunk, clean simple shapes, high quality, unity asset",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "644728d84d3d3eb418e6f4611e1a5caf",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

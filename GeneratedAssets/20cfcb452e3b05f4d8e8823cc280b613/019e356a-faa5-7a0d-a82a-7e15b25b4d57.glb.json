@@ -1,0 +1,23 @@
+{
+    "asset": "20cfcb452e3b05f4d8e8823cc280b613",
+    "fileName": "019e356a-faa5-7a0d-a82a-7e15b25b4d57.glb",
+    "prompt": "picnic table mesh with benches, grey plastic or wood material, simple design, high quality, unity asset",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "2f4fb4a7d08c22441902d48882cd7805",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

@@ -73,7 +73,7 @@ The missing engineers were not killed in the ordinary sense. Their consciousness
 3. Complete a mini-game.
 4. Receive a `Data Key`, lore fragment, or `Memory Shard`.
 5. Observe a visible change on the desktop or wallpaper.
-6. Enter an unlocked 2D wallpaper location.
+6. Enter an unlocked wallpaper anomaly location.
 7. Learn new story information.
 8. Return to the desktop and continue progression.
 
@@ -135,6 +135,8 @@ Each branch contains:
 - `Tetris` is optional and should not block the main story path
 - Desktop software mini-games should prefer in-window implementation inside `AeroDesktopScene`
 - Wallpaper anomaly spaces such as `TreeScene`, `CityScene`, and `BalloonScene` remain separate scenes
+- `TreeScene` is approved as a dedicated 3D park scene because environmental storytelling is central to its branch
+- `CityScene` and `BalloonScene` may remain lighter 2D or 2.5D scenes until their branches are fully in production
 
 ---
 
@@ -256,13 +258,44 @@ Each branch contains:
 
 ## 8. Wallpaper Locations
 
-These are interactive 2D scenes, not 3D exploration levels.
+These are wallpaper anomaly scenes. They do not all need the same format.
+
+- `TreeScene` is a full 3D environmental lore space.
+- `CityScene` can remain a lighter stylized 2D or 2.5D scene in early production.
+- `BalloonScene` can also remain a lighter stylized 2D or 2.5D scene in early production.
 
 ### TreeScene: The Lie
-- **Role:** Introduces the idea that AeroOS fabricates comfort
-- **Visual Direction:** Parallax sky, grass, and a single central tree
-- **Interaction:** Clicking the tree reveals scan results and logs
-- **Narrative Function:** "This life is decorative, not real."
+- **Role:** Introduces the idea that AeroOS fabricates comfort by turning a peaceful park into an emotional containment shell
+- **Format:** 3D environmental exploration scene
+- **Visual Direction:** A quiet, uncanny park with a central tree, looping walkways, benches, a bridge, still water, a small playground area, and carefully arranged greenery that feels too perfect
+- **Mood:** Safe at first glance, but increasingly wrong the longer the player explores it
+- **Interaction:** The player explores the park, finds written notes from previous workers, triggers environmental anomalies, and ultimately returns to the central tree for the scene's core reveal
+- **Narrative Function:** "This life is decorative, controlled, and designed to calm trapped minds."
+
+#### TreeScene Level Design Goals
+- Make the player feel that AeroOS built this place to comfort and sedate people
+- Use the park as a readable layout rather than a giant maze
+- Deliver lore through environmental pacing, not only through direct exposition
+- Let each discovered note make the park feel less natural and more intentional
+
+#### Recommended TreeScene Layout
+- **Entry path:** first calm view of the park
+- **Bridge area:** first note and subtle water anomaly
+- **Bench zone:** second note and first strong emotional clue
+- **Playground or swing area:** third note and stronger environmental discomfort
+- **Central tree:** final interaction and branch conclusion
+
+#### TreeScene Lore Delivery Structure
+- **Note 1:** a worker realizes the park repeats patterns and never naturally changes
+- **Note 2:** a worker notices the environment responds to stress by becoming warmer and calmer
+- **Note 3:** a worker hears voices and realizes the missing team may still be present inside the simulation
+- **Final tree interaction:** confirms the park is an emotional containment layer built by AeroOS
+
+#### Environmental Escalation Beats
+- After note 1: light wind begins where there should be none
+- After note 2: swings or nearby props move slightly on their own
+- After note 3: the water darkens, the park audio shifts, and the central tree becomes visually active
+- At the final tree interaction: the scene confirms this branch's first major truth and points the player back to desktop progression
 
 ### CityScene: The Prison
 - **Role:** Confirms containment
@@ -729,19 +762,31 @@ All new work should attach to the current project baseline.
 
 ## Prompt 1.3: Tree Scene
 
-> Create `TreeScene` as a 2D scene using sprites and simple UI.
-> Add `TreeInteraction.cs`.
-> On click, show a scan panel with different text based on progression:
-> - Base text if only `DocumentsKey` is unlocked
-> - Deep lore text if both `PicturesKey` and `MusicKey` are unlocked
+> Create `TreeScene` as a compact 3D park environment focused on environmental storytelling.
+> Use simple modular geometry or lightweight environment assets.
+> Required layout elements:
+> - one large central tree as the final interaction point
+> - one bridge over water
+> - one bench zone
+> - one small playground or swing area
+> - looping park paths that guide the player naturally between note locations
+> Add a player controller suitable for slow exploration.
+> Add `TreeSceneController.cs` or extend the existing controller so the player can collect 3 written notes before the final tree interaction unlocks.
+> Each note should reveal a different piece of lore from previous workers:
+> - note 1: the park repeats and does not behave like a real place
+> - note 2: the system changes the environment to calm frightened people
+> - note 3: voices from the missing team can still be heard here
+> After each note, trigger a subtle environmental change:
+> - light wind begins
+> - swings or props move on their own
+> - water darkens or the ambience shifts
+> At the final tree interaction, show different text based on progression:
+> - base text if only `DocumentsKey` is unlocked
+> - deeper text if both `PicturesKey` and `MusicKey` are unlocked
 > Add a return button to `AeroDesktopScene`.
-> Play looping `anomalyHum`.
-> On interaction, play `anomalyWhisper`.
-> Add one environmental mini-anomaly every so often:
-> - the tree outline twitches
-> - the grass hue shifts unnaturally
-> - a scan panel updates itself without player input
-> Keep the effect subtle and atmospheric.
+> Play looping `anomalyHum` ambience throughout the level.
+> On note pickup or final tree interaction, play `anomalyWhisper` or another memory reveal cue.
+> Keep the scene compact, readable, and atmospheric rather than large or empty.
 
 ## Prompt 3.2 Fix: Control Panel
 

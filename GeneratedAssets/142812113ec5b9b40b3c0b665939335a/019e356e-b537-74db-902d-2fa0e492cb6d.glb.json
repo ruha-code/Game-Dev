@@ -1,0 +1,23 @@
+{
+    "asset": "142812113ec5b9b40b3c0b665939335a",
+    "fileName": "019e356e-b537-74db-902d-2fa0e492cb6d.glb",
+    "prompt": "low poly park swing set mesh, metal frame, clean simple shapes, high quality, unity asset",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "7d793eefae92b0448926d6aa6f3e41a0",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}
