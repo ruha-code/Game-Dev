@@ -27,11 +27,11 @@ MonoBehaviour:
     m_path: Assets/Scenes/StoryIntroScene.unity
     m_guid: 5369ebf4b265a6843b1c3f1004e63293
   - m_enabled: 1
-    m_path: Assets/Scenes/SystemBootScene.unity
-    m_guid: 77168b83023bab549b5e2cfaf933ac25
-  - m_enabled: 1
     m_path: Assets/Scenes/BootScene.unity
     m_guid: 9fd3f8971c379584b8de22a0f9389812
+  - m_enabled: 1
+    m_path: Assets/Scenes/SystemBootScene.unity
+    m_guid: 77168b83023bab549b5e2cfaf933ac25
   - m_enabled: 1
     m_path: Assets/Scenes/AeroDesktopScene.unity
     m_guid: d33c67739c0e8ef40acf122aa4c0396e
