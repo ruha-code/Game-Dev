@@ -29,11 +29,13 @@ public class DesktopUIController : MonoBehaviour
     private Label _clockLabel;
     private VisualElement _mainArea;
     private Label _startMenuUserName;
+    private DocumentsAppController _documentsController;
     private TetrisController _tetrisController;
     private bool _hasPlayedDesktopAppearChime;
     private string _playerName;
     private string _stableClockText;
     private Coroutine _uiAnomalyRoutine;
+    private bool _desktopAnomaliesPaused;
     private VisualElement _toast;
     private Label _toastTitle;
     private Label _toastBody;
@@ -64,6 +66,7 @@ public class DesktopUIController : MonoBehaviour
         _ = ProgressionManager.Instance;
         _ = AudioManager.Instance;
 
+        _documentsController = GetComponent<DocumentsAppController>();
         _tetrisController = GetComponent<TetrisController>();
         _playerName = PlayerPrefs.GetString("PlayerName", "User");
         _root = _uiDocument.rootVisualElement;
@@ -82,6 +85,11 @@ public class DesktopUIController : MonoBehaviour
         EnsureAnomalyUi();
         ApplyPersonalization();
         CacheDesktopIcons();
+
+        if (_documentsController != null)
+        {
+            _documentsController.Initialize(_root);
+        }
 
         if (_tetrisController != null)
         {
@@ -118,6 +126,17 @@ public class DesktopUIController : MonoBehaviour
         {
             ProgressionManager.Instance.ProgressionChanged -= OnProgressionChanged;
         }
+    }
+
+    private void Update()
+    {
+        bool shouldPauseDesktopAnomalies = IsDesktopAppWindowOpen();
+        if (shouldPauseDesktopAnomalies == _desktopAnomaliesPaused)
+        {
+            return;
+        }
+
+        SetDesktopAnomaliesPaused(shouldPauseDesktopAnomalies);
     }
 
     private void RegisterUiEvents()
@@ -364,7 +383,20 @@ public class DesktopUIController : MonoBehaviour
         switch (iconName)
         {
             case "Documents":
-                HandleProgramLaunch("DocumentsMiniGame", IsIconEnabled(iconName));
+                if (!IsIconEnabled(iconName))
+                {
+                    ShowSystemToast("Recovery Incomplete", "This program is not available yet.");
+                    break;
+                }
+
+                if (_documentsController != null)
+                {
+                    _documentsController.Show();
+                }
+                else
+                {
+                    ShowSystemToast("Module Missing", "Documents window is not wired into the desktop yet.");
+                }
                 break;
             case "Pictures":
                 HandleProgramLaunch("PicturesMiniGame", IsIconEnabled(iconName));
@@ -539,8 +571,90 @@ public class DesktopUIController : MonoBehaviour
         while (isActiveAndEnabled)
         {
             yield return new WaitForSeconds(UnityEngine.Random.Range(minUiAnomalyInterval, maxUiAnomalyInterval));
+            if (_desktopAnomaliesPaused)
+            {
+                continue;
+            }
+
             yield return StartCoroutine(TriggerUiAnomaly(UnityEngine.Random.Range(0, 8)));
         }
+    }
+
+    private bool IsDesktopAppWindowOpen()
+    {
+        return (_documentsController != null && _documentsController.IsWindowOpen)
+            || (_tetrisController != null && _tetrisController.IsWindowOpen);
+    }
+
+    private void SetDesktopAnomaliesPaused(bool isPaused)
+    {
+        _desktopAnomaliesPaused = isPaused;
+
+        if (isPaused)
+        {
+            if (_uiAnomalyRoutine != null)
+            {
+                StopCoroutine(_uiAnomalyRoutine);
+                _uiAnomalyRoutine = null;
+            }
+
+            ClearDesktopAnomalyVisuals();
+            return;
+        }
+
+        if (_uiAnomalyRoutine == null && isActiveAndEnabled)
+        {
+            _uiAnomalyRoutine = StartCoroutine(UiAnomalyRoutine());
+        }
+    }
+
+    private void ClearDesktopAnomalyVisuals()
+    {
+        StopCoroutine(nameof(HideToastRoutine));
+        if (_toast != null)
+        {
+            _toast.RemoveFromClassList("desktop-toast--visible");
+        }
+
+        if (_fakeWindow != null)
+        {
+            _fakeWindow.RemoveFromClassList("desktop-fake-window--visible");
+        }
+
+        if (_glassOverlay != null)
+        {
+            _glassOverlay.RemoveFromClassList("glass-overlay--active");
+        }
+
+        if (_chatWindow != null)
+        {
+            _chatWindow.RemoveFromClassList("phantom-chat--visible");
+        }
+
+        if (_clockLabel != null)
+        {
+            _clockLabel.RemoveFromClassList("tray-clock--glitch");
+            _clockLabel.text = _stableClockText;
+        }
+
+        if (_mainArea != null)
+        {
+            _mainArea.RemoveFromClassList("desktop-main-area--glitch");
+            _mainArea.style.translate = new Translate(0f, 0f, 0f);
+        }
+
+        foreach (VisualElement icon in _iconMap.Values)
+        {
+            if (icon == null)
+            {
+                continue;
+            }
+
+            icon.RemoveFromClassList("desktop-icon-wrapper--haunted");
+            icon.style.translate = new Translate(0f, 0f, 0f);
+        }
+
+        ResetShutdownButton();
     }
 
     private IEnumerator TriggerUiAnomaly(int type)

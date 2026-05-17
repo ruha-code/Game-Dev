@@ -21,9 +21,6 @@ EditorBuildSettings:
     path: Assets/Scenes/AeroDesktopScene.unity
     guid: d33c67739c0e8ef40acf122aa4c0396e
   - enabled: 1
-    path: Assets/Scenes/DocumentsMiniGame.unity
-    guid: 4703c95abbeef5e42ac52f6aea67583c
-  - enabled: 1
     path: Assets/Scenes/TreeScene.unity
     guid: 4900b320159025740bc6569da22ba0d5
   m_configObjects:

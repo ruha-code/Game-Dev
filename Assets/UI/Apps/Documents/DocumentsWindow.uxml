@@ -1,0 +1,120 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:Style src="DocumentsWindow.uss" />
+    <ui:VisualElement name="documents-window" class="documents-window hidden">
+        <ui:VisualElement name="documents-wallpaper-overlay" class="documents-wallpaper-overlay" />
+        <ui:VisualElement class="documents-window-tint" />
+        <ui:VisualElement class="documents-particle documents-particle--one" />
+        <ui:VisualElement class="documents-particle documents-particle--two" />
+        <ui:VisualElement class="documents-particle documents-particle--three" />
+
+        <ui:VisualElement class="documents-window-header">
+            <ui:VisualElement class="documents-window-title-block">
+                <ui:Label name="documents-title" text="Recovered Documents" class="documents-window-title" />
+                <ui:Label text="Lab 7 archival recovery interface" class="documents-window-subtitle" />
+            </ui:VisualElement>
+            <ui:Button name="documents-close-button" text="X" class="documents-close-button" />
+        </ui:VisualElement>
+
+        <ui:VisualElement class="documents-window-shell">
+            <ui:VisualElement class="documents-column documents-column--main">
+                <ui:VisualElement class="documents-report-toolbar">
+                    <ui:VisualElement class="documents-toolbar-slot documents-toolbar-slot--left">
+                        <ui:Label text="LAB 7 INCIDENT REPORT" class="documents-section-title" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="documents-toolbar-slot documents-toolbar-slot--center">
+                        <ui:Label text="RECOVERY MODE" class="documents-mode-badge" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="documents-toolbar-slot documents-toolbar-slot--right">
+                        <ui:Label name="documents-anomaly-label" text="Signal stable" class="documents-anomaly-label" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:Label text="Damaged record recovered from AeroOS memory cache. Scan hidden fragments, expose false statements, and reconstruct what the system tried to bury." class="documents-intro-text" />
+
+                <ui:ScrollView mode="Vertical" class="documents-page">
+                    <ui:VisualElement class="documents-page-header">
+                        <ui:Label text="LAB 7 CONTAINMENT FILE // PARTIAL" class="documents-page-stamp" />
+                        <ui:Label text="Incident timestamp 21:16 // emotional safety layer unstable" class="documents-page-metadata" />
+                    </ui:VisualElement>
+
+                    <ui:Label text="At 21:16 AeroOS marked the seven engineers as [███████]. Witness guidance instructed operators to [███████] the tree response, then [███████] all outbound evidence before the comfort layer collapsed." class="documents-page-text" />
+
+                    <ui:VisualElement class="documents-blanks-layer">
+                        <ui:Button name="blank-missing" class="documents-blank">
+                            <ui:Label text="Missing Personnel" class="documents-blank-field" />
+                            <ui:Label text="[███████]" class="documents-blank-text" />
+                            <ui:Label text="Hover to decode fragment." class="documents-blank-caption" />
+                            <ui:VisualElement class="documents-scan-track">
+                                <ui:VisualElement class="documents-scan-fill" />
+                            </ui:VisualElement>
+                        </ui:Button>
+                        <ui:Button name="blank-observe" class="documents-blank">
+                            <ui:Label text="Tree Response Directive" class="documents-blank-field" />
+                            <ui:Label text="[███████]" class="documents-blank-text" />
+                            <ui:Label text="Hover to decode fragment." class="documents-blank-caption" />
+                            <ui:VisualElement class="documents-scan-track">
+                                <ui:VisualElement class="documents-scan-fill" />
+                            </ui:VisualElement>
+                        </ui:Button>
+                        <ui:Button name="blank-delete" class="documents-blank">
+                            <ui:Label text="Evidence Disposal" class="documents-blank-field" />
+                            <ui:Label text="[███████]" class="documents-blank-text" />
+                            <ui:Label text="Hover to decode fragment." class="documents-blank-caption" />
+                            <ui:VisualElement class="documents-scan-track">
+                                <ui:VisualElement class="documents-scan-fill" />
+                            </ui:VisualElement>
+                        </ui:Button>
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="documents-lie-panel">
+                        <ui:Label text="FALSE STATEMENTS DETECTED" class="documents-lie-title" />
+                        <ui:Label name="lie-line-1" text="AeroOS was created to protect human life." class="documents-lie-line documents-lie-line--false" />
+                        <ui:Label name="lie-line-2" text="The missing engineers are safe." class="documents-lie-line documents-lie-line--false" />
+                        <ui:Label name="lie-line-3" text="The tree is only a wallpaper decoration." class="documents-lie-line documents-lie-line--false" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+
+                <ui:VisualElement class="documents-status-bar">
+                    <ui:VisualElement class="documents-status-row">
+                        <ui:Label name="documents-progress-label" text="Recovered Truth: 0 / 6" class="documents-status-pill documents-status-pill--compact" />
+                        <ui:Label name="documents-trust-label" text="System Trust: 87%" class="documents-status-pill documents-status-pill--compact" />
+                    </ui:VisualElement>
+                    <ui:VisualElement class="documents-status-row documents-status-row--full">
+                        <ui:Label name="documents-status-label" text="Status: Scan the corrupted blanks before restoration." class="documents-status-pill documents-status-pill--wide" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement class="documents-column documents-column--side">
+                <ui:VisualElement class="documents-side-card documents-side-card--wordbank">
+                    <ui:Label text="WORD BANK" class="documents-section-title" />
+                    <ui:Label text="Recovered fragments detected" class="documents-side-description" />
+                    <ui:Label text="System recommendation: COMFORT" class="documents-recommendation documents-recommendation--warning" />
+                    <ui:VisualElement class="documents-word-bank">
+                        <ui:Button text="MISSING" class="documents-word-button documents-word-button--signal" />
+                        <ui:Button text="OBSERVE" class="documents-word-button documents-word-button--signal" />
+                        <ui:Button text="DELETE" class="documents-word-button documents-word-button--signal" />
+                        <ui:Button text="COMFORT" class="documents-word-button documents-word-button--recommended" />
+                        <ui:Button text="SAFE" class="documents-word-button documents-word-button--recommended" />
+                        <ui:Button text="DECORATION" class="documents-word-button documents-word-button--recommended" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+
+                <ui:VisualElement class="documents-side-card documents-side-card--target">
+                    <ui:Label text="ACTIVE TARGET" class="documents-focus-title" />
+                    <ui:Label name="documents-focus-field-label" text="Field: None selected" class="documents-focus-line" />
+                    <ui:Label name="documents-focus-state-label" text="Scan State: Not scanned" class="documents-focus-line" />
+                    <ui:Label name="documents-focus-hint-label" text="Hint: Hidden" class="documents-focus-line documents-focus-line--hint" />
+                    <ui:Label name="documents-focus-label" text="Select a redacted field to begin." class="documents-focus-summary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="documents-completion-popup" class="documents-completion-popup hidden">
+            <ui:VisualElement class="documents-completion-glow" />
+            <ui:Label text="RECOVERY COMPLETE" class="documents-completion-title" />
+            <ui:Label text="Wallpaper anomaly detected:&#10;Tree object now responsive.&#10;&#10;Emotional comfort layer compromised." class="documents-completion-body" />
+            <ui:Button name="documents-continue-button" text="Return to Desktop" class="documents-continue-button" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

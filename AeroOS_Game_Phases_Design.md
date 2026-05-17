@@ -102,7 +102,7 @@ The current plan should extend them, not replace them.
 
 ### Recommended MVP Content
 - existing 5-scene intro flow
-- `DocumentsMiniGame`
+- `Documents` desktop app window
 - `TreeScene`
 - `ProgressionManager`
 - `AudioManager`
@@ -133,6 +133,8 @@ Each branch contains:
 - `City Branch` should proceed with `Computer` and `Control Panel` first
 - `Balloon Branch` should proceed with its three mini-games after City
 - `Tetris` is optional and should not block the main story path
+- Desktop software mini-games should prefer in-window implementation inside `AeroDesktopScene`
+- Wallpaper anomaly spaces such as `TreeScene`, `CityScene`, and `BalloonScene` remain separate scenes
 
 ---
 
@@ -143,8 +145,57 @@ Each branch contains:
 ### 1. Documents
 **Type:** Text restoration puzzle  
 **Purpose:** Introduces the core mystery  
-**Mechanic:** The player reveals or restores hidden words in a report  
+**Implementation Form:** Desktop app window inside `AeroDesktopScene`  
+**Mechanic:** The player scans redacted fields, restores hidden words, and clicks false statements to expose the truth  
 **Win Result:** Grants `DocumentsKey` and unlocks `TreeScene`
+
+#### Current Documents Interaction Model
+- The player restores `3` redacted blanks and exposes `3` false statements for a total of `6` recovered truths.
+- The central report should feel like a damaged `Lab 7` archival document rather than a flat white panel.
+- The side UI should include a corrupted `WORD BANK` tool and an `ACTIVE TARGET` panel.
+- Desktop anomalies should pause while the player is actively inside the `Documents` app window so the puzzle stays readable.
+
+#### False Statements
+- `AeroOS was created to protect human life.`
+- `The missing engineers are safe.`
+- `The tree is only a wallpaper decoration.`
+
+#### Revealed Truths
+- `AeroOS was created to preserve consciousness without consent.`
+- `The missing engineers are still inside.`
+- `The tree is an emotional containment layer.`
+
+#### Blank States
+- `Not scanned:` dark redacted block
+- `Hovered:` cyan glow
+- `Scanned:` partial hint such as `M_SS_NG`
+- `Selected:` stronger blue outline
+- `Restored:` final word with soft blue-green glow
+- `Wrong attempt:` brief red shake
+
+#### Side Panel Notes
+- `WORD BANK`
+- subtitle: `Recovered fragments detected`
+- fake recommendation example: `System recommendation: COMFORT`
+- wrong words should feel system-endorsed and suspicious
+- correct words should feel slightly unstable or glitched
+
+- `ACTIVE TARGET`
+- `Field: [field name]`
+- `Scan State: [Not scanned / Scanned / Restored]`
+- `Hint: [hidden or partial word]`
+
+#### Completion Popup
+- Title: `RECOVERY COMPLETE`
+- Body:
+- `Wallpaper anomaly detected:`
+- `Tree object now responsive.`
+- `Emotional comfort layer compromised.`
+- Button: `Return to Desktop`
+- On completion:
+- call `ProgressionManager.Instance.UnlockKey(GameKey.DocumentsKey)`
+- play completion sound
+- return focus to `AeroDesktopScene`
 
 ### 2. Pictures
 **Type:** Spot the difference  
@@ -494,19 +545,21 @@ If the project grows, migrate to JSON save files for cleaner versioning and easi
 4. `AeroDesktopScene`
 
 ### Planned Additions
-5. `DocumentsMiniGame`
-6. `TreeScene`
-7. `PicturesMiniGame`
-8. `MusicMiniGame`
-9. `ComputerMiniGame`
-10. `ControlPanelMiniGame`
-11. `CityScene`
-12. `NetworkMiniGame`
-13. `VideosMiniGame`
-14. `RecycleBinMiniGame`
-15. `BalloonScene`
-16. `CoreScene`
-17. `ExitProtocolScene`
+5. `TreeScene`
+6. `CityScene`
+7. `BalloonScene`
+8. `CoreScene`
+9. `ExitProtocolScene`
+
+### Planned Desktop App Windows
+- `Documents`
+- `Pictures`
+- `Music`
+- `Computer`
+- `Control Panel`
+- `Network`
+- `Videos`
+- `Recycle Bin`
 
 ### Deferred Optional Content
 - `TetrisMiniGame` as a separate scene is not required right now
@@ -544,7 +597,7 @@ Create placeholders where needed, but fully develop only the scenes required by 
 - Keep the current intro stack intact
 
 ### Deliverables
-- `DocumentsMiniGame`
+- `Documents` desktop app window
 - `TreeScene`
 - UI popup system
 - desktop objective guidance
@@ -662,16 +715,17 @@ All new work should attach to the current project baseline.
 
 ## Prompt 1.2: Documents Mini-Game
 
-> Create `DocumentsMiniGame`.
-> Build a simple UI text restoration puzzle.
+> Create `Documents` as a desktop app window inside `AeroDesktopScene`.
+> Build a text restoration puzzle with clickable false statements and a corrupted `WORD BANK` side panel.
 > On success, call `ProgressionManager.Instance.UnlockKey(GameKey.DocumentsKey)`.
-> Then play `loginChime` and return to `AeroDesktopScene`.
+> Then play the completion sound and return focus to `AeroDesktopScene`.
 > Do not modify raw booleans directly.
 > Add one subtle anomaly during play, such as:
 > - a hidden word briefly changes before settling
 > - the document title flickers
 > - one line shifts by a few pixels and then snaps back
 > The anomaly should support tension without making the puzzle unreadable.
+> While the player is inside this app window, temporarily pause desktop background anomalies so the puzzle remains readable.
 
 ## Prompt 1.3: Tree Scene
 
@@ -797,7 +851,7 @@ Use explicit keys, consistent naming, and a single save pathway.
 
 1. Build the managers.
 2. Integrate them into the existing 5-scene project flow.
-3. Create `DocumentsMiniGame`.
+3. Create the `Documents` desktop app window.
 4. Create `TreeScene`.
 5. Verify the first full unlock loop from desktop to mini-game to wallpaper scene.
 6. Expand the Tree branch.
@@ -831,7 +885,7 @@ If starting implementation now, begin with:
 1. `ProgressionManager`
 2. `AudioManager`
 3. integration with the existing 5-scene flow
-4. `DocumentsMiniGame`
+4. `Documents` desktop app window
 5. `TreeScene`
 6. desktop objective guidance
 

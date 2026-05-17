@@ -42,6 +42,7 @@ public class TetrisController : MonoBehaviour
     }
 
     private VisualElement _window;
+    private VisualElement _titleBar;
     private VisualElement _board;
     private Label _scoreLabel;
     private Label _levelLabel;
@@ -109,6 +110,10 @@ public class TetrisController : MonoBehaviour
     private bool _sessionRewardTriggered;
 
     private const int BonusRewardLineTarget = 5;
+    private bool _isDraggingWindow;
+    private Vector2 _dragPointerOffset;
+
+    public bool IsWindowOpen => _window != null && !_window.ClassListContains("hidden");
 
     public void Initialize(VisualElement root)
     {
@@ -129,6 +134,7 @@ public class TetrisController : MonoBehaviour
         {
             _window.pickingMode = PickingMode.Ignore;
         }
+        _titleBar = _window?.Q<VisualElement>(className: "window-title-bar");
         _board = root.Q<VisualElement>("tetris-board");
         _scoreLabel = root.Q<Label>("score-label");
         _levelLabel = root.Q<Label>("level-label");
@@ -149,10 +155,92 @@ public class TetrisController : MonoBehaviour
         _closeButton.RegisterCallback<ClickEvent>(evt => Hide());
         _submitNameButton?.RegisterCallback<ClickEvent>(evt => OnSubmitName());
         _restartButton?.RegisterCallback<ClickEvent>(evt => ResetGame());
+        RegisterWindowDragging();
 
         LoadPieces();
         LoadHighScores();
         ResetGame();
+    }
+
+    private void RegisterWindowDragging()
+    {
+        if (_window == null || _titleBar == null)
+        {
+            return;
+        }
+
+        _titleBar.RegisterCallback<PointerDownEvent>(OnTitleBarPointerDown);
+        _titleBar.RegisterCallback<PointerMoveEvent>(OnTitleBarPointerMove);
+        _titleBar.RegisterCallback<PointerUpEvent>(OnTitleBarPointerUp);
+        _titleBar.RegisterCallback<PointerCaptureOutEvent>(_ => _isDraggingWindow = false);
+    }
+
+    private void OnTitleBarPointerDown(PointerDownEvent evt)
+    {
+        if (evt.button != 0 || _window == null || _window.parent == null)
+        {
+            return;
+        }
+
+        PrepareWindowForDragging();
+        _window.BringToFront();
+
+        Rect parentBounds = _window.parent.worldBound;
+        _dragPointerOffset = new Vector2(evt.position.x - parentBounds.xMin - _window.resolvedStyle.left,
+            evt.position.y - parentBounds.yMin - _window.resolvedStyle.top);
+        _isDraggingWindow = true;
+        _titleBar.CapturePointer(evt.pointerId);
+        evt.StopPropagation();
+    }
+
+    private void OnTitleBarPointerMove(PointerMoveEvent evt)
+    {
+        if (!_isDraggingWindow || _window == null || _window.parent == null)
+        {
+            return;
+        }
+
+        Rect parentBounds = _window.parent.worldBound;
+        float maxLeft = Mathf.Max(0f, parentBounds.width - _window.resolvedStyle.width);
+        float maxTop = Mathf.Max(0f, parentBounds.height - _window.resolvedStyle.height);
+        float left = Mathf.Clamp(evt.position.x - parentBounds.xMin - _dragPointerOffset.x, 0f, maxLeft);
+        float top = Mathf.Clamp(evt.position.y - parentBounds.yMin - _dragPointerOffset.y, 0f, maxTop);
+
+        _window.style.left = left;
+        _window.style.top = top;
+        evt.StopPropagation();
+    }
+
+    private void OnTitleBarPointerUp(PointerUpEvent evt)
+    {
+        if (!_isDraggingWindow)
+        {
+            return;
+        }
+
+        _isDraggingWindow = false;
+        _titleBar.ReleasePointer(evt.pointerId);
+        evt.StopPropagation();
+    }
+
+    private void PrepareWindowForDragging()
+    {
+        if (_window == null || _window.parent == null)
+        {
+            return;
+        }
+
+        if (_window.style.left.keyword == StyleKeyword.Null || _window.style.top.keyword == StyleKeyword.Null)
+        {
+            Rect parentBounds = _window.parent.worldBound;
+            Rect windowBounds = _window.worldBound;
+            _window.style.left = windowBounds.xMin - parentBounds.xMin;
+            _window.style.top = windowBounds.yMin - parentBounds.yMin;
+        }
+
+        _window.style.right = StyleKeyword.Auto;
+        _window.style.bottom = StyleKeyword.Auto;
+        _window.style.translate = new Translate(0f, 0f, 0f);
     }
 
     private void LoadHighScores()

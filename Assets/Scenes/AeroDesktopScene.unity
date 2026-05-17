@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 124660611}
   - component: {fileID: 124660613}
   - component: {fileID: 124660614}
+  - component: {fileID: 124660616}
   - component: {fileID: 124660615}
   m_Layer: 0
   m_Name: Desktop_UI
@@ -220,6 +221,24 @@ MonoBehaviour:
   gameOverClip: {fileID: 8300000, guid: fe00ec60e24ff0243897dd816280b2aa, type: 3}
   hardDropClip: {fileID: 8300000, guid: c8dff936b1e14f842b6fa026667352d7, type: 3}
   lockClip: {fileID: 8300000, guid: 5d77c0fcb09bf3b4faad712eeae451df, type: 3}
+--- !u!114 &124660616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124660610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3f112ed775a7d541b7cc3e0e7196c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DocumentsAppController
+  clickSound: {fileID: 0}
+  hoverSound: {fileID: 0}
+  successSound: {fileID: 0}
+  errorSound: {fileID: 0}
+  lieExposedSound: {fileID: 0}
+  completionSound: {fileID: 0}
 --- !u!82 &124660615
 AudioSource:
   m_ObjectHideFlags: 0
