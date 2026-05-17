@@ -132,6 +132,7 @@ public class ParkSceneController : MonoBehaviour
 
     private float _footstepDistanceCounter;
     private bool _wasGroundedLastFrame;
+    private float _movementTimer;
     private float _nextPresenceTime;
 
     private GameObject _jumpWatcher;
@@ -327,12 +328,20 @@ public class ParkSceneController : MonoBehaviour
         // Breathing logic
         if (_breathingSource != null)
         {
-            // Intensifies after 2nd and 4th fragment
-            float targetVolume = 0.05f;
-            if (_fragmentsRecovered >= 2) targetVolume = 0.18f;
-            if (_fragmentsRecovered >= 4) targetVolume = 0.32f;
+            // Only breathe heavily when sprinting and moving
+            bool isSprinting = _playerInputs != null && _playerInputs.sprint && speed > 0.5f;
             
-            _breathingSource.volume = Mathf.MoveTowards(_breathingSource.volume, targetVolume, Time.deltaTime * 0.2f);
+            float targetVolume = 0f;
+            if (isSprinting)
+            {
+                // Intensifies after 2nd and 4th fragment
+                targetVolume = 0.08f;
+                if (_fragmentsRecovered >= 2) targetVolume = 0.22f;
+                if (_fragmentsRecovered >= 4) targetVolume = 0.45f;
+            }
+            
+            // Slightly faster fade for responsiveness
+            _breathingSource.volume = Mathf.MoveTowards(_breathingSource.volume, targetVolume, Time.deltaTime * 0.5f);
         }
     }
 
