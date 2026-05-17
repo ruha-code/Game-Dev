@@ -1,0 +1,23 @@
+{
+    "asset": "e0706100076c3f247bf98f1346146f46",
+    "fileName": "019e3663-d610-7fde-ad16-e6f7cf631e28.glb",
+    "prompt": "Jagged twisted obsidian pillar with glowing red veins, crystalline edges, horror style, based on reference image",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "c10d1132bad2a3b4f9b4580e4578d9aa",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

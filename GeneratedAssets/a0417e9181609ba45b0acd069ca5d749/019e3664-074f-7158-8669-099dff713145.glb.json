@@ -1,0 +1,23 @@
+{
+    "asset": "a0417e9181609ba45b0acd069ca5d749",
+    "fileName": "019e3664-074f-7158-8669-099dff713145.glb",
+    "prompt": "Floating fractured glass anomaly orb with void core, based on reference image",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "8210eb708da48ae4a94a4328f0c9ea9a",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

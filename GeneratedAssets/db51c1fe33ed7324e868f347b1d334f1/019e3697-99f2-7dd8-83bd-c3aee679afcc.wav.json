@@ -1,0 +1,15 @@
+{
+    "asset": "db51c1fe33ed7324e868f347b1d334f1",
+    "fileName": "019e3697-99f2-7dd8-83bd-c3aee679afcc.wav",
+    "prompt": "Aggressive distorted glitch impact with a sharp digital sting, sudden horror hit",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

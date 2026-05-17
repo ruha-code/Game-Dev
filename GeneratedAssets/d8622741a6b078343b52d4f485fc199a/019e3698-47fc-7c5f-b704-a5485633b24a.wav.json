@@ -1,0 +1,15 @@
+{
+    "asset": "d8622741a6b078343b52d4f485fc199a",
+    "fileName": "019e3698-47fc-7c5f-b704-a5485633b24a.wav",
+    "prompt": "Deep guttural ghostly roar sting, sudden horror jump scare, visceral and dark",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.5,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

@@ -1,0 +1,15 @@
+{
+    "asset": "a1e22e25ee1f4e54983ab55916d8b8b1",
+    "fileName": "019e3697-175f-797a-b39e-2059edb6fc6a.wav",
+    "prompt": "Single crisp footstep on tall wet grass and mud, variant 4, realistic foley, high quality",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

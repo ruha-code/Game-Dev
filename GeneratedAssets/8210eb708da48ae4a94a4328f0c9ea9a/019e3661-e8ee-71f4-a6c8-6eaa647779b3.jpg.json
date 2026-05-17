@@ -1,0 +1,28 @@
+{
+    "asset": "8210eb708da48ae4a94a4328f0c9ea9a",
+    "fileName": "019e3661-e8ee-71f4-a6c8-6eaa647779b3.jpg",
+    "prompt": "Concept art of a floating fractured glass sphere with a dark void core and erratic electrical sparks inside, isolated on white background, glitchy and unsettling anomaly, high detail",
+    "negativePrompt": "",
+    "model": "flux-2-pro",
+    "modelName": "Flux 2 (Pro)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

@@ -1,0 +1,28 @@
+{
+    "asset": "c10d1132bad2a3b4f9b4580e4578d9aa",
+    "fileName": "019e3661-e913-7975-a287-48408a026b13.jpg",
+    "prompt": "Concept art of a jagged, twisted obsidian pillar with glowing red veins and sharp crystalline edges, isolated on white background, dark fantasy horror style, high detail",
+    "negativePrompt": "",
+    "model": "flux-2-pro",
+    "modelName": "Flux 2 (Pro)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

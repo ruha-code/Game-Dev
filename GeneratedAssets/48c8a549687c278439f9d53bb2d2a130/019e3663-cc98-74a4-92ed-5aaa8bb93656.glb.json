@@ -1,0 +1,23 @@
+{
+    "asset": "48c8a549687c278439f9d53bb2d2a130",
+    "fileName": "019e3663-cc98-74a4-92ed-5aaa8bb93656.glb",
+    "prompt": "Tall shadowy slender watcher with elongated limbs and glowing eye, based on reference image",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "2dfcc080fabc9794fbda2739704a049e",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

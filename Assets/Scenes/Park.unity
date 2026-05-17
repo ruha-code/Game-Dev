@@ -153,6 +153,20 @@ MonoBehaviour:
   watcherGlowColor: {r: 0.22, g: 0.6, b: 0.9, a: 1}
   directionalLight: {fileID: 0}
   globalVolume: {fileID: 0}
+  watcherPrefab: {fileID: 6640330488468238314, guid: 48c8a549687c278439f9d53bb2d2a130, type: 3}
+  anomalyOrbPrefab: {fileID: 5549004065784862248, guid: a0417e9181609ba45b0acd069ca5d749, type: 3}
+  riftSpikePrefab: {fileID: 3002157899002055908, guid: e0706100076c3f247bf98f1346146f46, type: 3}
+  whisperLoopClip: {fileID: 8300000, guid: dab4c414d030fdb4aaed75019d711db9, type: 3}
+  watcherStingClip: {fileID: 8300000, guid: 25aac1f84b9388f4b9cbb7a25bbe9a99, type: 3}
+  fogPulseClip: {fileID: 8300000, guid: 6382b4d361566f94b9dc07aa5045bc0b, type: 3}
+  stoneHumClip: {fileID: 8300000, guid: bfdf1f05e789e9d44941a6dfa4c432ee, type: 3}
+  letterOpenClip: {fileID: 8300000, guid: dfa1ebf237664bd45a9099961a7fc214, type: 3}
+  fragmentCompleteClip: {fileID: 8300000, guid: e9cbde8212ad46d4f8e3e7aac0eb16c9, type: 3}
+  whisperMaxVolume: 0.45
+  scareVolume: 0.9
+  pressureStartSeconds: 26
+  pressureDecayPerFragment: 3
+  pressureFreezeSeconds: 0.75
 --- !u!4 &299850
 Transform:
   m_ObjectHideFlags: 0
@@ -453,7 +467,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6556307555316582679, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 157.61
+      value: 139.01
       objectReference: {fileID: 0}
     - target: {fileID: 6556307555316582679, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.y
@@ -461,7 +475,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6556307555316582679, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 117.08
+      value: 125.71
       objectReference: {fileID: 0}
     - target: {fileID: 6556307555316582679, guid: 035bf1ba97d19214580cfe6f5a29fdc3, type: 3}
       propertyPath: m_LocalRotation.w

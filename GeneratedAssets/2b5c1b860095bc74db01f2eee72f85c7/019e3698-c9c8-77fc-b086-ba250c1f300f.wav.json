@@ -1,0 +1,15 @@
+{
+    "asset": "2b5c1b860095bc74db01f2eee72f85c7",
+    "fileName": "019e3698-c9c8-77fc-b086-ba250c1f300f.wav",
+    "prompt": "Quick dry scratching sound against tree bark, fast and close proximity, horror presence foley",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

@@ -1,0 +1,28 @@
+{
+    "asset": "2dfcc080fabc9794fbda2739704a049e",
+    "fileName": "019e3661-da9f-719c-ac4e-01cd54e77de5.jpg",
+    "prompt": "Concept art of a tall shadowy slender figure with multiple elongated limbs and a single glowing blue eye, wearing tattered dark robes, isolated on white background, eerie forest watcher style, psychological horror",
+    "negativePrompt": "",
+    "model": "flux-2-pro",
+    "modelName": "Flux 2 (Pro)",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "pixelateTargetSize": 0,
+    "pixelateKeepImageSize": false,
+    "pixelatePixelBlockSize": 0,
+    "pixelatePixelGridSize": 0,
+    "pixelateMode": 0,
+    "pixelateOutlineThickness": 0,
+    "doodles": {
+        "m_Items": []
+    },
+    "upscaleFactor": 0,
+    "dimensions": {
+        "width": 1024,
+        "height": 1024
+    },
+    "spriteSheet": false,
+    "duration": 0.0
+}

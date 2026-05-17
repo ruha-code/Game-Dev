@@ -1,0 +1,15 @@
+{
+    "asset": "723b5b244adeaa844bfef5882ef27e61",
+    "fileName": "019e3697-9aa3-7d02-a53e-6b51dff9ceaa.wav",
+    "prompt": "Deep, rhythmic human breathing, tense and slightly heavy, anxious atmosphere, loopable sfx",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 6.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

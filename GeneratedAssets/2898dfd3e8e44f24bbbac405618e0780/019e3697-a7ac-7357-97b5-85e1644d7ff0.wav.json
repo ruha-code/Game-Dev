@@ -1,0 +1,15 @@
+{
+    "asset": "2898dfd3e8e44f24bbbac405618e0780",
+    "fileName": "019e3697-a7ac-7357-97b5-85e1644d7ff0.wav",
+    "prompt": "Ominous low-frequency rhythmic pulsing, cinematic horror atmosphere, deep industrial thrum, loopable",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 8.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

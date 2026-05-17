@@ -1,0 +1,15 @@
+{
+    "asset": "680553f848d1b1e46952f010d395f7b7",
+    "fileName": "019e3697-9d55-7bfc-bb9e-e8855bb7d193.wav",
+    "prompt": "Heavy thud landing on wet earth and grass, body weight impact, realistic foley",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.5,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

@@ -1,0 +1,15 @@
+{
+    "asset": "3b3b201a441dcbc45b5f42c54a138811",
+    "fileName": "019e3697-e0e0-7166-85d7-42988e618600.wav",
+    "prompt": "High-pitched metallic screeching sting, sudden horror jump scare, sharp and echoing",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 1.5,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

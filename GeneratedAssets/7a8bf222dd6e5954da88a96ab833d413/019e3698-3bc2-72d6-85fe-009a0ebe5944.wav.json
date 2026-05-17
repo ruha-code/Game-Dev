@@ -1,0 +1,15 @@
+{
+    "asset": "7a8bf222dd6e5954da88a96ab833d413",
+    "fileName": "019e3698-3bc2-72d6-85fe-009a0ebe5944.wav",
+    "prompt": "Subtle dry leaves rustling and twigs snapping, close proximity, quiet horror presence foley",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
