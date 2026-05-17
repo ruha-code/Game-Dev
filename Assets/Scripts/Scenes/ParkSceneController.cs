@@ -21,7 +21,6 @@ public class ParkSceneController : MonoBehaviour
         "PT_Menhir_Rock_02 (1)",
         "PT_Menhir_Rock_02 (2)",
         "PT_Menhir_Rock_02 (3)",
-        "PT_Menhir_Rock_02 (4)",
         "PT_Menhir_Rock_02"
     };
 
@@ -30,8 +29,7 @@ public class ParkSceneController : MonoBehaviour
         "Fragment 01 // Arrival Log",
         "Fragment 02 // Groundskeeper Memo",
         "Fragment 03 // Missing Staff Notice",
-        "Fragment 04 // Memory Bleed Report",
-        "Fragment 05 // Exit Directive"
+        "Fragment 04 // Memory Bleed Report"
     };
 
     private readonly string[] _letterBodies =
@@ -42,9 +40,7 @@ public class ParkSceneController : MonoBehaviour
 
         "Мне начинает казаться, что лес наблюдает за мной.\n\nКогда я оборачиваюсь, некоторые деревья стоят не там, где были раньше.\n\nЯ нашёл следы.\nСначала подумал, что они мои.\nНо следов было больше, чем должно быть.",
 
-        "Кажется, я понял, почему система не выпускает нас.\n\nОна не удаляет людей.\nОна сохраняет их.\n\nИногда я слышу чужие мысли раньше, чем свои собственные.\n\nИ мне всё труднее вспомнить, какие из них принадлежат мне.",
-
-        "Ты снова пришёл.\n\nХорошо.\nЗначит, перенос почти завершён.\n\nНе бойся леса.\nОн — всего лишь корневая структура.\n\nСледующий узел уже открыт."
+        "Кажется, я понял, почему система не выпускает нас.\n\nОна не удаляет людей.\nОна сохраняет их.\n\nИногда я слышу чужие мысли раньше, чем свои собственные.\n\nИ мне всё труднее вспомнить, какие из них принадлежат мне."
     };
 
     private readonly List<Transform> _stones = new List<Transform>();
@@ -341,7 +337,7 @@ public class ParkSceneController : MonoBehaviour
                 // Intensifies after 2nd and 4th fragment
                 targetVolume = 0.08f;
                 if (_fragmentsRecovered >= 2) targetVolume = 0.22f;
-                if (_fragmentsRecovered >= 4) targetVolume = 0.45f;
+                if (_fragmentsRecovered >= 3) targetVolume = 0.45f;
             }
             
             // Slightly faster fade for responsiveness
@@ -827,8 +823,7 @@ public class ParkSceneController : MonoBehaviour
             new Vector3(-18f, 0f, 24f),
             new Vector3(22f, 0f, -18f),
             new Vector3(-26f, 0f, -22f),
-            new Vector3(26f, 0f, 20f),
-            new Vector3(0f, 0f, 31f)
+            new Vector3(26f, 0f, 20f)
         };
 
         for (int i = 0; i < offsets.Length; i++)
@@ -894,13 +889,12 @@ public class ParkSceneController : MonoBehaviour
             new Vector3(0f, 3.4f, 0f),
             new Vector3(-8f, 2.6f, 7f),
             new Vector3(8f, 2.8f, -5f),
-            new Vector3(-13f, 3.1f, -10f),
-            new Vector3(12f, 3.3f, 11f)
+            new Vector3(-13f, 3.1f, -10f)
         };
 
         for (int i = 0; i < offsets.Length; i++)
         {
-            Color orbColor = Color.Lerp(new Color(0.17f, 0.85f, 1f, 1f), new Color(0.85f, 0.94f, 1f, 1f), i / 4f);
+            Color orbColor = Color.Lerp(new Color(0.17f, 0.85f, 1f, 1f), new Color(0.85f, 0.94f, 1f, 1f), i / 3f);
             GameObject orb = CreateHorrorVisual(
                 anomalyOrbPrefab,
                 PrimitiveType.Sphere,
@@ -916,7 +910,7 @@ public class ParkSceneController : MonoBehaviour
             orbLight.type = LightType.Point;
             orbLight.range = 5f;
             orbLight.intensity = 0.75f;
-            orbLight.color = Color.Lerp(activeGlowColor, watcherGlowColor, i / 4f);
+            orbLight.color = Color.Lerp(activeGlowColor, watcherGlowColor, i / 3f);
 
             orb.SetActive(false);
             _anomalyOrbs.Add(orb);
@@ -1469,16 +1463,16 @@ public class ParkSceneController : MonoBehaviour
 
     private void ApplyAtmosphereStage(int stage)
     {
-        float[] directionalIntensities = { 1.55f, 1.2f, 0.88f, 0.58f, 0.34f, 0.12f };
-        float[] ambientIntensities = { 1f, 0.82f, 0.64f, 0.48f, 0.32f, 0.15f };
-        float[] fogDensities = { 0.002f, 0.005f, 0.012f, 0.022f, 0.035f, 0.055f };
-        float[] skyExposures = { 1f, 0.82f, 0.66f, 0.5f, 0.36f, 0.15f };
-        float[] bloomIntensities = { 0.2f, 0.45f, 0.85f, 1.35f, 1.95f, 3.5f };
-        float[] bloomThresholds = { 1.08f, 0.95f, 0.84f, 0.72f, 0.62f, 0.5f };
-        float[] vignetteIntensities = { 0.12f, 0.22f, 0.34f, 0.45f, 0.58f, 0.75f };
-        float[] postExposures = { 0f, -0.2f, -0.55f, -0.9f, -1.35f, -2.1f };
-        float[] contrasts = { 0f, 10f, 25f, 45f, 65f, 90f };
-        float[] saturations = { 0f, -10f, -25f, -45f, -65f, -90f };
+        float[] directionalIntensities = { 1.55f, 1.2f, 0.88f, 0.58f, 0.34f };
+        float[] ambientIntensities = { 1f, 0.82f, 0.64f, 0.48f, 0.32f };
+        float[] fogDensities = { 0.002f, 0.005f, 0.012f, 0.022f, 0.035f };
+        float[] skyExposures = { 1f, 0.82f, 0.66f, 0.5f, 0.36f };
+        float[] bloomIntensities = { 0.2f, 0.45f, 0.85f, 1.35f, 1.95f };
+        float[] bloomThresholds = { 1.08f, 0.95f, 0.84f, 0.72f, 0.62f };
+        float[] vignetteIntensities = { 0.12f, 0.22f, 0.34f, 0.45f, 0.58f };
+        float[] postExposures = { 0f, -0.2f, -0.55f, -0.9f, -1.35f };
+        float[] contrasts = { 0f, 10f, 25f, 45f, 65f };
+        float[] saturations = { 0f, -10f, -25f, -45f, -65f };
 
         Color[] lightColors =
         {
@@ -1486,8 +1480,7 @@ public class ParkSceneController : MonoBehaviour
             new Color(0.88f, 0.91f, 0.95f, 1f),
             new Color(0.74f, 0.82f, 0.9f, 1f),
             new Color(0.58f, 0.7f, 0.8f, 1f),
-            new Color(0.35f, 0.05f, 0.05f, 1f),
-            new Color(0.15f, 0.01f, 0.01f, 1f)
+            new Color(0.35f, 0.05f, 0.05f, 1f)
         };
 
         Color[] fogColors =
@@ -1496,8 +1489,7 @@ public class ParkSceneController : MonoBehaviour
             new Color(0.64f, 0.79f, 0.84f, 1f),
             new Color(0.45f, 0.61f, 0.67f, 1f),
             new Color(0.15f, 0.1f, 0.1f, 1f),
-            new Color(0.08f, 0.02f, 0.02f, 1f),
-            new Color(0.02f, 0.01f, 0.01f, 1f)
+            new Color(0.08f, 0.02f, 0.02f, 1f)
         };
 
         Color[] skyTints =
@@ -1506,8 +1498,7 @@ public class ParkSceneController : MonoBehaviour
             new Color(0.5f, 0.54f, 0.56f, 0.7f),
             new Color(0.43f, 0.49f, 0.54f, 0.82f),
             new Color(0.36f, 0.42f, 0.47f, 0.92f),
-            new Color(0.31f, 0.36f, 0.41f, 1f),
-            new Color(0.26f, 0.31f, 0.35f, 1f)
+            new Color(0.31f, 0.36f, 0.41f, 1f)
         };
 
         Color[] ambientSky =
@@ -1516,8 +1507,7 @@ public class ParkSceneController : MonoBehaviour
             new Color(0.36f, 0.45f, 0.58f, 1f),
             new Color(0.25f, 0.32f, 0.39f, 1f),
             new Color(0.17f, 0.23f, 0.28f, 1f),
-            new Color(0.12f, 0.17f, 0.2f, 1f),
-            new Color(0.11f, 0.15f, 0.18f, 1f)
+            new Color(0.12f, 0.17f, 0.2f, 1f)
         };
 
         Color[] ambientEquator =
@@ -1526,8 +1516,7 @@ public class ParkSceneController : MonoBehaviour
             new Color(0.28f, 0.34f, 0.37f, 1f),
             new Color(0.21f, 0.26f, 0.29f, 1f),
             new Color(0.15f, 0.19f, 0.21f, 1f),
-            new Color(0.11f, 0.15f, 0.16f, 1f),
-            new Color(0.08f, 0.11f, 0.13f, 1f)
+            new Color(0.11f, 0.15f, 0.16f, 1f)
         };
 
         Color[] ambientGround =
@@ -1536,8 +1525,7 @@ public class ParkSceneController : MonoBehaviour
             new Color(0.16f, 0.2f, 0.17f, 1f),
             new Color(0.12f, 0.15f, 0.13f, 1f),
             new Color(0.08f, 0.11f, 0.1f, 1f),
-            new Color(0.05f, 0.08f, 0.07f, 1f),
-            new Color(0.03f, 0.05f, 0.05f, 1f)
+            new Color(0.05f, 0.08f, 0.07f, 1f)
         };
 
         int index = Mathf.Clamp(stage, 0, directionalIntensities.Length - 1);
@@ -1586,17 +1574,17 @@ public class ParkSceneController : MonoBehaviour
 
         if (_letterPanelBackground != null)
         {
-            _letterPanelBackground.color = Color.Lerp(new Color(0.11f, 0.09f, 0.08f, 0.95f), new Color(0.07f, 0.03f, 0.03f, 0.98f), index / 5f);
+            _letterPanelBackground.color = Color.Lerp(new Color(0.11f, 0.09f, 0.08f, 0.95f), new Color(0.07f, 0.03f, 0.03f, 0.98f), index / 4f);
         }
 
         if (_letterBloodSmearTop != null)
         {
-            _letterBloodSmearTop.color = Color.Lerp(new Color(0.25f, 0.04f, 0.03f, 0.52f), new Color(0.58f, 0.05f, 0.05f, 0.88f), index / 5f);
+            _letterBloodSmearTop.color = Color.Lerp(new Color(0.25f, 0.04f, 0.03f, 0.52f), new Color(0.58f, 0.05f, 0.05f, 0.88f), index / 4f);
         }
 
         if (_letterBloodSmearBottom != null)
         {
-            _letterBloodSmearBottom.color = Color.Lerp(new Color(0.18f, 0.03f, 0.03f, 0.38f), new Color(0.42f, 0.03f, 0.03f, 0.76f), index / 5f);
+            _letterBloodSmearBottom.color = Color.Lerp(new Color(0.18f, 0.03f, 0.03f, 0.38f), new Color(0.42f, 0.03f, 0.03f, 0.76f), index / 4f);
         }
     }
 

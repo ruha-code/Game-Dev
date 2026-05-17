@@ -446,4 +446,58 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
 .recycle-bin-completion-next { color: var(--bin-accent); font-size: 14px; margin-bottom: 20px; }
 .recycle-bin-complete-button { width: 200px; height: 44px; border-radius: 12px; background-color: var(--bin-success); color: #000; -unity-font-style: bold; }
 
-.hidden { display: none; }
+.recycle-record-button--ghost {
+    border-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.recycle-record-title--whisper {
+    color: #ff4d6a;
+    -unity-font-style: bold;
+}
+
+.recycle-bin-window--invert {
+    background-color: rgba(248, 240, 228, 0.94);
+}
+
+.recycle-bin-window--invert .recycle-bin-column {
+    background-color: rgba(243, 231, 214, 0.94);
+    border-color: rgba(0, 0, 0, 0.4);
+}
+
+.recycle-bin-window--invert Label {
+    color: #070f1b;
+}
+
+.recycle-bin-ghost-cursor {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    border-width: 1px;
+    border-color: white;
+}
+
+.recycle-bin-window--invert {
+    background-color: rgba(248, 240, 228, 0.94);
+}
+
+.recycle-bin-window--invert .recycle-bin-column {
+    background-color: rgba(243, 231, 214, 0.94);
+    border-color: rgba(0, 0, 0, 0.4);
+}
+
+.recycle-bin-window--invert Label {
+    color: #070f1b;
+}
+
+.recycle-bin-ghost-cursor {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 999px;
+    border-width: 1px;
+    border-color: white;
+}

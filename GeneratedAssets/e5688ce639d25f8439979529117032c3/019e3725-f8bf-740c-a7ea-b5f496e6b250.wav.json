@@ -1,0 +1,15 @@
+{
+    "asset": "e5688ce639d25f8439979529117032c3",
+    "fileName": "019e3725-f8bf-740c-a7ea-b5f496e6b250.wav",
+    "prompt": "mysterious digital chime for data recovery, clean but slightly resonant and ghostly, successful forensic action",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 4.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

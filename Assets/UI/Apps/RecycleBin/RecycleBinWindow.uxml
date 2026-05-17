@@ -68,7 +68,18 @@
                             <ui:Label name="recycle-record-04-state" text="DELETED" class="recycle-record-state" />
                         </ui:VisualElement>
                     </ui:Button>
-                </ui:ScrollView>
+
+                    <ui:Button name="recycle-record-ghost" class="recycle-record-button hidden">
+                        <ui:VisualElement class="recycle-record-button-shell">
+                            <ui:VisualElement class="recycle-record-topline">
+                                <ui:Label text="ENG-00 // ERROR" class="recycle-record-title" />
+                                <ui:VisualElement class="recycle-record-dot" style="background-color: white;" />
+                            </ui:VisualElement>
+                            <ui:Label text="UNAUTHORIZED RESIDUE" class="recycle-record-subtitle" />
+                            <ui:Label text="VOID" class="recycle-record-state" />
+                        </ui:VisualElement>
+                    </ui:Button>
+                    </ui:ScrollView>
 
                 <ui:VisualElement class="recycle-bin-legend">
                     <ui:Label text="Status Legend" class="recycle-bin-legend-title" />

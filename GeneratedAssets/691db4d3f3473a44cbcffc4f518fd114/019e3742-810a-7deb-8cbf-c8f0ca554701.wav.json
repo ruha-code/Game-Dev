@@ -1,0 +1,15 @@
+{
+    "asset": "691db4d3f3473a44cbcffc4f518fd114",
+    "fileName": "019e3742-810a-7deb-8cbf-c8f0ca554701.wav",
+    "prompt": "A gentle harmonious crystal chime, short and sweet, representing successful data stabilization, high quality, soft and clean. Not sharp.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

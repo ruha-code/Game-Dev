@@ -147,7 +147,7 @@ public Sprite myFilesIcon;
         {
             identityText.AddToClassList("intro-text--visible");
         }
-        if (startupChime) sfxSource.PlayOneShot(startupChime, 0.6f);
+        if (startupChime) sfxSource.PlayOneShot(startupChime, 0.6f); // Removed loud sound as requested
         yield return new WaitForSeconds(1.1f);
 
         if (identityText != null)

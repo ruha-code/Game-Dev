@@ -1,0 +1,15 @@
+{
+    "asset": "340d620354ae3084fbb854ef7fa1d967",
+    "fileName": "019e3726-4de8-7305-8a8e-beee102d597d.wav",
+    "prompt": "unsettling forensic computer hum, low frequency airy drone, psychological horror atmosphere, distant digital whirring, clean loop",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

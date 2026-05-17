@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 124660614}
   - component: {fileID: 124660616}
   - component: {fileID: 124660615}
+  - component: {fileID: 124660617}
   m_Layer: 0
   m_Name: Desktop_UI
   m_TagString: Untagged
@@ -202,6 +203,11 @@ MonoBehaviour:
   glassCrackSound: {fileID: 8300000, guid: 8c7a8044d9f5c73468c12f16c1fdb3b5, type: 3}
   brokenGlassSprite: {fileID: 21300000, guid: dd82fcac1d5578a43a4c5c260197d262, type: 3}
   phantomChatIcon: {fileID: 21300000, guid: 4788d2649ae9f984cb82d2315209cf28, type: 3}
+  hotspotTransitionDuration: 1.1
+  hotspotTransitionColor: {r: 0.01, g: 0.03, b: 0.05, a: 1}
+  treeTransitionZoom: 1.12
+  treeTransitionPan: {x: -90, y: -42}
+  treeTransitionGlitchLead: 0.28
 --- !u!114 &124660614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,30 +221,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TetrisController
   audioSource: {fileID: 124660615}
-  moveClip: {fileID: 8300000, guid: ff24cacf48fb3d2439a0495be5fc6e2c, type: 3}
-  rotateClip: {fileID: 8300000, guid: 919da1767c00eea4f93856bf8fb2077b, type: 3}
-  lineClearClip: {fileID: 8300000, guid: 2eea2f21865f8e448ab2065e3e1196ff, type: 3}
   gameOverClip: {fileID: 8300000, guid: fe00ec60e24ff0243897dd816280b2aa, type: 3}
   hardDropClip: {fileID: 8300000, guid: c8dff936b1e14f842b6fa026667352d7, type: 3}
   lockClip: {fileID: 8300000, guid: 5d77c0fcb09bf3b4faad712eeae451df, type: 3}
---- !u!114 &124660616
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 124660610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d3f112ed775a7d541b7cc3e0e7196c44, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DocumentsAppController
-  clickSound: {fileID: 0}
-  hoverSound: {fileID: 0}
-  successSound: {fileID: 0}
-  errorSound: {fileID: 0}
-  lieExposedSound: {fileID: 0}
-  completionSound: {fileID: 0}
+  fragmentGlitchClip: {fileID: 0}
+  fragmentWhisperClip: {fileID: 0}
 --- !u!82 &124660615
 AudioSource:
   m_ObjectHideFlags: 0
@@ -336,6 +323,46 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &124660616
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124660610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3f112ed775a7d541b7cc3e0e7196c44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DocumentsAppController
+  clickSound: {fileID: 0}
+  hoverSound: {fileID: 0}
+  successSound: {fileID: 0}
+  errorSound: {fileID: 0}
+  lieExposedSound: {fileID: 0}
+  completionSound: {fileID: 0}
+--- !u!114 &124660617
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 124660610}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cee04057875b95946a89193465ed2f63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RecycleBinAppController
+  clickSound: {fileID: 8300000, guid: a066b4adf18d10340b046709f6549512, type: 3}
+  scanSound: {fileID: 8300000, guid: fd8847be716ab2e43ac0db37b0be17c9, type: 3}
+  restoreSound: {fileID: 8300000, guid: e9cbde8212ad46d4f8e3e7aac0eb16c9, type: 3}
+  completeSound: {fileID: 8300000, guid: 205d395846793bf48b90583a382c91a6, type: 3}
+  errorSound: {fileID: 8300000, guid: 25aac1f84b9388f4b9cbb7a25bbe9a99, type: 3}
+  glitchSound: {fileID: 8300000, guid: c1167aed850330f429d0b328094fe38d, type: 3}
+  ambientHum: {fileID: 8300000, guid: e9e4daa72aee041428621d62df17a50f, type: 3}
+  whisperHelpSound: {fileID: 8300000, guid: e32bd3281a21d274586e2c38e5437792, type: 3}
+  scanLoopSound: {fileID: 8300000, guid: 1427174cae9e561438c43fe39bb2ea08, type: 3}
+  stabilizationSuccessSound: {fileID: 8300000, guid: 7de398d7f16d13f419030782015a93c1, type: 3}
 --- !u!1 &893316266
 GameObject:
   m_ObjectHideFlags: 0

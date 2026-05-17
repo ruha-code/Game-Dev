@@ -1,0 +1,15 @@
+{
+    "asset": "f45e6f4a309b08a47bda1d7b2f8b7000",
+    "fileName": "019e3742-9bc1-704e-ac4f-5f2aaf6ee11c.wav",
+    "prompt": "A resolved, ascending digital melody chime, signifies full archive recovery, clean, satisfying, and soft. Frutiger Aero style.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 3.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

@@ -1,0 +1,15 @@
+{
+    "asset": "6fcd20239d332cc4194b47b21f945bd1",
+    "fileName": "019e3742-9154-7f87-9f97-c3f2aa7ac02d.wav",
+    "prompt": "A soft, rhythmic digital pulsing loop, technical and clean, Frutiger Aero aesthetic, transparent and glossy, low-frequency hum with gentle high-frequency blips. Not sharp, not loud.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 3.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

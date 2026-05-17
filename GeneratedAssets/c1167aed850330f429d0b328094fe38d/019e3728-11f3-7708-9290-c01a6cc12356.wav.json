@@ -1,0 +1,15 @@
+{
+    "asset": "c1167aed850330f429d0b328094fe38d",
+    "fileName": "019e3728-11f3-7708-9290-c01a6cc12356.wav",
+    "prompt": "aggressive digital glitch burst, sharp static with a faint distorted human whisper, horror impact",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

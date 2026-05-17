@@ -33,6 +33,7 @@ public class RecycleBinAppController : MonoBehaviour
 
     private VisualElement _window;
     private VisualElement _titleBar;
+    private VisualElement _ghostRecord;
     private Button _closeButton;
     private Button _scanButton;
     private Button _restoreButton;
@@ -61,25 +62,33 @@ public class RecycleBinAppController : MonoBehaviour
 
     private readonly List<EngineerRecord> _records = new();
     private readonly List<ChoiceData> _currentChoices = new();
+    private readonly List<Label> _profileLabels = new List<Label>();
 
     private EngineerRecord _selectedRecord;
     private bool _isVisible;
     private bool _isComplete;
-    private bool _isDraggingWindow;
     private bool _isActionInProgress;
     private float _contaminationLevel;
     private float _suspicionLevel;
-    private Vector2 _dragPointerOffset;
+    private AudioSource _humSource;
     private Coroutine _glitchRoutine;
     private Coroutine _popupRoutine;
 
-    [Header("Audio")]
+    private VisualElement _ghostCursor;
+    private bool _isGhostCursorActive;
+    private bool _isButtonFleeing;
+
+    [Header("Enhanced Audio")]
     public AudioClip clickSound;
     public AudioClip scanSound;
     public AudioClip restoreSound;
     public AudioClip completeSound;
     public AudioClip errorSound;
     public AudioClip glitchSound;
+    public AudioClip ambientHum;
+    public AudioClip whisperHelpSound;
+    public AudioClip scanLoopSound;
+    public AudioClip stabilizationSuccessSound;
 
     public bool IsWindowOpen => _isVisible;
 
@@ -88,11 +97,25 @@ public class RecycleBinAppController : MonoBehaviour
         _window = root.Q<VisualElement>("recycle-bin-window");
         if (_window == null) return;
 
+        _ghostRecord = root.Q<VisualElement>("recycle-record-ghost");
+
+        // Create ghost cursor
+        _ghostCursor = new VisualElement();
+        _ghostCursor.AddToClassList("recycle-bin-ghost-cursor");
+        _ghostCursor.pickingMode = PickingMode.Ignore;
+        _ghostCursor.style.display = DisplayStyle.None;
+        _window.Add(_ghostCursor);
+
         _window.pickingMode = PickingMode.Ignore;
         _titleBar = _window.Q<VisualElement>(className: "recycle-bin-window-header");
         _closeButton = root.Q<Button>("recycle-bin-close-button");
         _scanButton = root.Q<Button>("recycle-bin-scan-button");
         _restoreButton = root.Q<Button>("recycle-bin-restore-button");
+
+        _restoreButton?.RegisterCallback<PointerOverEvent>(_ => {
+            if (_suspicionLevel > 60 && Random.value > 0.5f) StartCoroutine(ButtonFleeRoutine());
+        });
+
         _stabilizeButton = root.Q<Button>("recycle-bin-stabilize-button");
         _completeButton = root.Q<Button>("recycle-bin-complete-button");
         _completionPopup = root.Q<VisualElement>("recycle-bin-completion-popup");
@@ -145,6 +168,174 @@ public class RecycleBinAppController : MonoBehaviour
         SetupRecords(root);
         RegisterWindowDragging();
         ResetState();
+        SetupHumSource();
+
+        _window.RegisterCallback<PointerMoveEvent>(evt => {
+            if (_isGhostCursorActive) {
+                _ghostCursor.style.left = evt.localPosition.x + 30;
+                _ghostCursor.style.top = evt.localPosition.y + 30;
+            }
+        });
+    }
+
+    private IEnumerator ButtonFleeRoutine()
+    {
+        if (_isButtonFleeing || _restoreButton == null) yield break;
+        _isButtonFleeing = true;
+        PlaySound(glitchSound);
+        _restoreButton.style.translate = new Translate(Random.Range(-100, 100), Random.Range(-40, 40), 0);
+        yield return new WaitForSeconds(1.2f);
+        _restoreButton.style.translate = new Translate(0, 0, 0);
+        _isButtonFleeing = false;
+    }
+
+    private void SetupHumSource()
+    {
+        if (ambientHum == null) return;
+        _humSource = gameObject.AddComponent<AudioSource>();
+        _humSource.clip = ambientHum;
+        _humSource.loop = true;
+        _humSource.volume = 0;
+        _humSource.playOnAwake = false;
+    }
+
+    public void Show()
+    {
+        if (_window == null) return;
+        _window.RemoveFromClassList("hidden");
+        _window.pickingMode = PickingMode.Position;
+        _window.BringToFront();
+        _isVisible = true;
+
+        if (_humSource != null) {
+            _humSource.Play();
+            StartCoroutine(FadeHum(0.4f, 2f));
+        }
+
+        if (_glitchRoutine != null) StopCoroutine(_glitchRoutine);
+        _glitchRoutine = StartCoroutine(GlitchRoutine());
+        if (_popupRoutine != null) StopCoroutine(_popupRoutine);
+        _popupRoutine = StartCoroutine(FakePopupRoutine());
+
+        StartCoroutine(AnomalyDirector());
+    }
+
+    private IEnumerator FadeHum(float target, float duration)
+    {
+        float start = _humSource != null ? _humSource.volume : 0;
+        float elapsed = 0;
+        while (elapsed < duration && _humSource != null) {
+            elapsed += Time.deltaTime;
+            _humSource.volume = Mathf.Lerp(start, target, elapsed / duration);
+            yield return null;
+        }
+    }
+
+    public void Hide()
+    {
+        if (_window == null) return;
+        _window.AddToClassList("hidden");
+        _window.pickingMode = PickingMode.Ignore;
+        _isVisible = false;
+        
+        if (_humSource != null) StartCoroutine(FadeHum(0f, 1f));
+        
+        StopAllCoroutines();
+        _glitchRoutine = null;
+        _popupRoutine = null;
+        _isGhostCursorActive = false;
+        if (_ghostCursor != null) _ghostCursor.style.display = DisplayStyle.None;
+    }
+
+    private IEnumerator AnomalyDirector()
+    {
+        while (_isVisible) {
+            yield return new WaitForSeconds(Random.Range(4f, 12f));
+            int roll = Random.Range(0, _suspicionLevel > 50 ? 5 : 3);
+            switch (roll) {
+                case 0: yield return WhisperAnomaly(); break;
+                case 1: yield return GhostRecordAnomaly(); break;
+                case 2: yield return LabelDriftAnomaly(); break;
+                case 3: yield return InversionAnomaly(); break;
+                case 4: yield return TextScrambleAnomaly(); break;
+            }
+
+            if (_suspicionLevel > 75 && !_isGhostCursorActive) {
+                _isGhostCursorActive = true;
+                if (_ghostCursor != null) _ghostCursor.style.display = DisplayStyle.Flex;
+            }
+        }
+    }
+
+    private IEnumerator InversionAnomaly()
+    {
+        _window.AddToClassList("recycle-bin-window--invert");
+        PlaySound(glitchSound);
+        yield return new WaitForSeconds(0.15f);
+        _window.RemoveFromClassList("recycle-bin-window--invert");
+    }
+
+    private IEnumerator TextScrambleAnomaly()
+    {
+        if (_selectedNameLabel == null) yield break;
+        string original = _selectedNameLabel.text;
+        string chars = "!@#$%^&*()_+<>?:{}|";
+        for (int i = 0; i < 8; i++) {
+            string scrambled = "";
+            for (int j = 0; j < original.Length; j++) scrambled += chars[Random.Range(0, chars.Length)];
+            _selectedNameLabel.text = scrambled;
+            yield return new WaitForSeconds(0.06f);
+        }
+        _selectedNameLabel.text = original;
+    }
+
+    private IEnumerator WhisperAnomaly()
+    {
+        if (_profileLabels.Count == 0) yield break;
+        Label target = _profileLabels[Random.Range(0, _profileLabels.Count)];
+        string original = target.text;
+        string[] whispers = { "HELP US", "STILL RUNNING", "DO NOT RESTORE", "MEMORY LEAK", "SAVE THE TRACE" };
+        
+        target.text = whispers[Random.Range(0, whispers.Length)];
+        target.AddToClassList("recycle-record-title--whisper");
+        PlaySound(whisperHelpSound ?? glitchSound);
+        yield return new WaitForSeconds(0.8f);
+        target.text = original;
+        target.RemoveFromClassList("recycle-record-title--whisper");
+    }
+
+    private IEnumerator GhostRecordAnomaly()
+    {
+        if (_ghostRecord == null) yield break;
+        _ghostRecord.RemoveFromClassList("hidden");
+        PlaySound(glitchSound);
+        yield return new WaitForSeconds(Random.Range(0.2f, 1.5f));
+        _ghostRecord.AddToClassList("hidden");
+        PlaySound(errorSound);
+    }
+
+    private IEnumerator LabelDriftAnomaly()
+    {
+        if (_selectedNameLabel == null) yield break;
+        float elapsed = 0;
+        while (elapsed < 1f) {
+            elapsed += Time.deltaTime;
+            _selectedNameLabel.style.translate = new Translate(Mathf.Sin(Time.time * 20) * 5, Mathf.Cos(Time.time * 15) * 3, 0);
+            yield return null;
+        }
+        _selectedNameLabel.style.translate = new Translate(0, 0, 0);
+    }
+
+    private IEnumerator ScreenShake(float intensity, float duration)
+    {
+        float elapsed = 0;
+        while (elapsed < duration) {
+            elapsed += Time.deltaTime;
+            Vector2 offset = Random.insideUnitCircle * intensity;
+            _window.style.translate = new Translate(offset.x, offset.y, 0);
+            yield return null;
+        }
+        _window.style.translate = new Translate(0, 0, 0);
     }
 
     private void ShowExitWarning()
@@ -196,32 +387,11 @@ public class RecycleBinAppController : MonoBehaviour
         PlaySound(glitchSound);
     }
 
-    public void Show()
-    {
-        if (_window == null) return;
-        _window.RemoveFromClassList("hidden");
-        _window.pickingMode = PickingMode.Position;
-        _window.BringToFront();
-        _isVisible = true;
-        if (_glitchRoutine != null) StopCoroutine(_glitchRoutine);
-        _glitchRoutine = StartCoroutine(GlitchRoutine());
-        if (_popupRoutine != null) StopCoroutine(_popupRoutine);
-        _popupRoutine = StartCoroutine(FakePopupRoutine());
-    }
-
-    public void Hide()
-    {
-        if (_window == null) return;
-        _window.AddToClassList("hidden");
-        _window.pickingMode = PickingMode.Ignore;
-        _isVisible = false;
-        if (_glitchRoutine != null) { StopCoroutine(_glitchRoutine); _glitchRoutine = null; }
-        if (_popupRoutine != null) { StopCoroutine(_popupRoutine); _popupRoutine = null; }
-    }
-
     private void SetupRecords(VisualElement root)
     {
         _records.Clear();
+        _profileLabels.Clear();
+
         RegisterRecord(root, "recycle-record-01", "recycle-record-01-state", "ENG-01", "Marat Kebekov", "Containment Arborist", "Deleted 21:14", "61%", 
             "Residue scan: The tree in the digital park was not decoration. It was an emotional containment shell designed to absorb panic.",
             "Restored: Marat modified the containment shell that later became the Tree Anomaly.",
@@ -249,6 +419,11 @@ public class RecycleBinAppController : MonoBehaviour
             "MESSAGE: 'If the button moves before you click, it already knows what you wanted.'",
             "What was Aida testing before she vanished?",
             new[] { "UI influence over user decisions.", "New button colors.", "Screen resolution limits." }, 0);
+
+        foreach (var r in _records) {
+            var label = r.EntryButton.Q<Label>(className: "recycle-record-title");
+            if (label != null) _profileLabels.Add(label);
+        }
     }
 
     private void RegisterRecord(VisualElement root, string btn, string lbl, string id, string name, string role, string date, string corr, string scan, string rest, string msg, string prompt, string[] choices, int correct)
@@ -304,7 +479,7 @@ public class RecycleBinAppController : MonoBehaviour
         float elapsed = 0;
         float duration = isScan ? 2.5f : 3.5f;
         VisualElement fill = isScan ? _scanProgressFill : _restoreProgressFill;
-        PlaySound(isScan ? scanSound : restoreSound);
+        // PlaySound(isScan ? (scanLoopSound ?? scanSound) : restoreSound); // Removed loud sound
 
         while (elapsed < duration) {
             elapsed += Time.deltaTime;
@@ -320,10 +495,12 @@ public class RecycleBinAppController : MonoBehaviour
             _selectedRecord.IsScanned = true;
             _selectedRecord.StateLabel.text = "ANALYZED";
             SetStatus($"Scan complete. Evidence revealed.");
+            // PlaySound(stabilizationSuccessSound ?? scanSound); // Removed loud/sharp sound as requested
         } else {
             _selectedRecord.IsRestored = true;
             _selectedRecord.StateLabel.text = "RESTORED";
             SetStatus($"Profile restored: {_selectedRecord.Name}");
+            // PlaySound(completeSound); // Removed loud sound
             CheckCompletion();
         }
         UpdateDetailsPanel();
@@ -342,14 +519,16 @@ public class RecycleBinAppController : MonoBehaviour
             _selectedRecord.StateLabel.text = "STABLE";
             _choiceButtons[index].AddToClassList("recycle-bin-choice-button--correct");
             SetStatus("Trace stabilized.");
-            PlaySound(scanSound);
+            // PlaySound(stabilizationSuccessSound ?? scanSound); // Removed loud/sharp sound as requested
+            _suspicionLevel = Mathf.Max(0, _suspicionLevel - 5);
         } else {
             _choiceButtons[index].AddToClassList("recycle-bin-choice-button--wrong");
             _contaminationLevel = Mathf.Min(100, _contaminationLevel + 25);
-            _suspicionLevel = Mathf.Min(100, _suspicionLevel + 15);
+            _suspicionLevel = Mathf.Min(100, _suspicionLevel + 20);
             SetStatus("Corruption spike detected.");
             PlaySound(errorSound);
             StartCoroutine(ShortGlitchBurst());
+            StartCoroutine(ScreenShake(12f, 0.4f));
         }
         UpdateActionState();
         UpdateDetailsPanel();
@@ -409,6 +588,7 @@ public class RecycleBinAppController : MonoBehaviour
                     UpdateProgressUi();
                     _popupLayer.Remove(popup);
                     SetStatus("Stabilization failed. Noise increased.");
+                    StartCoroutine(ScreenShake(12f, 0.5f));
                 }
             });
             btnRow.Add(b);
@@ -556,9 +736,7 @@ public class RecycleBinAppController : MonoBehaviour
         if (_records.Count > 0) SelectRecord(_records[0]);
     }
 
-    private void RegisterWindowDragging() {
-        // Dragging disabled for full-screen mode
-    }
+    private void RegisterWindowDragging() { }
 
     private void SetStatus(string s) { if (_statusLabel != null) _statusLabel.text = s; }
     private void PlaySound(AudioClip c) { if (c != null && AudioManager.Instance != null) AudioManager.Instance.PlayUISFX(c, 0.5f); }

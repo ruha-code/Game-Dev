@@ -1,0 +1,15 @@
+{
+    "asset": "83ea21a4a3cc8fe41b5a0165623615d2",
+    "fileName": "019e3742-97e8-762d-bb0e-56d1a7cdc1c2.wav",
+    "prompt": "A soft digital unfolding sound, smooth and optimistic, representing file restoration, clean and airy. Not sharp.",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

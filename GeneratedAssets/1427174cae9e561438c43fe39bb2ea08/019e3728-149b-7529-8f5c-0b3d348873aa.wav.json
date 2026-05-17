@@ -1,0 +1,15 @@
+{
+    "asset": "1427174cae9e561438c43fe39bb2ea08",
+    "fileName": "019e3728-149b-7529-8f5c-0b3d348873aa.wav",
+    "prompt": "robotic computational data scanning pulse, rhythmic and high-tech but eerie, digital forensic loop",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 3.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

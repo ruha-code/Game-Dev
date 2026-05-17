@@ -1,0 +1,15 @@
+{
+    "asset": "e32bd3281a21d274586e2c38e5437792",
+    "fileName": "019e3728-4d5c-78d0-8c52-3ea770fb4f26.wav",
+    "prompt": "short distorted human whisper saying 'help', glitchy and airy, unsettling ghost voice",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
