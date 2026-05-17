@@ -6,6 +6,7 @@ public class MonitorScreenController : MonoBehaviour
     public Texture2D wallpaperTexture;
     public Texture2D creatureFaceTexture;
     public Light monitorLight;
+    public Shader glitchScreenShader;
     
     [Header("Glitch Settings")]
     public float glitchIntensity = 0f;
@@ -33,7 +34,7 @@ public class MonitorScreenController : MonoBehaviour
         {
             if (screenMaterial == null)
             {
-                Shader shader = Shader.Find("Monitor/GlitchScreen");
+                Shader shader = glitchScreenShader != null ? glitchScreenShader : Shader.Find("Monitor/GlitchScreen");
                 if (shader != null)
                 {
                     screenMaterial = new Material(shader);
@@ -41,14 +42,23 @@ public class MonitorScreenController : MonoBehaviour
                 }
                 else if (screenSurface.sharedMaterial != null)
                 {
-                    screenMaterial = new Material(screenSurface.sharedMaterial);
-                    ownsRuntimeMaterial = true;
+                    Shader fallbackShader = screenSurface.sharedMaterial.shader;
+                    if (fallbackShader != null)
+                    {
+                        screenMaterial = new Material(screenSurface.sharedMaterial);
+                        ownsRuntimeMaterial = true;
+                    }
                 }
             }
 
             if (screenMaterial != null)
             {
                 screenSurface.material = screenMaterial;
+            }
+            else
+            {
+                Debug.LogWarning($"{nameof(MonitorScreenController)} on '{name}' could not create a runtime material. Screen glitch effects are disabled for this renderer.");
+                return;
             }
 
             if (wallpaperTexture != null) screenMaterial.SetTexture("_MainTex", wallpaperTexture);
@@ -91,6 +101,11 @@ public class MonitorScreenController : MonoBehaviour
                     break;
                 }
             }
+        }
+
+        if (glitchScreenShader == null)
+        {
+            glitchScreenShader = Shader.Find("Monitor/GlitchScreen");
         }
     }
 

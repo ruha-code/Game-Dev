@@ -701,6 +701,7 @@ MonoBehaviour:
   wallpaperTexture: {fileID: 2800000, guid: cef30d7eca6d2bf4c8656c0a86a2a29e, type: 3}
   creatureFaceTexture: {fileID: 0}
   monitorLight: {fileID: 0}
+  glitchScreenShader: {fileID: 4800000, guid: d79f862edf51032428a15010f5b9900f, type: 3}
   glitchIntensity: 0
   faceAlpha: 0
   scanlineStrength: 0.3

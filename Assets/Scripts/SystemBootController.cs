@@ -44,7 +44,7 @@ public class SystemBootController : MonoBehaviour
         UnityEngine.Cursor.visible = false;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
 
-        root = uiDocument.rootVisualElement.Q<VisualElement>("root");
+        root = uiDocument.rootVisualElement.Q<VisualElement>("root") ?? uiDocument.rootVisualElement;
         bgGlow = root.Q<VisualElement>("bg-glow");
         logo = root.Q<VisualElement>("logo");
         loadingContainer = root.Q<VisualElement>("loading-container");
@@ -252,6 +252,45 @@ public class SystemBootController : MonoBehaviour
         }
         
         yield return new WaitForSeconds(0.5f);
-        SceneManager.LoadScene(nextScene);
+
+        if (TryLoadNextScene())
+        {
+            yield break;
+        }
+
+        Debug.LogError($"Failed to load next scene '{nextScene}' from {nameof(SystemBootController)}. Check the active Build Profile scene list.");
+        if (setupPanel != null)
+        {
+            setupPanel.AddToClassList("setup-panel--visible");
+        }
+
+        UnityEngine.Cursor.visible = true;
+        UnityEngine.Cursor.lockState = CursorLockMode.None;
+    }
+
+    private bool TryLoadNextScene()
+    {
+        if (string.IsNullOrWhiteSpace(nextScene))
+        {
+            Debug.LogError($"{nameof(SystemBootController)} has an empty nextScene value.");
+            return false;
+        }
+
+        string scenePath = $"Assets/Scenes/{nextScene}.unity";
+        int buildIndexByPath = SceneUtility.GetBuildIndexByScenePath(scenePath);
+        if (buildIndexByPath >= 0)
+        {
+            SceneManager.LoadScene(buildIndexByPath);
+            return true;
+        }
+
+        if (Application.CanStreamedLevelBeLoaded(nextScene))
+        {
+            SceneManager.LoadScene(nextScene);
+            return true;
+        }
+
+        Debug.LogError($"Scene '{nextScene}' is not available in the player build. Expected path: {scenePath}");
+        return false;
     }
 }
