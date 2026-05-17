@@ -13,9 +13,15 @@ public class MainMenuController : MonoBehaviour
 
     private VisualElement root;
     private VisualElement container;
+    private VisualElement header;
     private VisualElement title;
     private VisualElement subtitle;
+    private VisualElement menuBox;
+    private VisualElement footer;
     private VisualElement fadeOverlay;
+    private VisualElement startupDisclaimer;
+    private VisualElement startupDisclaimerCard;
+    private Button startupDisclaimerContinueButton;
     private AeroActiveBackground activeBackground;
     private AeroAtmosphere atmosphere;
     private List<VisualElement> menuItems = new List<VisualElement>();
@@ -56,6 +62,8 @@ public class MainMenuController : MonoBehaviour
     private int lastAnomalyIndex = -1;
     private bool anomaliesEnabled = false;
     private bool suppressSettingsCallbacks;
+    private bool introSequenceCompleted;
+    private bool introDismissRequested;
 
     private struct AnomalyWeight
     {
@@ -71,9 +79,15 @@ public class MainMenuController : MonoBehaviour
 
         root = uiDocument.rootVisualElement;
         container = root.Q<VisualElement>("root");
+        header = root.Q<VisualElement>("header");
         title = root.Q<VisualElement>("title");
         subtitle = root.Q<VisualElement>("subtitle");
+        menuBox = root.Q<VisualElement>("menu");
+        footer = root.Q<VisualElement>("footer");
         fadeOverlay = root.Q<VisualElement>("fade-overlay");
+        startupDisclaimer = root.Q<VisualElement>("startup-disclaimer");
+        startupDisclaimerCard = root.Q<VisualElement>("startup-disclaimer-card");
+        startupDisclaimerContinueButton = root.Q<Button>("startup-disclaimer-continue");
         activeBackground = root.Q<AeroActiveBackground>();
         atmosphere = root.Q<AeroAtmosphere>();
 
@@ -105,12 +119,15 @@ public class MainMenuController : MonoBehaviour
         UnityEngine.Cursor.lockState = CursorLockMode.None;
 
         StopAllCoroutines(); 
+        PrepareIntroPresentation();
+        introSequenceCompleted = false;
+        introDismissRequested = false;
         StartCoroutine(TitleGlowBreathing());
         StartCoroutine(ClockUpdate());
+        StartCoroutine(StartupDisclaimerSequence());
         
         anomalyTimer = 4f; 
         CancelInvoke("EnableAnomalies");
-        Invoke("EnableAnomalies", 4f); 
     }
 
     private void OnDisable()
@@ -139,7 +156,6 @@ public class MainMenuController : MonoBehaviour
     private void SetupMenu()
     {
         menuItems.Clear();
-        var menuBox = root.Q<VisualElement>("menu");
         if (menuBox != null)
         {
             foreach (var item in menuBox.Children())
@@ -152,6 +168,167 @@ public class MainMenuController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void PrepareIntroPresentation()
+    {
+        root.pickingMode = PickingMode.Ignore;
+
+        if (header != null)
+        {
+            header.style.opacity = 0f;
+            header.style.translate = new Translate(0f, -18f, 0f);
+        }
+
+        if (menuBox != null)
+        {
+            menuBox.SetEnabled(false);
+            menuBox.pickingMode = PickingMode.Ignore;
+            menuBox.style.opacity = 0f;
+            menuBox.style.translate = new Translate(-26f, 0f, 0f);
+            menuBox.style.scale = new Scale(new Vector2(0.98f, 0.98f));
+        }
+
+        if (footer != null)
+        {
+            footer.style.opacity = 0f;
+            footer.style.translate = new Translate(0f, 18f, 0f);
+        }
+
+        if (startupDisclaimer != null)
+        {
+            startupDisclaimer.style.display = DisplayStyle.Flex;
+            startupDisclaimer.style.opacity = 0f;
+            startupDisclaimer.pickingMode = PickingMode.Position;
+        }
+
+        if (startupDisclaimerCard != null)
+        {
+            startupDisclaimerCard.style.opacity = 0f;
+            startupDisclaimerCard.style.scale = new Scale(new Vector2(0.96f, 0.96f));
+        }
+
+        if (startupDisclaimerContinueButton != null)
+        {
+            startupDisclaimerContinueButton.clicked -= OnStartupDisclaimerContinueClicked;
+            startupDisclaimerContinueButton.clicked += OnStartupDisclaimerContinueClicked;
+            startupDisclaimerContinueButton.SetEnabled(true);
+        }
+    }
+
+    private IEnumerator StartupDisclaimerSequence()
+    {
+        yield return FadeElement(startupDisclaimer, startupDisclaimerCard, 0f, 1f, 0.75f, 0.96f, 1f);
+
+        while (!introDismissRequested)
+        {
+            yield return null;
+        }
+
+        yield return FadeElement(startupDisclaimer, startupDisclaimerCard, 1f, 0f, 0.45f, 1f, 0.98f);
+
+        if (startupDisclaimer != null)
+        {
+            startupDisclaimer.style.display = DisplayStyle.None;
+            startupDisclaimer.pickingMode = PickingMode.Ignore;
+        }
+
+        yield return RevealMainMenu();
+        introSequenceCompleted = true;
+        root.pickingMode = PickingMode.Position;
+
+        if (menuBox != null)
+        {
+            menuBox.SetEnabled(true);
+            menuBox.pickingMode = PickingMode.Position;
+        }
+
+        anomalyTimer = 4f;
+        CancelInvoke("EnableAnomalies");
+        Invoke("EnableAnomalies", 4f);
+    }
+
+    private IEnumerator RevealMainMenu()
+    {
+        yield return RevealVisual(header, 0.55f, new Vector2(0f, -18f), Vector2.zero, 1f, 1f);
+        yield return new WaitForSecondsRealtime(0.08f);
+        yield return RevealVisual(menuBox, 0.65f, new Vector2(-26f, 0f), Vector2.zero, 0.98f, 1f);
+        yield return new WaitForSecondsRealtime(0.05f);
+        yield return RevealVisual(footer, 0.55f, new Vector2(0f, 18f), Vector2.zero, 1f, 1f);
+    }
+
+    private IEnumerator RevealVisual(VisualElement element, float duration, Vector2 fromTranslate, Vector2 toTranslate, float fromScale, float toScale)
+    {
+        if (element == null)
+        {
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = t * t * (3f - 2f * t);
+            element.style.opacity = eased;
+            element.style.translate = new Translate(
+                Mathf.Lerp(fromTranslate.x, toTranslate.x, eased),
+                Mathf.Lerp(fromTranslate.y, toTranslate.y, eased),
+                0f);
+            element.style.scale = new Scale(new Vector2(
+                Mathf.Lerp(fromScale, toScale, eased),
+                Mathf.Lerp(fromScale, toScale, eased)));
+            yield return null;
+        }
+
+        element.style.opacity = 1f;
+        element.style.translate = new Translate(toTranslate.x, toTranslate.y, 0f);
+        element.style.scale = new Scale(new Vector2(toScale, toScale));
+    }
+
+    private IEnumerator FadeElement(VisualElement wrapper, VisualElement card, float fromOpacity, float toOpacity, float duration, float fromScale, float toScale)
+    {
+        if (wrapper == null)
+        {
+            yield break;
+        }
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            float eased = t * t * (3f - 2f * t);
+            float opacity = Mathf.Lerp(fromOpacity, toOpacity, eased);
+            wrapper.style.opacity = opacity;
+
+            if (card != null)
+            {
+                card.style.opacity = opacity;
+                float scale = Mathf.Lerp(fromScale, toScale, eased);
+                card.style.scale = new Scale(new Vector2(scale, scale));
+            }
+
+            yield return null;
+        }
+
+        wrapper.style.opacity = toOpacity;
+        if (card != null)
+        {
+            card.style.opacity = toOpacity;
+            card.style.scale = new Scale(new Vector2(toScale, toScale));
+        }
+    }
+
+    private void OnStartupDisclaimerContinueClicked()
+    {
+        if (introDismissRequested)
+        {
+            return;
+        }
+
+        introDismissRequested = true;
+        PlaySFX(clickGlass);
     }
 
     private void SetupAnomalyWeights()
@@ -193,7 +370,7 @@ public class MainMenuController : MonoBehaviour
 
     private void Update()
     {
-        if (isTransitioning) return;
+        if (isTransitioning || !introSequenceCompleted) return;
 
         inactivityTime += Time.unscaledDeltaTime;
         
@@ -566,7 +743,7 @@ public class MainMenuController : MonoBehaviour
     {
         while (true)
         {
-            if (clockLabel != null) clockLabel.text = System.DateTime.Now.ToString("h:mm tt");
+            if (clockLabel != null) clockLabel.text = System.DateTime.Now.ToString("HH:mm");
             yield return new WaitForSecondsRealtime(30f);
         }
     }

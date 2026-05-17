@@ -402,14 +402,14 @@ public class DesktopUIController : MonoBehaviour
     {
         if (_clockLabel != null)
         {
-            _stableClockText = DateTime.Now.ToString("h:mm tt");
+            _stableClockText = DateTime.Now.ToString("HH:mm");
             _clockLabel.text = _stableClockText;
         }
 
         if (_clockExpandedPanel != null && !_clockExpandedPanel.ClassListContains("hidden"))
         {
             DateTime now = DateTime.Now;
-            if (_clockPanelTime != null) _clockPanelTime.text = now.ToString("h:mm:ss tt");
+            if (_clockPanelTime != null) _clockPanelTime.text = now.ToString("HH:mm:ss");
             if (_clockPanelDay != null) _clockPanelDay.text = now.ToString("dddd");
             if (_clockPanelDate != null) _clockPanelDate.text = now.ToString("d MMMM yyyy");
         }
