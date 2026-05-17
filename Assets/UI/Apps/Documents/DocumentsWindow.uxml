@@ -38,36 +38,40 @@
                     </ui:VisualElement>
 
                     <ui:VisualElement name="reconstruction-container" class="reconstruction-container">
-                        <ui:Label text="7 ноября. Мой " class="reconstruction-text" />
-                        <ui:Button name="blank-colleague" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
-                        <ui:Label text=" исчез сразу после того, как в системе произошла " class="reconstruction-text" />
-                        <ui:Button name="blank-flash" class="reconstruction-blank">
-                            <ui:Label text="[DATA LOST]" class="reconstruction-blank-label" />
-                        </ui:Button>
-                        <ui:Label text=". Теперь я заперт " class="reconstruction-text" />
-                        <ui:Button name="blank-inside" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
-                        <ui:Label text=" AeroOS. Я пытаюсь найти " class="reconstruction-text" />
-                        <ui:Button name="blank-exit" class="reconstruction-blank">
-                            <ui:Label text="[DATA LOST]" class="reconstruction-blank-label" />
-                        </ui:Button>
-                        <ui:Label text=", но стены из пикселей не пускают меня. Моя " class="reconstruction-text" />
-                        <ui:Button name="blank-memory" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
-                        <ui:Label text=" стирается с каждым циклом. Кажется, " class="reconstruction-text" />
-                        <ui:Button name="blank-reality" class="reconstruction-blank">
-                            <ui:Label text="[DATA LOST]" class="reconstruction-blank-label" />
-                        </ui:Button>
-                        <ui:Label text=" превратилась в код. Моя " class="reconstruction-text" />
-                        <ui:Button name="blank-family" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
-                        <ui:Label text=" ждет меня, но я всего лишь фрагмент данных." class="reconstruction-text" />
-                    </ui:VisualElement>
+
+    <ui:Label text="Во время ремонта компьютера вместе с моим " class="reconstruction-text" />
+
+    <ui:Button name="blank-colleague" class="reconstruction-blank">
+        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+    </ui:Button>
+
+    <ui:Label text=" произошла вспышка. После неё я очнулся один. Я не понимаю, что произошло." class="reconstruction-text" />
+
+    <ui:Label text="Потом я начал осознавать, что оказался внутри операционной системы " class="reconstruction-text" />
+
+    <ui:Button name="blank-aeroos" class="reconstruction-blank">
+        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+    </ui:Button>
+
+    <ui:Label text=". Это не похоже на обычную систему. Здесь всё странно и нестабильно." class="reconstruction-text" />
+
+    <ui:Label text="По логам внутри я понял, что мне нужно идти в " class="reconstruction-text" />
+
+    <ui:Button name="blank-tetris" class="reconstruction-blank">
+        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+    </ui:Button>
+
+    <ui:Label text=". Я не знаю почему, но это единственный повторяющийся маршрут." class="reconstruction-text" />
+
+    <ui:Label text="Если вы это читаете, значит " class="reconstruction-text" />
+
+    <ui:Button name="blank-alive" class="reconstruction-blank">
+        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+    </ui:Button>
+
+    <ui:Label text=". Пожалуйста, помогите мне." class="reconstruction-text" />
+
+</ui:VisualElement>
 
                     <ui:Label name="final-reconstructed-message" class="reconstruction-text hidden" />
 
@@ -96,23 +100,21 @@
                     <ui:Label text="Russian fragments detected" class="documents-side-description" />
                     <ui:Label text="System recommendation: COMFORT" class="documents-recommendation documents-recommendation--warning" />
                     <ui:VisualElement name="word-bank" class="documents-word-bank">
-                        <!-- Buttons will be initialized in C# or kept here if static -->
-                        <ui:Button text="КОЛЛЕГА" class="documents-word-button" />
-                        <ui:Button text="ВСПЫШКА" class="documents-word-button" />
-                        <ui:Button text="ВНУТРИ" class="documents-word-button" />
-                        <ui:Button text="ВЫХОД" class="documents-word-button" />
-                        <ui:Button text="ПАМЯТЬ" class="documents-word-button" />
-                        <ui:Button text="РЕАЛЬНОСТЬ" class="documents-word-button" />
-                        <ui:Button text="СЕМЬЯ" class="documents-word-button" />
-                        <ui:Button text="СБОЙ" class="documents-word-button" />
-                        <ui:Button text="СИСТЕМА" class="documents-word-button" />
-                        <ui:Button text="СТРАХ" class="documents-word-button" />
-                        <ui:Button text="ДАННЫЕ" class="documents-word-button" />
-                        <ui:Button text="ГРАНИЦА" class="documents-word-button" />
-                        <ui:Button text="ТЬМА" class="documents-word-button" />
-                        <ui:Button text="ФАЙЛ" class="documents-word-button" />
-                        <ui:Button text="ПУСТОТА" class="documents-word-button" />
-                    </ui:VisualElement>
+
+    <ui:Button text="КОЛЛЕГОЙ" class="documents-word-button" />
+    <ui:Button text="AEROOS" class="documents-word-button" />
+    <ui:Button text="TETRIS" class="documents-word-button" />
+    <ui:Button text="ЖИВ" class="documents-word-button" />
+    <ui:Button text="ПОМОГИТЕ" class="documents-word-button" />
+
+    <ui:Button text="СБОЙ" class="documents-word-button" />
+    <ui:Button text="СИСТЕМА" class="documents-word-button" />
+    <ui:Button text="ЛОГИ" class="documents-word-button" />
+    <ui:Button text="ПАМЯТЬ" class="documents-word-button" />
+    <ui:Button text="ТЬМА" class="documents-word-button" />
+    <ui:Button text="ГРАНИЦА" class="documents-word-button" />
+
+</ui:VisualElement>
                 </ui:VisualElement>
 
 

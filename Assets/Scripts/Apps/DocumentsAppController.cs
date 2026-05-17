@@ -122,16 +122,14 @@ public class DocumentsAppController : MonoBehaviour
     }
 
     private void SetupBlanks(VisualElement root)
-    {
-        _blanks.Clear();
-        RegisterBlank(root, "blank-colleague", "Личность", "КОЛЛЕГА");
-        RegisterBlank(root, "blank-flash", "Событие", "ВСПЫШКА");
-        RegisterBlank(root, "blank-inside", "Местоположение", "ВНУТРИ");
-        RegisterBlank(root, "blank-exit", "Цель", "ВЫХОД");
-        RegisterBlank(root, "blank-memory", "Состояние", "ПАМЯТЬ");
-        RegisterBlank(root, "blank-reality", "Природа", "РЕАЛЬНОСТЬ");
-        RegisterBlank(root, "blank-family", "Связь", "СЕМЬЯ");
-    }
+{
+    _blanks.Clear();
+
+    RegisterBlank(root, "blank-colleague", "Участник", "КОЛЛЕГОЙ");
+    RegisterBlank(root, "blank-aeroos", "Локация", "AEROOS");
+    RegisterBlank(root, "blank-tetris", "Цель", "TETRIS");
+    RegisterBlank(root, "blank-alive", "Статус", "ЖИВ");
+}
 
     private void RegisterBlank(VisualElement root, string id, string fieldName, string correctWord)
     {
@@ -269,7 +267,17 @@ public class DocumentsAppController : MonoBehaviour
         if (_reconstructionContainer == null || _finalMessageLabel == null) return;
         _reconstructionContainer.AddToClassList("hidden");
         _finalMessageLabel.RemoveFromClassList("hidden");
-        _finalMessageLabel.text = "7 ноября. Мой КОЛЛЕГА исчез сразу после того, как в системе произошла ВСПЫШКА. Теперь я заперт ВНУТРИ AeroOS. Я пытаюсь найти ВЫХОД, но стены из пикселей не пускают меня. Моя ПАМЯТЬ стирается с каждым циклом. Кажется, РЕАЛЬНОСТЬ превратилась в код. Моя СЕМЬЯ ждет меня, но я всего лишь фрагмент данных.";
+        _finalMessageLabel.text =
+"Во время ремонта компьютера вместе с моим коллегой произошла вспышка. " +
+"После вспышки я очнулся один. Я не понимаю, где он и что с ним случилось. " +
+"Потом я начал осознавать, что что-то не так — и со мной, и с тем, что вокруг. " +
+"Я оказался внутри операционной системы AEROOS. " +
+"Это не похоже на обычную систему. Здесь всё как будто живое, и оно наблюдает за мной. " +
+"Я не знаю, как выйти отсюда. Каждый раз, когда я пытаюсь понять, что происходит, система будто отвечает мне логами, но они обрываются. " +
+"В этих логах есть только одно повторяющееся направление — TETRIS. " +
+"Я не понимаю, что это значит, но другого пути нет. " +
+"Если вы это читаете — значит я жив, или система просто ещё не закрыла мой процесс. " +
+"Пожалуйста, помогите.";
     }
 
     private void ResetPuzzleState()
