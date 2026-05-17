@@ -41,7 +41,7 @@ public class TaskbarController : MonoBehaviour
     {
         if (_clockLabel != null)
         {
-            _clockLabel.text = DateTime.Now.ToString("h:mm tt");
+            _clockLabel.text = DateTime.Now.ToString("HH:mm");
         }
     }
 

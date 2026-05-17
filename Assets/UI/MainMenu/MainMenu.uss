@@ -206,6 +206,85 @@ AeroOS Main Menu Styles - Final Polish & Alignment Fix
     transition-duration: 0.35s;
 }
 
+.startup-disclaimer {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(1, 5, 12, 0.86);
+    opacity: 0;
+    display: none;
+}
+
+.startup-disclaimer-card {
+    width: 760px;
+    max-width: 82%;
+    padding: 28px 32px 26px 32px;
+    background-color: rgba(10, 26, 45, 0.78);
+    border-width: 1px;
+    border-color: rgba(163, 224, 255, 0.28);
+    border-top-color: rgba(255, 255, 255, 0.42);
+    border-left-color: rgba(255, 255, 255, 0.16);
+    border-radius: 22px;
+}
+
+.startup-disclaimer-title {
+    font-size: 34px;
+    color: white;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.startup-disclaimer-body {
+    font-size: 18px;
+    color: rgba(232, 245, 255, 0.96);
+    line-height: 26px;
+    margin-bottom: 12px;
+    white-space: normal;
+}
+
+.startup-disclaimer-body--secondary {
+    color: rgba(193, 221, 245, 0.88);
+    margin-bottom: 18px;
+}
+
+.startup-disclaimer-hint {
+    font-size: 13px;
+    color: rgba(163, 224, 255, 0.9);
+    letter-spacing: 1.6px;
+    -unity-font-style: bold;
+    text-transform: uppercase;
+}
+
+.startup-disclaimer-button {
+    margin-top: 20px;
+    min-width: 190px;
+    height: 48px;
+    padding: 0 24px;
+    align-self: flex-end;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.28);
+    border-radius: 12px;
+    color: white;
+    -unity-font-style: bold;
+    font-size: 16px;
+    -unity-text-align: middle-center;
+}
+
+.startup-disclaimer-button:hover {
+    background-color: rgba(163, 224, 255, 0.2);
+    border-color: rgba(163, 224, 255, 0.55);
+}
+
+.startup-disclaimer-button:active {
+    background-color: rgba(120, 209, 255, 0.3);
+}
+
 .panel-content {
     width: 700px;
     padding: 30px 34px 28px 34px;

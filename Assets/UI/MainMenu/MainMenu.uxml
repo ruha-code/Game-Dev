@@ -148,6 +148,16 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <ui:VisualElement name="startup-disclaimer" class="startup-disclaimer">
+            <ui:VisualElement name="startup-disclaimer-card" class="startup-disclaimer-card">
+                <ui:Label text="Content Warning" class="startup-disclaimer-title" />
+                <ui:Label text="This game contains frequent visual glitches, bright flashes, unsettling imagery, sudden loud sounds, and intense horror sequences." class="startup-disclaimer-body" />
+                <ui:Label text="If you are sensitive to flashing lights or abrupt audio spikes, please play carefully and consider lowering volume before continuing." class="startup-disclaimer-body startup-disclaimer-body--secondary" />
+                <ui:Label text="Read this warning before entering the AeroOS shell." class="startup-disclaimer-hint" />
+                <ui:Button text="Continue" name="startup-disclaimer-continue" class="startup-disclaimer-button" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <ui:VisualElement name="fade-overlay" class="fade-overlay" picking-mode="Ignore">
 <ui:VisualElement name="loading-container" class="loading-container">
                 <ui:Label text="AeroOS" name="loading-logo" class="loading-logo" />

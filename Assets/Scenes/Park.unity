@@ -162,11 +162,29 @@ MonoBehaviour:
   stoneHumClip: {fileID: 8300000, guid: bfdf1f05e789e9d44941a6dfa4c432ee, type: 3}
   letterOpenClip: {fileID: 8300000, guid: dfa1ebf237664bd45a9099961a7fc214, type: 3}
   fragmentCompleteClip: {fileID: 8300000, guid: e9cbde8212ad46d4f8e3e7aac0eb16c9, type: 3}
+  footstepClips:
+  - {fileID: 8300000, guid: 77554280914c5ed4d9709a13f76bfd3e, type: 3}
+  - {fileID: 8300000, guid: 5c06833446c81204a86be16ea7e8c759, type: 3}
+  - {fileID: 8300000, guid: 82c1a0d61c689fe479063a8bad01737b, type: 3}
+  - {fileID: 8300000, guid: a1e22e25ee1f4e54983ab55916d8b8b1, type: 3}
+  - {fileID: 8300000, guid: 06ffa0b774719f44bbe4ccc18cc2e2a7, type: 3}
+  - {fileID: 8300000, guid: 9101a13c25068654f96745768f502e20, type: 3}
+  landingClip: {fileID: 8300000, guid: 680553f848d1b1e46952f010d395f7b7, type: 3}
+  breathingLoopClip: {fileID: 8300000, guid: 723b5b244adeaa844bfef5882ef27e61, type: 3}
+  pressureLoopClip: {fileID: 8300000, guid: 2898dfd3e8e44f24bbbac405618e0780, type: 3}
+  expulsionHitClip: {fileID: 8300000, guid: db51c1fe33ed7324e868f347b1d334f1, type: 3}
+  scareStingVariants:
+  - {fileID: 8300000, guid: 3b3b201a441dcbc45b5f42c54a138811, type: 3}
+  - {fileID: 8300000, guid: d8622741a6b078343b52d4f485fc199a, type: 3}
+  presenceFoleyClips:
+  - {fileID: 8300000, guid: 7a8bf222dd6e5954da88a96ab833d413, type: 3}
+  - {fileID: 8300000, guid: 2b5c1b860095bc74db01f2eee72f85c7, type: 3}
   whisperMaxVolume: 0.45
   scareVolume: 0.9
   pressureStartSeconds: 26
   pressureDecayPerFragment: 3
   pressureFreezeSeconds: 0.75
+  pressureFailuresBeforeExpulsion: 3
 --- !u!4 &299850
 Transform:
   m_ObjectHideFlags: 0

@@ -129,7 +129,7 @@ public class StoryIntroController : MonoBehaviour
             string line = originalLine;
             if (line.Contains("{TIME}"))
             {
-                line = line.Replace("{TIME}", System.DateTime.Now.ToString("h:mm tt"));
+                line = line.Replace("{TIME}", System.DateTime.Now.ToString("HH:mm"));
             }
             
             yield return StartCoroutine(TypewriteLine(line, fullText));
