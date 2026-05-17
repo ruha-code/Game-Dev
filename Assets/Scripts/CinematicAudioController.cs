@@ -26,6 +26,7 @@ public class CinematicAudioController : MonoBehaviour
     private float lastGlitchSoundTime;
     private float lastHeartbeatTime;
     private bool isSilenced;
+    private bool hasPlayedTransitionWhoosh;
 
     void Start()
     {
@@ -55,6 +56,7 @@ public class CinematicAudioController : MonoBehaviour
         lastWhisperTime = Time.time;
         lastGlitchSoundTime = Time.time;
         lastHeartbeatTime = Time.time;
+        hasPlayedTransitionWhoosh = false;
     }
 
     public void Silence()
@@ -159,8 +161,9 @@ public class CinematicAudioController : MonoBehaviour
         
         if (t >= cinematic.T8 && transitionSource != null && transitionWhoosh != null)
         {
-            if (!transitionSource.isPlaying)
+            if (!hasPlayedTransitionWhoosh)
             {
+                hasPlayedTransitionWhoosh = true;
                 transitionSource.clip = transitionWhoosh;
                 transitionSource.Play();
             }

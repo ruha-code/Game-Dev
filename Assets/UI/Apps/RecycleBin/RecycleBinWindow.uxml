@@ -166,8 +166,8 @@
 
         <ui:VisualElement name="recycle-bin-completion-popup" class="recycle-bin-completion-popup hidden">
             <ui:Label text="BIN ARCHIVE RESTORED" class="recycle-bin-completion-title" />
-            <ui:Label name="recycle-bin-final-summary" text="Recovered deletions point toward Computer diagnostics." class="recycle-bin-completion-body" />
-            <ui:Label text="Next destination: Computer diagnostics" class="recycle-bin-completion-next" />
+            <ui:Label name="recycle-bin-final-summary" text="Recovered deletions point toward the park. The tree on the desktop is waking up." class="recycle-bin-completion-body" />
+            <ui:Label text="Next destination: Park anomaly via the desktop tree" class="recycle-bin-completion-next" />
             <ui:Button name="recycle-bin-complete-button" text="Close Bin" class="recycle-bin-complete-button" />
         </ui:VisualElement>
     </ui:VisualElement>

@@ -244,15 +244,15 @@ public class CinematicIntroController : MonoBehaviour
     {
         if (monitorLight == null) return;
         if (t < t2) monitorLight.intensity = 0f;
-        else if (t < t3) monitorLight.intensity = Mathf.Lerp(0f, 0.5f, (t - t2) / (t3 - t2));
-        else if (t < t4) monitorLight.intensity = Mathf.Lerp(0.5f, 2f, (t - t3) / (t4 - t3));
-        else if (t < t6) monitorLight.intensity = 2f;
-        else if (t < t7) { float p = Mathf.Sin(t * 20f) * 0.5f + 0.5f; monitorLight.intensity = 2f + p * 3f * glitchIntensity; }
-        else if (t < t8) monitorLight.intensity = Mathf.Lerp(2f, 8f, (t - t7) / (t8 - t7));
-        else monitorLight.intensity = Mathf.Lerp(8f, 0f, (t - t8) / transitionDuration);
+        else if (t < t3) monitorLight.intensity = Mathf.Lerp(0f, 0.35f, (t - t2) / (t3 - t2));
+        else if (t < t4) monitorLight.intensity = Mathf.Lerp(0.35f, 1.25f, (t - t3) / (t4 - t3));
+        else if (t < t6) monitorLight.intensity = 1.25f;
+        else if (t < t7) { float p = Mathf.Sin(t * 20f) * 0.5f + 0.5f; monitorLight.intensity = 1.25f + p * 1.8f * glitchIntensity; }
+        else if (t < t8) monitorLight.intensity = Mathf.Lerp(1.25f, 5.2f, (t - t7) / (t8 - t7));
+        else monitorLight.intensity = Mathf.Lerp(5.2f, 0f, (t - t8) / transitionDuration);
         if (ambientLights != null)
         {
-            float ai = t < t3 ? 0.1f : 0.05f;
+            float ai = t < t3 ? 0.035f : 0.02f;
             foreach (Light l in ambientLights) if (l != null && l != monitorLight) l.intensity = ai;
         }
     }

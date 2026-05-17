@@ -192,7 +192,7 @@ public Sprite myFilesIcon;
         if (materializeClip) sfxSource.PlayOneShot(materializeClip, 0.3f);
         yield return StartCoroutine(FadeLayer(skyLayers, 1f, 1.0f));
         // 2. Sunlight
-        if (sunLight) yield return StartCoroutine(FadeLight(sunLight, 1.2f, 1.0f));
+        if (sunLight) yield return StartCoroutine(FadeLight(sunLight, 0.75f, 1.0f));
         // 3. Clouds
         if (materializeClip) sfxSource.PlayOneShot(materializeClip, 0.2f);
         yield return StartCoroutine(FadeLayer(cloudLayers, 1f, 0.8f));

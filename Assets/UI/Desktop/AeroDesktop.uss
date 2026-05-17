@@ -57,6 +57,12 @@ This was created with the help of Assistant, a Unity Artificial Intelligence pro
     background-color: rgba(150, 235, 255, 0.3);
 }
 
+.wallpaper-hotspot--objective {
+    background-color: rgba(120, 255, 210, 0.28);
+    border-color: rgba(210, 255, 240, 0.95);
+    color: #ffffff;
+}
+
 #tree-hotspot {
     right: 110px;
     bottom: 170px;

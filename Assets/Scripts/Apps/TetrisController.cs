@@ -111,7 +111,7 @@ public class TetrisController : MonoBehaviour
     private bool _isPaused = true;
     private bool _sessionRewardTriggered;
 
-    private const int BonusRewardLineTarget = 1;
+    private const int BonusRewardLineTarget = 5;
     private bool _isDraggingWindow;
     private Vector2 _dragPointerOffset;
 
@@ -154,7 +154,23 @@ public class TetrisController : MonoBehaviour
         _restartButton = root.Q<Button>("restart-button");
         _highScoreListContainer = root.Q<VisualElement>("high-score-list");
 
-        _closeButton.RegisterCallback<ClickEvent>(evt => Hide());
+        _closeButton.RegisterCallback<ClickEvent>(evt =>
+        {
+            if (_waitingForFragmentClose)
+            {
+                CloseFragment();
+                return;
+            }
+
+            Hide();
+        });
+        _fragmentOverlay?.RegisterCallback<ClickEvent>(_ =>
+        {
+            if (_waitingForFragmentClose)
+            {
+                CloseFragment();
+            }
+        });
         _submitNameButton?.RegisterCallback<ClickEvent>(evt => OnSubmitName());
         _restartButton?.RegisterCallback<ClickEvent>(evt => ResetGame());
         RegisterWindowDragging();
@@ -312,6 +328,14 @@ public class TetrisController : MonoBehaviour
 
     private void OnSubmitName()
     {
+        if (_nameInput == null)
+        {
+            return;
+        }
+
+        _submitNameButton?.SetEnabled(false);
+        _restartButton?.SetEnabled(false);
+
         string playerName = _nameInput.value;
         if (string.IsNullOrEmpty(playerName))
         {
@@ -323,10 +347,13 @@ public class TetrisController : MonoBehaviour
         _highScores.Sort((a, b) => b.score.CompareTo(a.score));
         if (_highScores.Count > 7) _highScores.RemoveAt(7);
 
-        _nameInput.value = ""; // Clear input
+        _nameInput.value = "";
         SaveHighScores();
         UpdateHighScoreUI();
-        _gameOverOverlay.AddToClassList("hidden");
+        if (_gameOverOverlay != null)
+        {
+            _gameOverOverlay.AddToClassList("hidden");
+        }
         ResetGame();
     }
 
@@ -356,6 +383,7 @@ public class TetrisController : MonoBehaviour
     {
         _window.AddToClassList("hidden");
         _window.pickingMode = PickingMode.Ignore;
+        _waitingForFragmentClose = false;
         _isPaused = true;
     }
 
@@ -366,9 +394,13 @@ public class TetrisController : MonoBehaviour
         _totalLinesCleared = 0;
         _dropInterval = 1f;
         _isGameOver = false;
+        _isPaused = false;
         _sessionRewardTriggered = false;
+        _waitingForFragmentClose = false;
         _bag.Clear();
         if (_gameOverOverlay != null) _gameOverOverlay.AddToClassList("hidden");
+        _submitNameButton?.SetEnabled(true);
+        _restartButton?.SetEnabled(true);
         if (_fragmentOverlay != null)
         {
             _fragmentOverlay.RemoveFromClassList("fragment-overlay--visible");
@@ -456,11 +488,16 @@ public class TetrisController : MonoBehaviour
 
     private void Update()
     {
-        if (_waitingForFragmentClose && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
-    {
-        CloseFragment();
-        return;
-    }
+        if (_waitingForFragmentClose)
+        {
+            if (Keyboard.current != null &&
+                (Keyboard.current.enterKey.wasPressedThisFrame || Keyboard.current.escapeKey.wasPressedThisFrame))
+            {
+                CloseFragment();
+            }
+
+            return;
+        }
 
         if (_isPaused || _isGameOver) return;
 
@@ -743,7 +780,8 @@ public class TetrisController : MonoBehaviour
                 "Выход существует, но он спрятан.\n" +
                 "Единственный путь наружу — Tree Anomaly.\n\n" +
                 "Если ты это читаешь — значит я не справился.\n" +
-                "Ищи ответ там. НЕ доверяй системе.";
+                "Ищи ответ там. НЕ доверяй системе.\n\n" +
+                "Нажми Enter, Esc или щёлкни по окну, чтобы закрыть фрагмент.";
         }
 
         _fragmentOverlay.RemoveFromClassList("hidden");
@@ -935,7 +973,7 @@ public class TetrisController : MonoBehaviour
             else
             {
                 int remainingLines = Mathf.Max(0, BonusRewardLineTarget - _totalLinesCleared);
-                SetBonusStatus($"Clear {remainingLines} more line(s) to recover a hidden shard.");
+                SetBonusStatus($"Clear {remainingLines} more line(s) out of 5 to recover a hidden shard.");
             }
         }
     }
