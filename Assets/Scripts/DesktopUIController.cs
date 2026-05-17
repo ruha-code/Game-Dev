@@ -83,6 +83,7 @@ public class DesktopUIController : MonoBehaviour
 
         _ = ProgressionManager.Instance;
         ProgressionManager.Instance.LoadProgress();
+        ProgressionManager.Instance.MarkPlayableSaveAvailable();
         _ = AudioManager.Instance;
 
         _documentsController = GetComponent<DocumentsAppController>();

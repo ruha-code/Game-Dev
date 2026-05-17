@@ -452,7 +452,7 @@ public class MainMenuController : MonoBehaviour
     private IEnumerator Anomaly_ContinueExists()
     {
         var continueBtn = root.Q<VisualElement>("continue-item");
-        if (continueBtn == null || PlayerPrefs.HasKey("SaveExists")) yield break;
+        if (continueBtn == null || ProgressionManager.Instance.HasPlayableSave) yield break;
         continueBtn.SetEnabled(true);
         var label = continueBtn.Q<Label>();
         string original = label.text;
@@ -719,7 +719,7 @@ public class MainMenuController : MonoBehaviour
 
     private void CheckSave()
     {
-        bool hasSave = PlayerPrefs.HasKey("SaveExists");
+        bool hasSave = ProgressionManager.Instance.HasPlayableSave;
         var continueBtn = root.Q<VisualElement>("continue-item");
         if (continueBtn == null)
         {
@@ -816,7 +816,7 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
-        if (!PlayerPrefs.HasKey("SaveExists"))
+        if (!ProgressionManager.Instance.HasPlayableSave)
         {
             return;
         }

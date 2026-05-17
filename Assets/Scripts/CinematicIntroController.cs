@@ -1,9 +1,13 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class CinematicIntroController : MonoBehaviour
 {
+    private const string FallbackLitShaderName = "Universal Render Pipeline/Lit";
+    private const string LegacyLitShaderName = "Standard";
+
     [Header("Camera")]
     public Camera mainCamera;
     
@@ -16,6 +20,7 @@ public class CinematicIntroController : MonoBehaviour
     public Light[] ambientLights;
     
     [Header("Creature")]
+    public Shader fallbackLitShader;
     public Shader glitchCreatureShader;
     public Material creatureMaterial; 
     
@@ -29,6 +34,7 @@ public class CinematicIntroController : MonoBehaviour
     public float glitchDuration = 1.5f;
     public float pullInDuration = 1.5f;
     public float transitionDuration = 1.5f;
+    public float failsafeExtraSeconds = 3f;
     
     [Header("Audio")]
     public CinematicAudioController audioController;
@@ -54,6 +60,7 @@ public class CinematicIntroController : MonoBehaviour
     private float glitchIntensity;
     private float shakeAmount;
     private bool transitionStarted;
+    private bool skipActionEnabledLocally;
     
     private float t1, t2, t3, t4, t5, t6, t7, t8;
     public float T1 => t1;
@@ -104,11 +111,22 @@ public class CinematicIntroController : MonoBehaviour
         t8 = t7 + pullInDuration;
         
         if (monitorLight != null) monitorLight.intensity = 0f;
+        Debug.Log($"[CinematicIntroController] Starting BootScene cinematic. Next scene: {nextScene}");
         StartCoroutine(RunCinematic());
+        StartCoroutine(FailsafeTransition());
     }
 
     private void ResolveReferences()
     {
+        if (fallbackLitShader == null)
+        {
+            fallbackLitShader = Shader.Find(FallbackLitShaderName);
+            if (fallbackLitShader == null)
+            {
+                fallbackLitShader = Shader.Find(LegacyLitShaderName);
+            }
+        }
+
         if (mainCamera == null)
         {
             mainCamera = Camera.main;
@@ -165,6 +183,24 @@ public class CinematicIntroController : MonoBehaviour
         if (!transitionStarted && skipAction != null && skipAction.action.WasPressedThisFrame()) SkipCinematic();
     }
 
+    private void OnEnable()
+    {
+        if (skipAction?.action != null && !skipAction.action.enabled)
+        {
+            skipAction.action.Enable();
+            skipActionEnabledLocally = true;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (skipActionEnabledLocally && skipAction?.action != null)
+        {
+            skipAction.action.Disable();
+            skipActionEnabledLocally = false;
+        }
+    }
+
     private void SkipCinematic()
     {
         if (transitionStarted) return;
@@ -177,15 +213,27 @@ public class CinematicIntroController : MonoBehaviour
     IEnumerator RunCinematic()
     {
         timeline = 0f;
+        bool encounteredUpdateFailure = false;
         while (timeline < t8 + transitionDuration)
         {
             float dt = Time.deltaTime;
             timeline += dt;
-            UpdateCamera(timeline, dt);
-            UpdateLighting(timeline);
-            UpdateCreature(timeline, dt);
-            UpdateGlitchEffects(timeline, dt);
-            UpdateOverlay(timeline);
+            try
+            {
+                UpdateCamera(timeline, dt);
+                UpdateLighting(timeline);
+                UpdateScreenSequence(timeline);
+                UpdateCreature(timeline, dt);
+                UpdateGlitchEffects(timeline, dt);
+                UpdateOverlay(timeline);
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogException(exception);
+                Debug.LogError("[CinematicIntroController] Cinematic update failed. Falling back to next scene transition.");
+                encounteredUpdateFailure = true;
+                break;
+            }
             if (timeline >= t8 + transitionDuration && !transitionStarted)
             {
                 transitionStarted = true;
@@ -195,6 +243,29 @@ public class CinematicIntroController : MonoBehaviour
             }
             yield return null;
         }
+
+        if (encounteredUpdateFailure && !transitionStarted)
+        {
+            transitionStarted = true;
+            if (audioController != null) audioController.Silence();
+            yield return StartCoroutine(TransitionToNextScene());
+        }
+    }
+
+    IEnumerator FailsafeTransition()
+    {
+        float waitDuration = Mathf.Max(1f, t8 + transitionDuration + failsafeExtraSeconds);
+        yield return new WaitForSeconds(waitDuration);
+
+        if (transitionStarted)
+        {
+            yield break;
+        }
+
+        Debug.LogError($"[CinematicIntroController] Failsafe triggered after {waitDuration:F1}s. Forcing transition to '{nextScene}'.");
+        transitionStarted = true;
+        if (audioController != null) audioController.Silence();
+        yield return StartCoroutine(TransitionToNextScene());
     }
 
     void BuildCameraPath()
@@ -297,6 +368,35 @@ public class CinematicIntroController : MonoBehaviour
         {
             float ai = t < t3 ? 0.035f : 0.02f;
             foreach (Light l in ambientLights) if (l != null && l != monitorLight) l.intensity = ai;
+        }
+    }
+
+    void UpdateScreenSequence(float t)
+    {
+        if (screenController == null)
+        {
+            return;
+        }
+
+        if (t < t4)
+        {
+            screenController.SetMode(BootScreenController.ScreenMode.Idle, 0f);
+        }
+        else if (t < t6)
+        {
+            screenController.SetMode(BootScreenController.ScreenMode.Hallucination, Mathf.InverseLerp(t4, t6, t));
+        }
+        else if (t < t7)
+        {
+            screenController.SetMode(BootScreenController.ScreenMode.GlitchText, Mathf.InverseLerp(t6, t7, t));
+        }
+        else if (t < t8)
+        {
+            screenController.SetMode(BootScreenController.ScreenMode.Pull, Mathf.InverseLerp(t7, t8, t));
+        }
+        else
+        {
+            screenController.SetMode(BootScreenController.ScreenMode.Pull, 1f);
         }
     }
 
@@ -430,8 +530,51 @@ public class CinematicIntroController : MonoBehaviour
         var emission = creatureParticles.emission; emission.enabled = false;
         var shape = creatureParticles.shape; shape.shapeType = ParticleSystemShapeType.Sphere; shape.radius = 0.5f;
         var renderer = creatureParticles.GetComponent<ParticleSystemRenderer>();
-        renderer.material = new Material(Shader.Find("Standard")); renderer.material.SetColor("_Color", new Color(0.3f, 0.9f, 1f, 0.5f)); renderer.material.EnableKeyword("_EMISSION"); renderer.material.SetColor("_EmissionColor", new Color(0.02f, 0.25f, 0.35f, 1f));
-        if (creatureMaterial == null) { Shader enhancedShader = Shader.Find("GlitchCreature/EnhancedEntity"); if (enhancedShader != null) { creatureMaterial = new Material(enhancedShader); creatureMaterial.SetColor("_MainColor", new Color(0.05f, 0.08f, 0.1f, 0f)); creatureMaterial.SetFloat("_NoiseScale", 5f); creatureMaterial.SetFloat("_NoiseSpeed", 2f); creatureMaterial.SetFloat("_FlickerIntensity", 0.5f); creatureMaterial.SetFloat("_Distortion", 0.3f); creatureMaterial.SetFloat("_ParticleDensity", 0.3f); creatureMaterial.SetFloat("_ParticleSpeed", 1f); creatureMaterial.SetFloat("_GlitchBlocks", 0.2f); creatureMaterial.SetFloat("_DissolveAmount", 0f); } else if (glitchCreatureShader != null) { creatureMaterial = new Material(glitchCreatureShader); creatureMaterial.SetColor("_MainColor", new Color(0.1f, 0.1f, 0.1f, 0f)); creatureMaterial.SetFloat("_NoiseScale", 5f); creatureMaterial.SetFloat("_NoiseSpeed", 2f); creatureMaterial.SetFloat("_FlickerIntensity", 0.5f); creatureMaterial.SetFloat("_Distortion", 0.3f); } else { creatureMaterial = new Material(Shader.Find("Standard")); creatureMaterial.SetColor("_Color", new Color(0.1f, 0.1f, 0.1f, 0.5f)); creatureMaterial.SetFloat("_Mode", 3); creatureMaterial.EnableKeyword("_ALPHABLEND_ON"); } }
+        if (renderer != null && fallbackLitShader != null)
+        {
+            renderer.material = new Material(fallbackLitShader);
+            renderer.material.SetColor("_Color", new Color(0.3f, 0.9f, 1f, 0.5f));
+            renderer.material.EnableKeyword("_EMISSION");
+            renderer.material.SetColor("_EmissionColor", new Color(0.02f, 0.25f, 0.35f, 1f));
+        }
+
+        if (creatureMaterial == null)
+        {
+            Shader enhancedShader = Shader.Find("GlitchCreature/EnhancedEntity");
+            if (enhancedShader != null)
+            {
+                creatureMaterial = new Material(enhancedShader);
+                creatureMaterial.SetColor("_MainColor", new Color(0.05f, 0.08f, 0.1f, 0f));
+                creatureMaterial.SetFloat("_NoiseScale", 5f);
+                creatureMaterial.SetFloat("_NoiseSpeed", 2f);
+                creatureMaterial.SetFloat("_FlickerIntensity", 0.5f);
+                creatureMaterial.SetFloat("_Distortion", 0.3f);
+                creatureMaterial.SetFloat("_ParticleDensity", 0.3f);
+                creatureMaterial.SetFloat("_ParticleSpeed", 1f);
+                creatureMaterial.SetFloat("_GlitchBlocks", 0.2f);
+                creatureMaterial.SetFloat("_DissolveAmount", 0f);
+            }
+            else if (glitchCreatureShader != null)
+            {
+                creatureMaterial = new Material(glitchCreatureShader);
+                creatureMaterial.SetColor("_MainColor", new Color(0.1f, 0.1f, 0.1f, 0f));
+                creatureMaterial.SetFloat("_NoiseScale", 5f);
+                creatureMaterial.SetFloat("_NoiseSpeed", 2f);
+                creatureMaterial.SetFloat("_FlickerIntensity", 0.5f);
+                creatureMaterial.SetFloat("_Distortion", 0.3f);
+            }
+            else if (fallbackLitShader != null)
+            {
+                creatureMaterial = new Material(fallbackLitShader);
+                creatureMaterial.SetColor("_Color", new Color(0.1f, 0.1f, 0.1f, 0.5f));
+                creatureMaterial.EnableKeyword("_ALPHABLEND_ON");
+            }
+        }
+
+        if (creatureMaterial == null)
+        {
+            Debug.LogError("[CinematicIntroController] Creature material could not be created because no compatible shader was found.");
+        }
         CreateBodyPart("Torso", PrimitiveType.Capsule, new Vector3(0f, 0.6f, 0f), new Vector3(0.25f, 0.35f, 0.15f));
         GameObject head = CreateBodyPart("Head", PrimitiveType.Sphere, new Vector3(0f, 1.05f, 0f), new Vector3(0.12f, 0.15f, 0.12f));
         head.transform.SetParent(creatureRoot.transform);
@@ -451,12 +594,25 @@ public class CinematicIntroController : MonoBehaviour
 
     IEnumerator TransitionToNextScene()
     {
+        Debug.Log($"[CinematicIntroController] TransitionToNextScene started. Target: {nextScene}");
         float elapsed = 0f;
         while (elapsed < transitionDuration) { elapsed += Time.deltaTime; yield return null; }
         if (!string.IsNullOrEmpty(nextScene))
         {
-            AsyncOperation asyncLoad = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(nextScene);
+            string scenePath = $"Assets/Scenes/{nextScene}.unity";
+            int buildIndexByPath = SceneUtility.GetBuildIndexByScenePath(scenePath);
+            AsyncOperation asyncLoad = buildIndexByPath >= 0
+                ? SceneManager.LoadSceneAsync(buildIndexByPath)
+                : SceneManager.LoadSceneAsync(nextScene);
+
+            if (asyncLoad == null)
+            {
+                Debug.LogError($"[CinematicIntroController] Failed to load next scene '{nextScene}'. Expected path: {scenePath}");
+                yield break;
+            }
+
             while (!asyncLoad.isDone) yield return null;
+            Debug.Log($"[CinematicIntroController] Scene transition to '{nextScene}' completed.");
         }
     }
 

@@ -2409,6 +2409,7 @@ MonoBehaviour:
   monitorLight: {fileID: 1170640428}
   ambientLights:
   - {fileID: 1491716772}
+  fallbackLitShader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
   glitchCreatureShader: {fileID: 4800000, guid: 0e50ea7fac440d540a065177a2caf359, type: 3}
   creatureMaterial: {fileID: 0}
   blackScreenDuration: 1

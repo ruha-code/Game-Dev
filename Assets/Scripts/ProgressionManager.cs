@@ -73,6 +73,8 @@ public class ProgressionManager : MonoBehaviour
     public ObjectiveId LastPopupObjective { get; private set; }
     public bool TetrisRewardClaimed { get; private set; }
 
+    public bool HasPlayableSave => PlayerPrefs.HasKey(SaveExistsKey);
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Bootstrap()
     {
@@ -236,7 +238,6 @@ public class ProgressionManager : MonoBehaviour
         PlayerPrefs.SetInt(CurrentObjectiveKey, (int)CurrentObjective);
         PlayerPrefs.SetInt(LastPopupObjectiveKey, (int)LastPopupObjective);
         PlayerPrefs.SetInt(TetrisRewardClaimedKey, TetrisRewardClaimed ? 1 : 0);
-        PlayerPrefs.SetInt(SaveExistsKey, 1);
         PlayerPrefs.Save();
     }
 
@@ -279,8 +280,20 @@ public class ProgressionManager : MonoBehaviour
         TetrisRewardClaimed = false;
         CurrentObjective = EvaluateObjective();
         LastPopupObjective = CurrentObjective;
+        PlayerPrefs.DeleteKey(SaveExistsKey);
         SaveProgress();
         NotifyProgressionChanged();
+    }
+
+    public void MarkPlayableSaveAvailable()
+    {
+        if (PlayerPrefs.HasKey(SaveExistsKey))
+        {
+            return;
+        }
+
+        PlayerPrefs.SetInt(SaveExistsKey, 1);
+        PlayerPrefs.Save();
     }
 
     private void UpdateObjectiveAndSave()
