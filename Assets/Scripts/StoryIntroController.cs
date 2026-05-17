@@ -34,19 +34,19 @@ public class StoryIntroController : MonoBehaviour
 
     private string[] initialLines = {
     "AETHER DYNAMICS",
-    "ВНУТРЕННИЙ ОТЧЁТ ОБ ИНЦИДЕНТЕ",
-    "Год: 2026",
-    "Проект: AeroOS",
-    "Пропавшие инженеры: 7",
-    "Последний активный сотрудник:",
-    "ТЫ"
+    "INTERNAL INCIDENT REPORT",
+    "Year: 2026",
+    "Project: AeroOS",
+    "Lead Engineers Missing: 7",
+    "Final Active Employee:",
+    "YOU"
     };
 
 
     private string[] confirmedLines = {
-        "ПОЛЬЗОВАТЕЛЬ ПОДТВЕРЖДЁН",
-        "{TIME}\nЛАБОРАТОРИЯ 7\nНОЧНАЯ СМЕНА",
-        "Пожалуйста, исследуй тестовую среду."
+    "USER CONFIRMED",
+    "{TIME}\nLAB 7\nNIGHT SHIFT",
+    "Please investigate the test environment."
     };
 
     private IEnumerator Start()
