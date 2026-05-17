@@ -36,11 +36,15 @@ public class ParkSceneController : MonoBehaviour
 
     private readonly string[] _letterBodies =
     {
-        "They moved the first corrupted branch into the park because nobody would question a quiet landscape. The tree kept rendering itself one season behind reality, and AeroOS started calling that delay a comfort feature.\n\nIf you can read this, the comfort layer is failing.",
-        "We planted stone markers around the anomaly after sunset. By morning, each one had turned to face the hill as if something beneath the roots had spoken during the night.\n\nDo not answer if the park answers first.",
-        "Three employees vanished while tracing the bark fractures. Their badges were recovered inside family photos they never took, smiling in places this park has never had.\n\nThe system is filing people as scenery.",
-        "The menhirs are not monuments. They are needles stitched through one wound, holding a memory leak shut long enough for the desktop to stay calm.\n\nEvery letter you recover weakens the lie and strengthens whatever has been watching from the treeline.",
-        "The park was only the shell. The warmer fragments were scattered where memories still pretend to be harmless: Pictures keeps the faces, Music keeps the voices.\n\nLeave before the fifth watcher reaches the path. Return to the desktop. Finish the recovery there."
+        "Я снова слышал этот шум.\nБудто кто-то идёт за мной между деревьями.\n\nГолова болит всё сильнее.\nИногда я забываю, куда шёл несколько секунд назад.\n\nНо я точно помню одно — мне нельзя останавливаться.",
+
+        "Сегодня я пытался вспомнить своё имя.\n\nСначала казалось, что вот-вот вспомню.\nНо в голове была только ошибка.\n\nСистема постоянно что-то меняет.\nДаже воспоминания.",
+
+        "Мне начинает казаться, что лес наблюдает за мной.\n\nКогда я оборачиваюсь, некоторые деревья стоят не там, где были раньше.\n\nЯ нашёл следы.\nСначала подумал, что они мои.\nНо следов было больше, чем должно быть.",
+
+        "Кажется, я понял, почему система не выпускает нас.\n\nОна не удаляет людей.\nОна сохраняет их.\n\nИногда я слышу чужие мысли раньше, чем свои собственные.\n\nИ мне всё труднее вспомнить, какие из них принадлежат мне.",
+
+        "Ты снова пришёл.\n\nХорошо.\nЗначит, перенос почти завершён.\n\nНе бойся леса.\nОн — всего лишь корневая структура.\n\nСледующий узел уже открыт."
     };
 
     private readonly List<Transform> _stones = new List<Transform>();
