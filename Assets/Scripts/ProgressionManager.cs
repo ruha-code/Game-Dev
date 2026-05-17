@@ -108,7 +108,7 @@ public class ProgressionManager : MonoBehaviour
     {
         return location switch
         {
-            LocationId.TreeScene => HasKey(GameKey.ComputerKey),
+            LocationId.TreeScene => HasKey(GameKey.RecycleBinKey),
             LocationId.CityScene => false,
             LocationId.BalloonScene => false,
             _ => false
@@ -170,8 +170,8 @@ public class ProgressionManager : MonoBehaviour
         return CurrentObjective switch
         {
             ObjectiveId.ReviewDocuments => "Current Task: Review Documents",
-            ObjectiveId.InvestigateTree => "Current Task: Enter the Tree Anomaly and face the park",
-            ObjectiveId.RecoverTreeMemory => "Current Task: Clear Tetris and recover the hidden shard",
+            ObjectiveId.InvestigateTree => "Current Task: Click the tree and enter Park",
+            ObjectiveId.RecoverTreeMemory => "Current Task: Clear 5 lines in Tetris to recover the hidden shard",
             ObjectiveId.AccessComputer => "Current Task: Open Computer and trace the deletion command",
             ObjectiveId.InvestigateCity => "Current Task: Continue investigation",
             ObjectiveId.ConfigureControlPanel => "Current Task: Continue investigation",
@@ -189,8 +189,8 @@ public class ProgressionManager : MonoBehaviour
         return CurrentObjective switch
         {
             ObjectiveId.ReviewDocuments => "Recovery incomplete. Please review Documents.",
-            ObjectiveId.InvestigateTree => "Tree anomaly unlocked. The park is waiting.",
-            ObjectiveId.RecoverTreeMemory => "A hidden shard is trapped inside Tetris. Clear a line to pull it free.",
+            ObjectiveId.InvestigateTree => "Recycle Bin restored. Visit the park. The tree is responding.",
+            ObjectiveId.RecoverTreeMemory => "A hidden shard is trapped inside Tetris. Clear 5 lines to pull it free.",
             ObjectiveId.AccessComputer => "Computer diagnostics are now available. Follow the deletion trail.",
             ObjectiveId.InvestigateCity => "Objective updated.",
             ObjectiveId.ConfigureControlPanel => "Objective updated.",
@@ -305,11 +305,6 @@ public class ProgressionManager : MonoBehaviour
         if (!HasKey(GameKey.RecycleBinKey))
         {
             return ObjectiveId.SearchRecycleBin;
-        }
-
-        if (!HasKey(GameKey.ComputerKey))
-        {
-            return ObjectiveId.AccessComputer;
         }
 
         if (!HasVisitedLocation(LocationId.TreeScene))

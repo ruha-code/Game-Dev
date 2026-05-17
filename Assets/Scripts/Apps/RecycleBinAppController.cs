@@ -606,7 +606,7 @@ public class RecycleBinAppController : MonoBehaviour
             _isComplete = true;
             ProgressionManager.Instance.UnlockKey(GameKey.RecycleBinKey);
             _completionPopup?.RemoveFromClassList("hidden");
-            if (_finalSummaryLabel != null) _finalSummaryLabel.text = "AeroOS did not delete the engineers. It converted them into protected system processes. Core access partially unlocked.";
+            if (_finalSummaryLabel != null) _finalSummaryLabel.text = "AeroOS did not delete the engineers. It converted them into protected system processes. The next trace leads to the park. Click the tree on the desktop.";
             PlaySound(completeSound);
             _window.AddToClassList("recycle-bin-window--complete");
         }

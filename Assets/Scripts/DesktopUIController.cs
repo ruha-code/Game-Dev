@@ -302,9 +302,9 @@ public class DesktopUIController : MonoBehaviour
         }
 
         UpdateIconState("Documents", true, progression.CurrentObjective == ObjectiveId.ReviewDocuments);
-        UpdateIconState("Tetris", true, progression.CurrentObjective == ObjectiveId.RecoverTreeMemory && !progression.TetrisRewardClaimed);
+        UpdateIconState("Tetris", progression.HasKey(GameKey.DocumentsKey), progression.CurrentObjective == ObjectiveId.RecoverTreeMemory && !progression.TetrisRewardClaimed);
         UpdateIconState("Recycle Bin", progression.TetrisRewardClaimed, progression.CurrentObjective == ObjectiveId.SearchRecycleBin && !progression.HasKey(GameKey.RecycleBinKey));
-        UpdateIconState("Computer", progression.HasKey(GameKey.RecycleBinKey), progression.CurrentObjective == ObjectiveId.AccessComputer && !progression.HasKey(GameKey.ComputerKey));
+        UpdateIconState("Computer", progression.HasKey(GameKey.ComputerKey), progression.CurrentObjective == ObjectiveId.AccessComputer && !progression.HasKey(GameKey.ComputerKey));
         UpdateIconState("Pictures", progression.HasKey(GameKey.DocumentsKey), false);
         UpdateIconState("Music", progression.HasKey(GameKey.DocumentsKey), false);
         UpdateIconState("Control Panel", progression.HasKey(GameKey.ComputerKey), false);
@@ -314,6 +314,14 @@ public class DesktopUIController : MonoBehaviour
         SetHotspotVisible(_treeHotspot, progression.IsLocationUnlocked(LocationId.TreeScene));
         SetHotspotVisible(_cityHotspot, progression.IsLocationUnlocked(LocationId.CityScene));
         SetHotspotVisible(_balloonHotspot, progression.IsLocationUnlocked(LocationId.BalloonScene));
+
+        if (_treeHotspot != null)
+        {
+            bool treeIsObjective = progression.CurrentObjective == ObjectiveId.InvestigateTree && progression.IsLocationUnlocked(LocationId.TreeScene);
+            _treeHotspot.text = treeIsObjective ? "Click Tree To Enter Park" : "Tree Anomaly";
+            _treeHotspot.EnableInClassList("wallpaper-hotspot--objective", treeIsObjective);
+            _treeHotspot.tooltip = treeIsObjective ? "The park trace is active here." : "An unstable trace in the wallpaper.";
+        }
 
         if (progression.HasUnseenObjectivePopup())
         {
@@ -331,7 +339,7 @@ public class DesktopUIController : MonoBehaviour
 
         icon.EnableInClassList("desktop-icon-wrapper--locked", !isEnabled);
         icon.EnableInClassList("desktop-icon-wrapper--objective", isObjective);
-        icon.SetEnabled(isEnabled || iconName == "Tetris" || iconName == "Documents");
+        icon.SetEnabled(isEnabled || iconName == "Documents");
     }
 
     private void SetHotspotVisible(VisualElement hotspot, bool isVisible)
@@ -602,6 +610,12 @@ public class DesktopUIController : MonoBehaviour
                 }
                 break;
             case "Tetris":
+                if (!IsIconEnabled(iconName))
+                {
+                    ShowSystemToast("Recovery Incomplete", "Documents must be restored before Tetris becomes usable.");
+                    break;
+                }
+
                 if (_tetrisController != null)
                 {
                     _tetrisController.Show();
