@@ -125,7 +125,7 @@ public class DocumentsAppController : MonoBehaviour
 {
     _blanks.Clear();
 
-    RegisterBlank(root, "blank-days", "Состояние", "ДНИ");
+    RegisterBlank(root, "blank-days", "Состояние", "ДНЕЙ");
     RegisterBlank(root, "blank-logs", "Объект", "ЛОГИ");
     RegisterBlank(root, "blank-tetris", "Подсказка", "TETRIS");
     RegisterBlank(root, "blank-text", "Факт", "ТЕКСТ");

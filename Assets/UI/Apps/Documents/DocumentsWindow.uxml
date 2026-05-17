@@ -114,7 +114,7 @@
                     <ui:Label text="System recommendation: COMFORT" class="documents-recommendation documents-recommendation--warning" />
 
                     <ui:VisualElement name="word-bank" class="documents-word-bank">
-                        <ui:Button text="ДНИ" class="documents-word-button" />
+                        <ui:Button text="ДНЕЙ" class="documents-word-button" />
                         <ui:Button text="ЛОГИ" class="documents-word-button" />
                         <ui:Button text="TETRIS" class="documents-word-button" />
                         <ui:Button text="ТЕКСТ" class="documents-word-button" />
