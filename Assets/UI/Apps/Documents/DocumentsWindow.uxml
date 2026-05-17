@@ -41,47 +41,43 @@
 
                     <ui:VisualElement name="reconstruction-container" class="reconstruction-container">
 
-                        <ui:Label text="Уже пару " class="reconstruction-text" />
+    <ui:Label text="Уже пару дней, как я попал сюда." class="reconstruction-text" />
 
-                        <ui:Button name="blank-days" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
+    <ui:Label text="Я не понимаю, что здесь происходит и что мне делать." class="reconstruction-text" />
 
-                        <ui:Label text=", как я попал сюда. Я не понимаю, что здесь происходит и что мне делать." class="reconstruction-text" />
+    <ui:Label text="Я просто пытаюсь выбраться. Постоянно. Без остановки." class="reconstruction-text" />
 
-                        <ui:Label text="Я просто пытаюсь выбраться. Постоянно. Без остановки." class="reconstruction-text" />
+    <ui:Label text="Всё вокруг ощущается неправильно, как будто система смотрит в ответ, когда я открываю файлы." class="reconstruction-text" />
 
-                        <ui:Label text="Всё вокруг ощущается неправильно, как будто система смотрит в ответ, когда я открываю файлы." class="reconstruction-text" />
+    <ui:Label text="Я нашёл " class="reconstruction-text" />
 
-                        <ui:Label text="Я нашёл " class="reconstruction-text" />
+    <ui:Button name="blank-logs" class="reconstruction-blank">
+        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+    </ui:Button>
 
-                        <ui:Button name="blank-logs" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
+    <ui:Label text=". Там есть странные упоминания, будто кто-то оставляет следы специально." class="reconstruction-text" />
 
-                        <ui:Label text=". Там есть странные упоминания, будто кто-то оставляет следы специально." class="reconstruction-text" />
+    <ui:Label text="И ещё там было одно сообщение — не уверен, что оно предназначалось мне." class="reconstruction-text" />
 
-                        <ui:Label text="И ещё там было одно сообщение — не уверен, что оно предназначалось мне." class="reconstruction-text" />
+    <ui:Label text="В нём говорится, что подсказки можно найти внутри " class="reconstruction-text" />
 
-                        <ui:Label text="В нём говорится, что подсказки можно найти внутри " class="reconstruction-text" />
+    <ui:Button name="blank-tetris" class="reconstruction-blank">
+        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+    </ui:Button>
 
-                        <ui:Button name="blank-tetris" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
+    <ui:Label text="." class="reconstruction-text" />
 
-                        <ui:Label text="." class="reconstruction-text" />
+    <ui:Label text="Если вы видите этот " class="reconstruction-text" />
 
-                        <ui:Label text="Если вы видите этот " class="reconstruction-text" />
+    <ui:Button name="blank-text" class="reconstruction-blank">
+        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+    </ui:Button>
 
-                        <ui:Button name="blank-text" class="reconstruction-blank">
-                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-                        </ui:Button>
+    <ui:Label text=" — значит, я, скорее всего, ещё здесь. Или уже стал частью этого места." class="reconstruction-text" />
 
-                        <ui:Label text=" — значит, я, скорее всего, ещё здесь. Или уже стал частью этого места." class="reconstruction-text" />
+    <ui:Label text="В любом случае… следующий шаг — Tetris." class="reconstruction-text" />
 
-                        <ui:Label text="В любом случае… следующий шаг — Tetris." class="reconstruction-text" />
-
-                    </ui:VisualElement>
+</ui:VisualElement>
 
                     <ui:Label name="final-reconstructed-message" class="reconstruction-text hidden" />
 
