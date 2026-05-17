@@ -69,6 +69,8 @@ public class DocumentsAppController : MonoBehaviour
 
     public void Initialize(VisualElement root)
     {
+        ResolveAudioFallbacks();
+
         _window = root.Q<VisualElement>("documents-window");
         if (_window == null) return;
 
@@ -149,6 +151,16 @@ public class DocumentsAppController : MonoBehaviour
         button.RegisterCallback<PointerLeaveEvent>(_ => { blank.IsHovering = false; if (_selectedBlank != blank) button.RemoveFromClassList("reconstruction-blank--selected"); });
         button.RegisterCallback<ClickEvent>(_ => HandleBlankSelected(blank));
         _blanks.Add(blank);
+    }
+
+    private void ResolveAudioFallbacks()
+    {
+        clickSound ??= Resources.Load<AudioClip>("Audio/UI/Aero_Click");
+        hoverSound ??= Resources.Load<AudioClip>("Audio/UI/UI_Hover_Tick");
+        successSound ??= Resources.Load<AudioClip>("Audio/UI/Aero_IdentityAccepted");
+        errorSound ??= Resources.Load<AudioClip>("Audio/UI/StaticCrack");
+        lieExposedSound ??= Resources.Load<AudioClip>("Audio/UI/GlitchBurst_Sync");
+        completionSound ??= Resources.Load<AudioClip>("Audio/UI/Aero_Popup_Notification");
     }
 
     private void SetupLies(VisualElement root)

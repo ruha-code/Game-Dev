@@ -70,30 +70,20 @@ public class CinematicIntroController : MonoBehaviour
         UnityEngine.Cursor.visible = false;
         UnityEngine.Cursor.lockState = CursorLockMode.Locked;
 
-        if (mainCamera == null) mainCamera = Camera.main;
+        ResolveReferences();
+
+        if (mainCamera == null)
+        {
+            Debug.LogError("[CinematicIntroController] Main camera could not be resolved.");
+            enabled = false;
+            return;
+        }
+
         mainCamera.clearFlags = CameraClearFlags.SolidColor;
         mainCamera.backgroundColor = Color.black;
         
         GameObject screenSurface = GameObject.Find("Boot Screen Surface");
         monitorPosition = screenSurface != null ? screenSurface.transform.position : new Vector3(0f, 1.35f, 2.24f);
-        
-        if (monitorLight == null)
-        {
-            Light[] lights = FindObjectsByType<Light>(FindObjectsInactive.Include);
-            foreach (Light l in lights) if (l.name.ToLower().Contains("monitor")) { monitorLight = l; break; }
-        }
-        
-        if (monitorScreen == null)
-        {
-            Renderer[] renderers = FindObjectsByType<Renderer>(FindObjectsInactive.Include);
-            foreach (Renderer r in renderers)
-            {
-                monitorScreen = r.GetComponent<MonitorScreenController>();
-                if (monitorScreen != null) break;
-            }
-        }
-        
-        if (audioController == null) audioController = gameObject.AddComponent<CinematicAudioController>();
         
         ProceduralAudioGenerator audioGen = gameObject.GetComponent<ProceduralAudioGenerator>();
         if (audioGen == null) audioGen = gameObject.AddComponent<ProceduralAudioGenerator>();
@@ -115,6 +105,59 @@ public class CinematicIntroController : MonoBehaviour
         
         if (monitorLight != null) monitorLight.intensity = 0f;
         StartCoroutine(RunCinematic());
+    }
+
+    private void ResolveReferences()
+    {
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+            if (mainCamera == null)
+            {
+                mainCamera = FindAnyObjectByType<Camera>();
+            }
+        }
+
+        if (screenController == null)
+        {
+            screenController = FindAnyObjectByType<BootScreenController>(FindObjectsInactive.Include);
+        }
+
+        if (monitorScreen == null)
+        {
+            monitorScreen = FindAnyObjectByType<MonitorScreenController>(FindObjectsInactive.Include);
+        }
+
+        if (monitorLight == null)
+        {
+            monitorLight = monitorScreen != null ? monitorScreen.monitorLight : null;
+            if (monitorLight == null)
+            {
+                Light[] lights = FindObjectsByType<Light>(FindObjectsInactive.Include);
+                foreach (Light lightSource in lights)
+                {
+                    if (lightSource == null)
+                    {
+                        continue;
+                    }
+
+                    if (lightSource.name.ToLowerInvariant().Contains("monitor"))
+                    {
+                        monitorLight = lightSource;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (audioController == null)
+        {
+            audioController = GetComponent<CinematicAudioController>();
+            if (audioController == null)
+            {
+                audioController = gameObject.AddComponent<CinematicAudioController>();
+            }
+        }
     }
 
     void Update()

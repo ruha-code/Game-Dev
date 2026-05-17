@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.UI;
 #endif
 
 public class ParkSceneController : MonoBehaviour
@@ -474,6 +475,22 @@ public class ParkSceneController : MonoBehaviour
             _playerController = playerObject.GetComponent<FirstPersonController>();
             _playerInputs = playerObject.GetComponent<StarterAssetsInputs>();
             _characterController = playerObject.GetComponent<CharacterController>();
+
+#if ENABLE_INPUT_SYSTEM
+            PlayerInput playerInput = playerObject.GetComponent<PlayerInput>();
+            if (playerInput != null)
+            {
+                if (playerInput.camera == null)
+                {
+                    playerInput.camera = Camera.main != null ? Camera.main : FindAnyObjectByType<Camera>();
+                }
+
+                if (playerInput.uiInputModule == null)
+                {
+                    playerInput.uiInputModule = FindAnyObjectByType<InputSystemUIInputModule>();
+                }
+            }
+#endif
         }
 
         GameObject cameraObject = GameObject.Find(CameraName);
@@ -481,22 +498,38 @@ public class ParkSceneController : MonoBehaviour
         {
             _mainCamera = cameraObject.GetComponent<Camera>();
         }
+        else
+        {
+            _mainCamera = Camera.main != null ? Camera.main : FindAnyObjectByType<Camera>();
+        }
 
         if (directionalLight == null)
         {
-            GameObject lightObject = GameObject.Find("Directional Light");
-            if (lightObject != null)
+            Light[] lights = FindObjectsByType<Light>(FindObjectsInactive.Include);
+            foreach (Light lightSource in lights)
             {
-                directionalLight = lightObject.GetComponent<Light>();
+                if (lightSource == null || lightSource.type != LightType.Directional)
+                {
+                    continue;
+                }
+
+                directionalLight = lightSource;
+                break;
             }
         }
 
         if (globalVolume == null)
         {
-            GameObject volumeObject = GameObject.Find("Global Volume");
-            if (volumeObject != null)
+            Volume[] volumes = FindObjectsByType<Volume>(FindObjectsInactive.Include);
+            foreach (Volume volume in volumes)
             {
-                globalVolume = volumeObject.GetComponent<Volume>();
+                if (volume == null || volume.sharedProfile == null)
+                {
+                    continue;
+                }
+
+                globalVolume = volume;
+                break;
             }
         }
     }

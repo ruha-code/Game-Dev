@@ -119,6 +119,8 @@ public class TetrisController : MonoBehaviour
 
     public void Initialize(VisualElement root)
     {
+        ResolveAudioFallbacks();
+
         if (audioSource == null)
         {
             audioSource = GetComponent<AudioSource>();
@@ -976,6 +978,15 @@ public class TetrisController : MonoBehaviour
                 SetBonusStatus($"Clear {remainingLines} more line(s) out of 5 to recover a hidden shard.");
             }
         }
+    }
+
+    private void ResolveAudioFallbacks()
+    {
+        hardDropClip ??= Resources.Load<AudioClip>("Audio/Tetris/HardDrop");
+        lockClip ??= Resources.Load<AudioClip>("Audio/Tetris/Lock");
+        gameOverClip ??= Resources.Load<AudioClip>("Audio/Tetris/GameOver");
+        fragmentGlitchClip ??= Resources.Load<AudioClip>("Audio/UI/GlitchBurst");
+        fragmentWhisperClip ??= Resources.Load<AudioClip>("Audio/UI/Anomaly_Whisper");
     }
 
     private void SetBonusStatus(string text)
