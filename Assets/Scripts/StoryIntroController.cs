@@ -33,19 +33,20 @@ public class StoryIntroController : MonoBehaviour
     private AudioSource sfxSource;
 
     private string[] initialLines = {
-        "AETHER DYNAMICS",
-        "INTERNAL INCIDENT REPORT",
-        "Year: 2026",
-        "Project: AeroOS",
-        "Lead Engineers Missing: 7",
-        "Final Active Employee:",
-        "YOU"
+    "AETHER DYNAMICS",
+    "ВНУТРЕННИЙ ОТЧЁТ ОБ ИНЦИДЕНТЕ",
+    "Год: 2026",
+    "Проект: AeroOS",
+    "Пропавшие инженеры: 7",
+    "Последний активный сотрудник:",
+    "ТЫ"
     };
 
+
     private string[] confirmedLines = {
-        "USER CONFIRMED",
-        "{TIME}\nLAB 7\nNIGHT SHIFT",
-        "Please investigate the test environment."
+        "ПОЛЬЗОВАТЕЛЬ ПОДТВЕРЖДЁН",
+        "{TIME}\nЛАБОРАТОРИЯ 7\nНОЧНАЯ СМЕНА",
+        "Пожалуйста, исследуй тестовую среду."
     };
 
     private IEnumerator Start()
