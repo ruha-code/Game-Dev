@@ -193,7 +193,7 @@ public class SystemBootController : MonoBehaviour
         string[] narrativeLines = {
             "Connecting to Aether Dynamics Mainframe...",
             "Recovering Session Data for Lab 7...",
-            "Warning: 7 Engineer Accounts remain 'FLAGGED'...",
+            "Warning: 4 Engineer Accounts remain 'FLAGGED'...",
             "Synchronizing Memory Cores...",
             "Reconstructing Personal Environment...",
             "User '" + playerName + "' detected as Last Active Employee.",
