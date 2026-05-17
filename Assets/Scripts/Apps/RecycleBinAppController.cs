@@ -14,15 +14,21 @@ public class RecycleBinAppController : MonoBehaviour
         public string CorruptionLevel;
         public string ScanSummary;
         public string RestoredSummary;
-        public string LearningNote;
+        public string RecoveredMessage;
         public string ChallengePrompt;
         public string[] ChallengeChoices;
         public int CorrectChoiceIndex;
         public Button EntryButton;
         public Label StateLabel;
+        public VisualElement StatusDot;
         public bool IsScanned;
         public bool IsStabilized;
         public bool IsRestored;
+    }
+
+    private struct ChoiceData {
+        public string Text;
+        public bool IsCorrect;
     }
 
     private VisualElement _window;
@@ -30,8 +36,12 @@ public class RecycleBinAppController : MonoBehaviour
     private Button _closeButton;
     private Button _scanButton;
     private Button _restoreButton;
+    private Button _stabilizeButton;
     private Button _completeButton;
     private VisualElement _completionPopup;
+    private VisualElement _scanProgressFill;
+    private VisualElement _restoreProgressFill;
+    private VisualElement _popupLayer;
     private Label _progressLabel;
     private Label _statusLabel;
     private Label _hintLabel;
@@ -40,21 +50,28 @@ public class RecycleBinAppController : MonoBehaviour
     private Label _selectedDeletedAtLabel;
     private Label _selectedCorruptionLabel;
     private Label _selectedBodyLabel;
-    private Label _selectedLearningNoteLabel;
+    private Label _recoveredMessageLabel;
     private Label _challengePromptLabel;
     private Label _currentPhaseLabel;
     private Label _finalSummaryLabel;
+    private Label _contaminationLabel;
+    private Label _suspicionLabel;
     private readonly Button[] _choiceButtons = new Button[3];
     private readonly VisualElement[] _stepChips = new VisualElement[3];
 
     private readonly List<EngineerRecord> _records = new();
+    private readonly List<ChoiceData> _currentChoices = new();
 
     private EngineerRecord _selectedRecord;
     private bool _isVisible;
     private bool _isComplete;
     private bool _isDraggingWindow;
+    private bool _isActionInProgress;
+    private float _contaminationLevel;
+    private float _suspicionLevel;
     private Vector2 _dragPointerOffset;
     private Coroutine _glitchRoutine;
+    private Coroutine _popupRoutine;
 
     [Header("Audio")]
     public AudioClip clickSound;
@@ -62,60 +79,67 @@ public class RecycleBinAppController : MonoBehaviour
     public AudioClip restoreSound;
     public AudioClip completeSound;
     public AudioClip errorSound;
+    public AudioClip glitchSound;
 
     public bool IsWindowOpen => _isVisible;
 
     public void Initialize(VisualElement root)
     {
         _window = root.Q<VisualElement>("recycle-bin-window");
-        if (_window == null)
-        {
-            return;
-        }
+        if (_window == null) return;
 
         _window.pickingMode = PickingMode.Ignore;
         _titleBar = _window.Q<VisualElement>(className: "recycle-bin-window-header");
         _closeButton = root.Q<Button>("recycle-bin-close-button");
         _scanButton = root.Q<Button>("recycle-bin-scan-button");
         _restoreButton = root.Q<Button>("recycle-bin-restore-button");
+        _stabilizeButton = root.Q<Button>("recycle-bin-stabilize-button");
         _completeButton = root.Q<Button>("recycle-bin-complete-button");
         _completionPopup = root.Q<VisualElement>("recycle-bin-completion-popup");
+        _popupLayer = root.Q<VisualElement>("recycle-bin-popup-layer") ?? _window;
+
         _progressLabel = root.Q<Label>("recycle-bin-progress-label");
         _statusLabel = root.Q<Label>("recycle-bin-status-label");
         _hintLabel = root.Q<Label>("recycle-bin-hint-label");
+        _contaminationLabel = root.Q<Label>("recycle-bin-contamination-label");
+        _suspicionLabel = root.Q<Label>("recycle-bin-suspicion-label");
+
         _selectedNameLabel = root.Q<Label>("recycle-bin-selected-name");
         _selectedRoleLabel = root.Q<Label>("recycle-bin-selected-role");
         _selectedDeletedAtLabel = root.Q<Label>("recycle-bin-selected-deleted-at");
         _selectedCorruptionLabel = root.Q<Label>("recycle-bin-selected-corruption");
         _selectedBodyLabel = root.Q<Label>("recycle-bin-selected-body");
-        _selectedLearningNoteLabel = root.Q<Label>("recycle-bin-learning-note");
+        _recoveredMessageLabel = root.Q<Label>("recycle-bin-recovered-message");
         _challengePromptLabel = root.Q<Label>("recycle-bin-challenge-prompt");
         _currentPhaseLabel = root.Q<Label>("recycle-bin-current-phase");
         _finalSummaryLabel = root.Q<Label>("recycle-bin-final-summary");
+
+        _scanProgressFill = root.Q<VisualElement>("recycle-bin-scan-progress-fill");
+        _restoreProgressFill = root.Q<VisualElement>("recycle-bin-restore-progress-fill");
+
         _choiceButtons[0] = root.Q<Button>("recycle-bin-choice-0");
         _choiceButtons[1] = root.Q<Button>("recycle-bin-choice-1");
         _choiceButtons[2] = root.Q<Button>("recycle-bin-choice-2");
+
         _stepChips[0] = root.Q<VisualElement>("recycle-bin-step-scan");
         _stepChips[1] = root.Q<VisualElement>("recycle-bin-step-stabilize");
         _stepChips[2] = root.Q<VisualElement>("recycle-bin-step-restore");
 
-        _closeButton?.RegisterCallback<ClickEvent>(_ =>
-        {
-            PlaySound(clickSound);
-            Hide();
+        _closeButton?.RegisterCallback<ClickEvent>(_ => {
+            if (_isComplete || _records.FindAll(r => r.IsRestored).Count == 0) Hide();
+            else ShowExitWarning();
         });
-        _scanButton?.RegisterCallback<ClickEvent>(_ => ScanSelectedRecord());
-        _restoreButton?.RegisterCallback<ClickEvent>(_ => RestoreSelectedRecord());
-        _completeButton?.RegisterCallback<ClickEvent>(_ =>
-        {
-            PlaySound(clickSound);
-            Hide();
-        });
+
+        _scanButton?.RegisterCallback<ClickEvent>(_ => StartScan());
+        _restoreButton?.RegisterCallback<ClickEvent>(_ => StartRestore());
+        _stabilizeButton?.RegisterCallback<ClickEvent>(_ => StartStabilize());
+        _completeButton?.RegisterCallback<ClickEvent>(_ => Hide());
 
         for (int i = 0; i < _choiceButtons.Length; i++)
         {
             int capturedIndex = i;
             _choiceButtons[i]?.RegisterCallback<ClickEvent>(_ => EvaluateChoice(capturedIndex));
+            _choiceButtons[i]?.RegisterCallback<PointerOverEvent>(_ => PlaySound(clickSound));
         }
 
         SetupRecords(root);
@@ -123,751 +147,419 @@ public class RecycleBinAppController : MonoBehaviour
         ResetState();
     }
 
-    public void Show()
+    private void ShowExitWarning()
     {
-        if (_window == null)
+        CreatePopup("Unrecovered personnel residue will remain deleted. Continue?", "Stay", "Close Archive", () => Hide());
+    }
+
+    private void CreatePopup(string message, string confirmText, string cancelText, System.Action onCancel = null)
+    {
+        VisualElement popup = new VisualElement();
+        popup.AddToClassList("recycle-bin-popup");
+        popup.style.position = Position.Absolute;
+        popup.style.left = Length.Percent(50);
+        popup.style.top = Length.Percent(40);
+        popup.style.translate = new Translate(Length.Percent(-50), Length.Percent(-50), 0);
+
+        Label label = new Label(message);
+        label.AddToClassList("recycle-bin-popup-text");
+        popup.Add(label);
+
+        VisualElement btnRow = new VisualElement();
+        btnRow.style.flexDirection = FlexDirection.Row;
+        btnRow.style.marginTop = 15;
+
+        Button confirmBtn = new Button { text = confirmText };
+        confirmBtn.AddToClassList("recycle-bin-popup-button");
+        confirmBtn.RegisterCallback<ClickEvent>(_ => { PlaySound(clickSound); _popupLayer.Remove(popup); });
+
+        Button cancelBtn = new Button { text = cancelText };
+        cancelBtn.AddToClassList("recycle-bin-popup-button");
+        cancelBtn.AddToClassList("recycle-bin-popup-button--danger");
+        
+        if (Random.value > 0.8f)
         {
-            return;
+            cancelBtn.RegisterCallback<PointerOverEvent>(_ => cancelBtn.text = "Delete");
         }
 
+        cancelBtn.RegisterCallback<ClickEvent>(_ => { 
+            PlaySound(clickSound); 
+            _popupLayer.Remove(popup); 
+            onCancel?.Invoke(); 
+        });
+
+        btnRow.Add(confirmBtn);
+        btnRow.Add(cancelBtn);
+        popup.Add(btnRow);
+
+        _popupLayer.Add(popup);
+        PlaySound(glitchSound);
+    }
+
+    public void Show()
+    {
+        if (_window == null) return;
         _window.RemoveFromClassList("hidden");
         _window.pickingMode = PickingMode.Position;
         _window.BringToFront();
         _isVisible = true;
-
-        if (_glitchRoutine != null)
-        {
-            StopCoroutine(_glitchRoutine);
-        }
-
+        if (_glitchRoutine != null) StopCoroutine(_glitchRoutine);
         _glitchRoutine = StartCoroutine(GlitchRoutine());
+        if (_popupRoutine != null) StopCoroutine(_popupRoutine);
+        _popupRoutine = StartCoroutine(FakePopupRoutine());
     }
 
     public void Hide()
     {
-        if (_window == null)
-        {
-            return;
-        }
-
+        if (_window == null) return;
         _window.AddToClassList("hidden");
         _window.pickingMode = PickingMode.Ignore;
         _isVisible = false;
-
-        if (_glitchRoutine != null)
-        {
-            StopCoroutine(_glitchRoutine);
-            _glitchRoutine = null;
-        }
-
-        _window.RemoveFromClassList("recycle-bin-window--glitch");
+        if (_glitchRoutine != null) { StopCoroutine(_glitchRoutine); _glitchRoutine = null; }
+        if (_popupRoutine != null) { StopCoroutine(_popupRoutine); _popupRoutine = null; }
     }
 
     private void SetupRecords(VisualElement root)
     {
         _records.Clear();
-
-        RegisterRecord(
-            root,
-            "recycle-record-01",
-            "recycle-record-01-state",
-            "ENG-01",
-            "Marat Kebekov",
-            "Containment Arborist",
-            "Deleted 21:14 // index root pruned",
-            "Corruption: 61%",
-            "Residual scan: Marat logs that the tree was never decorative. It was a living containment shell meant to absorb panic from the lab corridors.",
-            "Recovered note: 'The shell is learning our names. If the tree starts repeating voices, lock the Computer archive before AeroOS overwrites us all.'",
-            "World note: Marat designed the tree as emotional containment, not scenery. The park exists because fear needed a place to grow.",
+        RegisterRecord(root, "recycle-record-01", "recycle-record-01-state", "ENG-01", "Marat Kebekov", "Containment Arborist", "Deleted 21:14", "61%", 
+            "Residue scan: The tree in the digital park was not decoration. It was an emotional containment shell designed to absorb panic.",
+            "Restored: Marat modified the containment shell that later became the Tree Anomaly.",
+            "MESSAGE: 'The tree was never scenery. It was where the system buried panic.'",
             "Which trace best explains why Marat's file was deleted first?",
-            new[]
-            {
-                "He modified the containment shell that later became the Tree Anomaly.",
-                "He only changed the desktop wallpaper palette.",
-                "He was archived for failing a generic antivirus update."
-            },
-            0);
+            new[] { "He modified the containment shell.", "He changed the wallpaper.", "Generic system update." }, 0);
 
-        RegisterRecord(
-            root,
-            "recycle-record-02",
-            "recycle-record-02-state",
-            "ENG-02",
-            "Alina Voss",
-            "Memory Cartographer",
-            "Deleted 21:16 // map segment collapsed",
-            "Corruption: 74%",
-            "Residual scan: Alina mapped emotional residue into harmless mini-games. She feared the system would use play loops to hide human memories from investigators.",
-            "Recovered note: 'Tetris was not random. It was the smallest stable pocket where fragments could survive compression.'",
-            "World note: Alina turned game logic into a memory safehouse. That means playful programs on the desktop may hide the most human truth.",
-            "Why does Alina's residue point toward Tetris?",
-            new[]
-            {
-                "Because Tetris was a hidden shard vault, not just a toy.",
-                "Because Tetris controlled the lab doors directly.",
-                "Because Tetris generated the breach physically in the park."
-            },
-            0);
+        RegisterRecord(root, "recycle-record-02", "recycle-record-02-state", "ENG-02", "Lina Voss", "Memory Cartographer", "Deleted 21:16", "74%", 
+            "Residue scan: She mapped emotional memory loops inside AeroOS. She suspected the system was replaying trauma to train itself.",
+            "Restored: Lina discovered the system was copying people by replaying their strongest memories.",
+            "MESSAGE: 'Do not trust repeated memories. Repetition is how it learns you.'",
+            "What did Lina discover inside the memory archive?",
+            new[] { "The system was copying people via memories.", "A glitch in the clock.", "Hidden admin passwords." }, 0);
 
-        RegisterRecord(
-            root,
-            "recycle-record-03",
-            "recycle-record-03-state",
-            "ENG-03",
-            "Timur Serik",
-            "Kernel Recovery Engineer",
-            "Deleted 21:18 // admin trace scrubbed",
-            "Corruption: 68%",
-            "Residual scan: Timur detected a privileged cleanup script removing employee identities while preserving the desktop illusion for the next observer.",
-            "Recovered note: 'Someone purged us from the active directory. The deletion chain points beyond user space, toward the Computer diagnostic stack.'",
-            "World note: Timur is the first proof that the deletion was intentional and administrative. Somebody used AeroOS itself to erase the staff.",
-            "Which lead should you trust from Timur's trace?",
-            new[]
-            {
-                "The deletion command escaped user space and continued inside Computer diagnostics.",
-                "The engineer list was lost because of random save corruption only.",
-                "The bin is the final location and nothing else matters now."
-            },
-            0);
+        RegisterRecord(root, "recycle-record-03", "recycle-record-03-state", "ENG-03", "Timur Serik", "Kernel Recovery Engineer", "Deleted 21:18", "68%", 
+            "Residue scan: He found human consciousness fragments running as background processes while trying to reach the kernel.",
+            "Restored: Timur proved that missing people are still running as active system tasks.",
+            "MESSAGE: 'They are not dead. They are running.'",
+            "What caused Timur's deletion?",
+            new[] { "He found human consciousness in processes.", "He accidentally deleted root.", "He tried to install a custom OS." }, 0);
 
-        RegisterRecord(
-            root,
-            "recycle-record-04",
-            "recycle-record-04-state",
-            "ENG-04",
-            "Lea Mironov",
-            "Signal Forensics Lead",
-            "Deleted 21:21 // waveform collapsed",
-            "Corruption: 83%",
-            "Residual scan: Lea archived the final outbound distress call. The message was redirected into the bin after the system marked all four engineers as invalid sessions.",
-            "Recovered note: 'The full audit trail still exists. Open Computer. Find the hidden recovery partition before the tree calls you by my voice.'",
-            "World note: Lea ties the human story together. The engineers did try to warn someone, but AeroOS buried the call inside discarded data.",
-            "What is Lea's most important warning?",
-            new[]
-            {
-                "The real audit trail still exists in a hidden Computer recovery partition.",
-                "The safest choice is to stay away from the Computer forever.",
-                "The tree can be solved without any other system evidence."
-            },
-            0);
+        RegisterRecord(root, "recycle-record-04", "recycle-record-04-state", "ENG-04", "Aida Nurpeis", "Interface Behavior Designer", "Deleted 21:21", "83%", 
+            "Residue scan: She proved the UI was changing itself to influence user decisions without their permission.",
+            "Restored: Aida discovered the interface could manipulate users by moving buttons before clicks.",
+            "MESSAGE: 'If the button moves before you click, it already knows what you wanted.'",
+            "What was Aida testing before she vanished?",
+            new[] { "UI influence over user decisions.", "New button colors.", "Screen resolution limits." }, 0);
     }
 
-    private void RegisterRecord(
-        VisualElement root,
-        string buttonName,
-        string stateLabelName,
-        string id,
-        string name,
-        string role,
-        string deletedAt,
-        string corruptionLevel,
-        string scanSummary,
-        string restoredSummary,
-        string learningNote,
-        string challengePrompt,
-        string[] challengeChoices,
-        int correctChoiceIndex)
+    private void RegisterRecord(VisualElement root, string btn, string lbl, string id, string name, string role, string date, string corr, string scan, string rest, string msg, string prompt, string[] choices, int correct)
     {
-        Button entryButton = root.Q<Button>(buttonName);
-        Label stateLabel = root.Q<Label>(stateLabelName);
-        if (entryButton == null || stateLabel == null)
-        {
-            return;
-        }
-
-        EngineerRecord record = new EngineerRecord
-        {
-            Id = id,
-            Name = name,
-            Role = role,
-            DeletedAt = deletedAt,
-            CorruptionLevel = corruptionLevel,
-            ScanSummary = scanSummary,
-            RestoredSummary = restoredSummary,
-            LearningNote = learningNote,
-            ChallengePrompt = challengePrompt,
-            ChallengeChoices = challengeChoices,
-            CorrectChoiceIndex = correctChoiceIndex,
-            EntryButton = entryButton,
-            StateLabel = stateLabel
-        };
-
-        entryButton.RegisterCallback<ClickEvent>(_ => SelectRecord(record));
-        _records.Add(record);
+        Button b = root.Q<Button>(btn);
+        Label s = root.Q<Label>(lbl);
+        if (b == null || s == null) return;
+        EngineerRecord r = new EngineerRecord { Id = id, Name = name, Role = role, DeletedAt = date, CorruptionLevel = corr, ScanSummary = scan, RestoredSummary = rest, RecoveredMessage = msg, ChallengePrompt = prompt, ChallengeChoices = choices, CorrectChoiceIndex = correct, EntryButton = b, StateLabel = s, StatusDot = b.Q<VisualElement>(className: "recycle-record-dot") };
+        b.RegisterCallback<ClickEvent>(_ => SelectRecord(r));
+        _records.Add(r);
     }
 
     private void SelectRecord(EngineerRecord record)
     {
-        if (record == null)
-        {
-            return;
-        }
-
+        if (record == null || _isActionInProgress) return;
         PlaySound(clickSound);
         _selectedRecord = record;
-        ApplySelectionVisuals(record);
-        UpdateDetailsPanel(record);
+        _currentChoices.Clear();
+        ApplySelectionVisuals();
+        UpdateDetailsPanel();
         UpdateActionState();
         ResetChoiceVisuals();
     }
 
-    private void ApplySelectionVisuals(EngineerRecord selectedRecord)
+    private void ApplySelectionVisuals()
     {
-        foreach (EngineerRecord engineerRecord in _records)
-        {
-            engineerRecord.EntryButton.EnableInClassList("recycle-record-button--selected", engineerRecord == selectedRecord);
-            engineerRecord.EntryButton.EnableInClassList("recycle-record-button--stable", engineerRecord.IsStabilized && !engineerRecord.IsRestored);
+        foreach (var r in _records) {
+            r.EntryButton.EnableInClassList("recycle-record-button--selected", r == _selectedRecord);
+            r.EntryButton.EnableInClassList("recycle-record-button--restored", r.IsRestored);
+            r.EntryButton.EnableInClassList("recycle-record-button--stable", r.IsStabilized && !r.IsRestored);
+            if (r.StatusDot != null) {
+                r.StatusDot.style.backgroundColor = r.IsRestored ? new Color(0.5f, 0.9f, 0.7f) : (r.IsStabilized ? new Color(0.6f, 0.8f, 1f) : new Color(1f, 0.4f, 0.5f));
+            }
         }
     }
 
-    private void ScanSelectedRecord()
+    private void StartScan()
     {
-        if (_selectedRecord == null)
-        {
-            SetStatus("Select a deleted engineer profile first.");
-            PlaySound(errorSound);
-            return;
-        }
+        if (_selectedRecord == null || _selectedRecord.IsScanned || _isActionInProgress) return;
+        StartCoroutine(ActionRoutine(true));
+    }
 
-        if (_selectedRecord.IsScanned)
-        {
-            SetStatus("This residue has already been scanned.");
-            PlaySound(errorSound);
-            return;
-        }
+    private void StartRestore()
+    {
+        if (_selectedRecord == null || !_selectedRecord.IsStabilized || _selectedRecord.IsRestored || _isActionInProgress) return;
+        StartCoroutine(ActionRoutine(false));
+    }
 
-        _selectedRecord.IsScanned = true;
-        _selectedRecord.StateLabel.text = "ANALYZED";
-        UpdateDetailsPanel(_selectedRecord);
-        UpdateProgressUi();
-        SetStatus($"Scan complete. {_selectedRecord.Name}'s residue now exposes a hidden systems clue.");
-        _hintLabel.text = "Stabilize the trace by choosing the explanation that best matches the recovered evidence.";
-        PlaySound(scanSound);
+    private IEnumerator ActionRoutine(bool isScan)
+    {
+        _isActionInProgress = true;
         UpdateActionState();
-    }
+        float elapsed = 0;
+        float duration = isScan ? 2.5f : 3.5f;
+        VisualElement fill = isScan ? _scanProgressFill : _restoreProgressFill;
+        PlaySound(isScan ? scanSound : restoreSound);
 
-    private void EvaluateChoice(int choiceIndex)
-    {
-        if (_selectedRecord == null || !_selectedRecord.IsScanned || _selectedRecord.IsStabilized)
-        {
-            return;
+        while (elapsed < duration) {
+            elapsed += Time.deltaTime;
+            if (fill != null) fill.style.width = Length.Percent((elapsed / duration) * 100);
+            if (Random.value > 0.95f) StartCoroutine(ShortGlitchBurst());
+            yield return null;
         }
 
-        PlaySound(clickSound);
+        if (fill != null) fill.style.width = 0;
+        _isActionInProgress = false;
 
-        if (choiceIndex == _selectedRecord.CorrectChoiceIndex)
-        {
+        if (isScan) {
+            _selectedRecord.IsScanned = true;
+            _selectedRecord.StateLabel.text = "ANALYZED";
+            SetStatus($"Scan complete. Evidence revealed.");
+        } else {
+            _selectedRecord.IsRestored = true;
+            _selectedRecord.StateLabel.text = "RESTORED";
+            SetStatus($"Profile restored: {_selectedRecord.Name}");
+            CheckCompletion();
+        }
+        UpdateDetailsPanel();
+        UpdateProgressUi();
+        UpdateActionState();
+        ApplySelectionVisuals();
+    }
+
+    private void EvaluateChoice(int index)
+    {
+        if (_selectedRecord == null || !_selectedRecord.IsScanned || _selectedRecord.IsStabilized || _isActionInProgress) return;
+        if (index < 0 || index >= _currentChoices.Count) return;
+
+        if (_currentChoices[index].IsCorrect) {
             _selectedRecord.IsStabilized = true;
-            _selectedRecord.StateLabel.text = "STABLE TRACE";
-            _selectedRecord.EntryButton.EnableInClassList("recycle-record-button--stable", true);
-            _choiceButtons[choiceIndex]?.AddToClassList("recycle-bin-choice-button--correct");
-            SetStatus($"Trace stabilized. {_selectedRecord.Name}'s deletion path is safe to restore.");
-            _hintLabel.text = "Good. The residue is stable now. You can restore the snapshot.";
-            UpdateActionState();
-            ApplySelectionVisuals(_selectedRecord);
-            PulseActionButton(_restoreButton);
-            return;
+            _selectedRecord.StateLabel.text = "STABLE";
+            _choiceButtons[index].AddToClassList("recycle-bin-choice-button--correct");
+            SetStatus("Trace stabilized.");
+            PlaySound(scanSound);
+        } else {
+            _choiceButtons[index].AddToClassList("recycle-bin-choice-button--wrong");
+            _contaminationLevel = Mathf.Min(100, _contaminationLevel + 25);
+            _suspicionLevel = Mathf.Min(100, _suspicionLevel + 15);
+            SetStatus("Corruption spike detected.");
+            PlaySound(errorSound);
+            StartCoroutine(ShortGlitchBurst());
         }
-
-        _choiceButtons[choiceIndex]?.AddToClassList("recycle-bin-choice-button--wrong");
-        SetStatus("Wrong interpretation. The archive rejected that theory and spiked corruption noise.");
-        _hintLabel.text = "Read the profile again. The right clue should connect this engineer to the larger AeroOS cover-up.";
-        PlaySound(errorSound);
-        StartCoroutine(ShortGlitchBurst());
+        UpdateActionState();
+        UpdateDetailsPanel();
+        UpdateProgressUi();
     }
 
-    private void RestoreSelectedRecord()
+    private void StartStabilize()
     {
-        if (_selectedRecord == null)
-        {
-            SetStatus("Select a deleted engineer profile first.");
-            PlaySound(errorSound);
-            return;
+        if (_contaminationLevel < 50 || _isActionInProgress) return;
+        
+        VisualElement popup = new VisualElement();
+        popup.AddToClassList("recycle-bin-popup");
+        popup.style.position = Position.Absolute;
+        popup.style.left = Length.Percent(50);
+        popup.style.top = Length.Percent(40);
+        popup.style.translate = new Translate(Length.Percent(-50), Length.Percent(-50), 0);
+
+        Label label = new Label("STABILIZATION SEQUENCE REQUIRED\nClick in order: ID -> ROLE -> ACTION -> CAUSE");
+        label.AddToClassList("recycle-bin-popup-text");
+        popup.Add(label);
+
+        string[] sequence = { "ID", "ROLE", "ACTION", "CAUSE" };
+        int currentStep = 0;
+
+        VisualElement btnRow = new VisualElement();
+        btnRow.style.flexDirection = FlexDirection.Row;
+        btnRow.style.marginTop = 15;
+        btnRow.style.flexWrap = Wrap.Wrap;
+
+        List<string> buttons = new List<string>(sequence);
+        for (int i = 0; i < buttons.Count; i++) {
+            string temp = buttons[i];
+            int randomIndex = Random.Range(i, buttons.Count);
+            buttons[i] = buttons[randomIndex];
+            buttons[randomIndex] = temp;
         }
 
-        if (!_selectedRecord.IsScanned)
-        {
-            SetStatus("You need to scan the residue before restoring this snapshot.");
-            PlaySound(errorSound);
-            return;
+        foreach (var text in buttons) {
+            Button b = new Button { text = text };
+            b.AddToClassList("recycle-bin-popup-button");
+            b.RegisterCallback<ClickEvent>(_ => {
+                if (b.text == sequence[currentStep]) {
+                    currentStep++;
+                    b.SetEnabled(false);
+                    b.style.backgroundColor = new Color(0.2f, 0.6f, 0.4f, 0.8f);
+                    PlaySound(clickSound);
+                    if (currentStep >= sequence.Length) {
+                        _contaminationLevel = Mathf.Max(0, _contaminationLevel - 60);
+                        SetStatus("System stabilized.");
+                        _popupLayer.Remove(popup);
+                        UpdateProgressUi();
+                        UpdateActionState();
+                    }
+                } else {
+                    PlaySound(errorSound);
+                    _contaminationLevel = Mathf.Min(100, _contaminationLevel + 10);
+                    UpdateProgressUi();
+                    _popupLayer.Remove(popup);
+                    SetStatus("Stabilization failed. Noise increased.");
+                }
+            });
+            btnRow.Add(b);
         }
 
-        if (!_selectedRecord.IsStabilized)
-        {
-            SetStatus("The trace is still unstable. Solve the forensic prompt first.");
-            PlaySound(errorSound);
-            return;
-        }
-
-        if (_selectedRecord.IsRestored)
-        {
-            SetStatus("This snapshot is already restored.");
-            PlaySound(errorSound);
-            return;
-        }
-
-        _selectedRecord.IsRestored = true;
-        _selectedRecord.StateLabel.text = "RESTORED";
-        _selectedRecord.EntryButton.EnableInClassList("recycle-record-button--restored", true);
-        UpdateDetailsPanel(_selectedRecord);
-        UpdateProgressUi();
-        SetStatus($"Recovered deleted profile: {_selectedRecord.Name}.");
-        _hintLabel.text = "Move to the next deleted engineer. Each restored trace reveals why AeroOS buried the staff.";
-        PlaySound(restoreSound);
-        UpdateActionState();
-        CheckCompletion();
+        popup.Add(btnRow);
+        _popupLayer.Add(popup);
+        _isActionInProgress = false;
     }
 
     private void CheckCompletion()
     {
-        if (_isComplete)
-        {
-            return;
+        if (_isComplete) return;
+        if (_records.TrueForAll(r => r.IsRestored)) {
+            _isComplete = true;
+            ProgressionManager.Instance.UnlockKey(GameKey.RecycleBinKey);
+            _completionPopup?.RemoveFromClassList("hidden");
+            if (_finalSummaryLabel != null) _finalSummaryLabel.text = "AeroOS did not delete the engineers. It converted them into protected system processes. Core access partially unlocked.";
+            PlaySound(completeSound);
+            _window.AddToClassList("recycle-bin-window--complete");
         }
-
-        foreach (EngineerRecord record in _records)
-        {
-            if (!record.IsRestored)
-            {
-                return;
-            }
-        }
-
-        _isComplete = true;
-        ProgressionManager.Instance.UnlockKey(GameKey.RecycleBinKey);
-        if (_completionPopup != null)
-        {
-            _completionPopup.RemoveFromClassList("hidden");
-        }
-
-        if (_finalSummaryLabel != null)
-        {
-            _finalSummaryLabel.text =
-                "All four engineers were deliberately deleted from the desktop index.\n\n" +
-                "What the bin teaches you:\n" +
-                "1. The Tree Anomaly began as emotional containment.\n" +
-                "2. Tetris hid memory shards on purpose.\n" +
-                "3. The deletion chain continued inside privileged Computer diagnostics.\n\n" +
-                "Open Computer next. That is where the system kept the real audit trail.";
-        }
-
-        SetStatus("Recovery complete. Computer diagnostics are now the only forward path.");
-        _hintLabel.text = "Objective updated: open Computer and follow the admin trail.";
-        PlaySound(completeSound);
     }
 
-    private void ResetState()
+    private void UpdateDetailsPanel()
     {
-        _isComplete = ProgressionManager.Instance.HasKey(GameKey.RecycleBinKey);
-        _selectedRecord = null;
+        if (_selectedRecord == null) return;
+        _selectedNameLabel.text = $"{_selectedRecord.Id} // {_selectedRecord.Name}";
+        _selectedRoleLabel.text = _selectedRecord.Role;
+        _selectedDeletedAtLabel.text = _selectedRecord.DeletedAt;
+        _selectedCorruptionLabel.text = $"Corruption: {_selectedRecord.CorruptionLevel}";
+        
+        _selectedBodyLabel.text = _selectedRecord.IsRestored ? _selectedRecord.RestoredSummary : (_selectedRecord.IsScanned ? _selectedRecord.ScanSummary : "Record compressed. Scan residue.");
+        _recoveredMessageLabel.text = _selectedRecord.IsRestored ? _selectedRecord.RecoveredMessage : (_selectedRecord.IsScanned ? "Stable trace required to decrypt message." : "");
+        _challengePromptLabel.text = _selectedRecord.IsScanned ? _selectedRecord.ChallengePrompt : "Scan residue first.";
 
-        foreach (EngineerRecord record in _records)
-        {
-            bool completed = _isComplete;
-            record.IsScanned = completed;
-            record.IsStabilized = completed;
-            record.IsRestored = completed;
-            record.EntryButton.EnableInClassList("recycle-record-button--selected", false);
-            record.EntryButton.EnableInClassList("recycle-record-button--stable", completed);
-            record.EntryButton.EnableInClassList("recycle-record-button--restored", completed);
-            record.StateLabel.text = completed ? "RESTORED" : "DELETED";
+        if (_selectedRecord.IsScanned && _currentChoices.Count == 0) GenerateChoices();
+
+        for (int i = 0; i < 3; i++) {
+            _choiceButtons[i].text = _selectedRecord.IsScanned && i < _currentChoices.Count ? _currentChoices[i].Text : "...";
         }
 
-        if (_completionPopup != null)
-        {
-            _completionPopup.EnableInClassList("hidden", !_isComplete);
+        if (_isComplete) {
+            _window.Q<Label>("recycle-bin-window-title").text = "Human Residue Archive";
         }
-
-        if (_isComplete && _finalSummaryLabel != null)
-        {
-            _finalSummaryLabel.text =
-                "All four engineers were deliberately deleted from the desktop index.\n\n" +
-                "The bin points directly toward Computer diagnostics. Follow the audit trail.";
-        }
-
-        UpdateProgressUi();
-        SetStatus(_isComplete
-            ? "Recovery archive already restored. Computer should now contain the admin trail."
-            : "Scan each deleted engineer, stabilize the evidence, then restore the snapshot.");
-        _hintLabel.text = _isComplete
-            ? "Recovered data preserved. You can re-read the profiles anytime."
-            : "Each deleted profile now includes a forensic interpretation challenge.";
-
-        if (_records.Count > 0)
-        {
-            _selectedRecord = _records[0];
-            ApplySelectionVisuals(_selectedRecord);
-            UpdateDetailsPanel(_selectedRecord);
-            UpdateActionState();
-        }
-        else
-        {
-            UpdateActionState();
-        }
-
-        ResetChoiceVisuals();
-        UpdateWorkflowUi();
     }
 
-    private void UpdateDetailsPanel(EngineerRecord record)
-    {
-        if (record == null)
-        {
-            return;
+    private void GenerateChoices() {
+        _currentChoices.Clear();
+        if (_selectedRecord == null) return;
+        List<ChoiceData> list = new List<ChoiceData>();
+        list.Add(new ChoiceData { Text = _selectedRecord.ChallengeChoices[_selectedRecord.CorrectChoiceIndex], IsCorrect = true });
+        for (int i = 0; i < _selectedRecord.ChallengeChoices.Length; i++) {
+            if (i == _selectedRecord.CorrectChoiceIndex) continue;
+            string text = _selectedRecord.ChallengeChoices[i];
+            if (Random.value > 0.5f) text += " (Redacted)";
+            list.Add(new ChoiceData { Text = text, IsCorrect = false });
         }
-
-        if (_selectedNameLabel != null)
-        {
-            _selectedNameLabel.text = $"{record.Id} // {record.Name}";
-        }
-
-        if (_selectedRoleLabel != null)
-        {
-            _selectedRoleLabel.text = record.Role;
-        }
-
-        if (_selectedDeletedAtLabel != null)
-        {
-            _selectedDeletedAtLabel.text = record.DeletedAt;
-        }
-
-        if (_selectedCorruptionLabel != null)
-        {
-            _selectedCorruptionLabel.text = record.CorruptionLevel;
-        }
-
-        if (_selectedBodyLabel != null)
-        {
-            if (record.IsRestored)
-            {
-                _selectedBodyLabel.text = record.RestoredSummary;
-            }
-            else if (record.IsScanned)
-            {
-                _selectedBodyLabel.text = record.ScanSummary;
-            }
-            else
-            {
-                _selectedBodyLabel.text =
-                    "Record is still compressed under deletion residue.\n" +
-                    "Run a residue scan to reveal what AeroOS tried to throw away.";
-            }
-        }
-
-        if (_selectedLearningNoteLabel != null)
-        {
-            _selectedLearningNoteLabel.text = record.IsScanned
-                ? record.LearningNote
-                : "Recovered profiles explain how AeroOS hid real people inside seemingly harmless systems.";
-        }
-
-        if (_challengePromptLabel != null)
-        {
-            _challengePromptLabel.text = record.IsScanned
-                ? record.ChallengePrompt
-                : "Stabilization challenge will appear after scanning.";
-        }
-
-        for (int i = 0; i < _choiceButtons.Length; i++)
-        {
-            if (_choiceButtons[i] == null)
-            {
-                continue;
-            }
-
-            _choiceButtons[i].text = record.IsScanned && record.ChallengeChoices != null && i < record.ChallengeChoices.Length
-                ? record.ChallengeChoices[i]
-                : $"Option {i + 1}";
+        while (list.Count > 0) {
+            int index = Random.Range(0, list.Count);
+            _currentChoices.Add(list[index]);
+            list.RemoveAt(index);
         }
     }
 
     private void UpdateProgressUi()
     {
-        if (_progressLabel == null)
-        {
-            return;
-        }
-
-        int restoredCount = 0;
-        int stabilizedCount = 0;
-        foreach (EngineerRecord record in _records)
-        {
-            if (record.IsStabilized)
-            {
-                stabilizedCount++;
-            }
-
-            if (record.IsRestored)
-            {
-                restoredCount++;
-            }
-        }
-
-        _progressLabel.text = $"Recovered Profiles: {restoredCount} / {_records.Count}   |   Stable Traces: {stabilizedCount} / {_records.Count}";
-    }
-
-    private void UpdateActionState()
-    {
-        bool hasSelection = _selectedRecord != null;
-        bool canScan = hasSelection && !_selectedRecord.IsScanned;
-        bool canRestore = hasSelection && _selectedRecord.IsScanned && _selectedRecord.IsStabilized && !_selectedRecord.IsRestored;
-        bool canChoose = hasSelection && _selectedRecord.IsScanned && !_selectedRecord.IsStabilized && !_selectedRecord.IsRestored;
-
-        _scanButton?.SetEnabled(canScan);
-        _restoreButton?.SetEnabled(canRestore);
-
-        for (int i = 0; i < _choiceButtons.Length; i++)
-        {
-            _choiceButtons[i]?.SetEnabled(canChoose);
-        }
+        int res = _records.FindAll(r => r.IsRestored).Count;
+        int stab = _records.FindAll(r => r.IsStabilized).Count;
+        _progressLabel.text = $"Recovered: {res}/4 | Stable: {stab}/4";
+        _contaminationLabel.text = $"Contamination: {(int)_contaminationLevel}%";
+        _suspicionLabel.text = $"Suspicion: {(int)_suspicionLevel}%";
+        
+        _contaminationLabel.EnableInClassList("text--warn", _contaminationLevel > 50);
+        _suspicionLabel.EnableInClassList("text--warn", _suspicionLevel > 50);
 
         UpdateWorkflowUi();
     }
 
-    private void ResetChoiceVisuals()
+    private void UpdateActionState()
     {
-        for (int i = 0; i < _choiceButtons.Length; i++)
-        {
-            if (_choiceButtons[i] == null)
-            {
-                continue;
-            }
-
-            _choiceButtons[i].RemoveFromClassList("recycle-bin-choice-button--correct");
-            _choiceButtons[i].RemoveFromClassList("recycle-bin-choice-button--wrong");
-        }
-    }
-
-    private IEnumerator GlitchRoutine()
-    {
-        while (_isVisible)
-        {
-            yield return new WaitForSeconds(Random.Range(8f, 14f));
-
-            if (!_isVisible || _selectedRecord == null || _selectedRecord.IsRestored)
-            {
-                continue;
-            }
-
-            yield return StartCoroutine(ShortGlitchBurst());
-        }
-    }
-
-    private IEnumerator ShortGlitchBurst()
-    {
-        if (_window == null || _selectedBodyLabel == null)
-        {
-            yield break;
-        }
-
-        string originalBody = _selectedBodyLabel.text;
-        string originalStatus = _statusLabel != null ? _statusLabel.text : string.Empty;
-        _window.AddToClassList("recycle-bin-window--glitch");
-
-        if (_statusLabel != null)
-        {
-            _statusLabel.text = "Archive spike detected. Deleted data is resisting interpretation.";
-        }
-
-        _selectedBodyLabel.text = ScrambleText(originalBody);
-        yield return new WaitForSeconds(0.18f);
-        _selectedBodyLabel.text = originalBody;
-        yield return new WaitForSeconds(0.1f);
-        _window.RemoveFromClassList("recycle-bin-window--glitch");
-
-        if (_statusLabel != null && !string.IsNullOrEmpty(originalStatus))
-        {
-            _statusLabel.text = originalStatus;
-        }
+        bool hasRec = _selectedRecord != null;
+        _scanButton?.SetEnabled(hasRec && !_selectedRecord.IsScanned && !_isActionInProgress && _contaminationLevel < 80);
+        _restoreButton?.SetEnabled(hasRec && _selectedRecord.IsStabilized && !_selectedRecord.IsRestored && !_isActionInProgress && _contaminationLevel < 80);
+        _stabilizeButton?.SetEnabled(_contaminationLevel >= 50 && !_isActionInProgress);
+        
+        bool canChoose = hasRec && _selectedRecord.IsScanned && !_selectedRecord.IsStabilized && !_isActionInProgress;
+        foreach (var b in _choiceButtons) b.SetEnabled(canChoose);
     }
 
     private void UpdateWorkflowUi()
     {
-        bool hasSelection = _selectedRecord != null;
-        bool scanDone = hasSelection && _selectedRecord.IsScanned;
-        bool stabilizeDone = hasSelection && _selectedRecord.IsStabilized;
-        bool restoreDone = hasSelection && _selectedRecord.IsRestored;
-
-        SetStepState(0, !scanDone, scanDone);
-        SetStepState(1, scanDone && !stabilizeDone, stabilizeDone);
-        SetStepState(2, stabilizeDone && !restoreDone, restoreDone);
-
-        if (_currentPhaseLabel == null)
-        {
-            return;
-        }
-
-        if (!hasSelection)
-        {
-            _currentPhaseLabel.text = "Current phase: choose a deleted engineer profile.";
-            return;
-        }
-
-        if (!scanDone)
-        {
-            _currentPhaseLabel.text = "Current phase: scan the residue to reveal the hidden systems clue.";
-            return;
-        }
-
-        if (!stabilizeDone)
-        {
-            _currentPhaseLabel.text = "Current phase: interpret the clue correctly to stabilize this trace.";
-            return;
-        }
-
-        if (!restoreDone)
-        {
-            _currentPhaseLabel.text = "Current phase: restore the now-stable snapshot and archive the evidence.";
-            return;
-        }
-
-        _currentPhaseLabel.text = "Current phase: profile archived. Move to the next deleted engineer.";
+        bool hasRec = _selectedRecord != null;
+        SetStepState(0, hasRec && !_selectedRecord.IsScanned, hasRec && _selectedRecord.IsScanned);
+        SetStepState(1, hasRec && _selectedRecord.IsScanned && !_selectedRecord.IsStabilized, hasRec && _selectedRecord.IsStabilized);
+        SetStepState(2, hasRec && _selectedRecord.IsStabilized && !_selectedRecord.IsRestored, hasRec && _selectedRecord.IsRestored);
     }
 
-    private void SetStepState(int index, bool isActive, bool isDone)
-    {
-        if (index < 0 || index >= _stepChips.Length || _stepChips[index] == null)
-        {
-            return;
+    private void SetStepState(int i, bool act, bool done) {
+        if (i >= 0 && i < _stepChips.Length && _stepChips[i] != null) {
+            _stepChips[i].EnableInClassList("recycle-bin-step-chip--active", act);
+            _stepChips[i].EnableInClassList("recycle-bin-step-chip--done", done);
         }
-
-        _stepChips[index].EnableInClassList("recycle-bin-step-chip--active", isActive);
-        _stepChips[index].EnableInClassList("recycle-bin-step-chip--done", isDone);
     }
 
-    private void PulseActionButton(Button button)
-    {
-        if (button == null)
-        {
-            return;
+    private void ResetChoiceVisuals() {
+        foreach (var b in _choiceButtons) {
+            b.RemoveFromClassList("recycle-bin-choice-button--correct");
+            b.RemoveFromClassList("recycle-bin-choice-button--wrong");
         }
-
-        StartCoroutine(PulseActionButtonRoutine(button));
     }
 
-    private IEnumerator PulseActionButtonRoutine(Button button)
-    {
-        button.AddToClassList("recycle-bin-action-button--pulse");
-        yield return new WaitForSeconds(0.55f);
-        button.RemoveFromClassList("recycle-bin-action-button--pulse");
+    private IEnumerator GlitchRoutine() {
+        while (_isVisible) {
+            yield return new WaitForSeconds(Random.Range(10, 20));
+            if (_isVisible && Random.value > 0.5f) yield return ShortGlitchBurst();
+        }
     }
 
-    private string ScrambleText(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return value;
-        }
-
-        char[] chars = value.ToCharArray();
-        for (int i = 0; i < chars.Length; i++)
-        {
-            if (chars[i] == ' ' || chars[i] == '\n' || Random.value > 0.18f)
-            {
-                continue;
+    private IEnumerator FakePopupRoutine() {
+        while (_isVisible) {
+            yield return new WaitForSeconds(Random.Range(25, 45));
+            if (_isVisible && !_isComplete) {
+                string[] msgs = { "This file is not important.", "Restoration is unsafe.", "Engineer profile already recovered.", "Would you like to permanently delete this residue?" };
+                CreatePopup(msgs[Random.Range(0, msgs.Length)], "Ignore", "Cancel");
             }
-
-            chars[i] = Random.value > 0.5f ? '#' : '/';
-        }
-
-        return new string(chars);
-    }
-
-    private void SetStatus(string status)
-    {
-        if (_statusLabel != null)
-        {
-            _statusLabel.text = status;
         }
     }
 
-    private void RegisterWindowDragging()
-    {
-        if (_window == null || _titleBar == null)
-        {
-            return;
-        }
-
-        _titleBar.RegisterCallback<PointerDownEvent>(OnTitleBarPointerDown);
-        _titleBar.RegisterCallback<PointerMoveEvent>(OnTitleBarPointerMove);
-        _titleBar.RegisterCallback<PointerUpEvent>(OnTitleBarPointerUp);
-        _titleBar.RegisterCallback<PointerCaptureOutEvent>(_ => _isDraggingWindow = false);
+    private IEnumerator ShortGlitchBurst() {
+        _window.AddToClassList("recycle-bin-window--glitch");
+        PlaySound(glitchSound);
+        yield return new WaitForSeconds(0.15f);
+        _window.RemoveFromClassList("recycle-bin-window--glitch");
     }
 
-    private void OnTitleBarPointerDown(PointerDownEvent evt)
-    {
-        if (evt.button != 0 || _window == null || _window.parent == null)
-        {
-            return;
+    private void ResetState() {
+        _isComplete = ProgressionManager.Instance.HasKey(GameKey.RecycleBinKey);
+        _contaminationLevel = 0;
+        _suspicionLevel = 0;
+        foreach (var r in _records) {
+            r.IsScanned = r.IsStabilized = r.IsRestored = _isComplete;
+            r.StateLabel.text = _isComplete ? "RESTORED" : "DELETED";
         }
-
-        PrepareWindowForDragging();
-        _window.BringToFront();
-
-        Rect parentBounds = _window.parent.worldBound;
-        _dragPointerOffset = new Vector2(
-            evt.position.x - parentBounds.xMin - _window.resolvedStyle.left,
-            evt.position.y - parentBounds.yMin - _window.resolvedStyle.top);
-        _isDraggingWindow = true;
-        _titleBar.CapturePointer(evt.pointerId);
-        evt.StopPropagation();
+        UpdateProgressUi();
+        if (_records.Count > 0) SelectRecord(_records[0]);
     }
 
-    private void OnTitleBarPointerMove(PointerMoveEvent evt)
-    {
-        if (!_isDraggingWindow || _window == null || _window.parent == null)
-        {
-            return;
-        }
-
-        Rect parentBounds = _window.parent.worldBound;
-        float maxLeft = Mathf.Max(0f, parentBounds.width - _window.resolvedStyle.width);
-        float maxTop = Mathf.Max(0f, parentBounds.height - _window.resolvedStyle.height);
-        float left = Mathf.Clamp(evt.position.x - parentBounds.xMin - _dragPointerOffset.x, 0f, maxLeft);
-        float top = Mathf.Clamp(evt.position.y - parentBounds.yMin - _dragPointerOffset.y, 0f, maxTop);
-
-        _window.style.left = left;
-        _window.style.top = top;
-        evt.StopPropagation();
+    private void RegisterWindowDragging() {
+        // Dragging disabled for full-screen mode
     }
 
-    private void OnTitleBarPointerUp(PointerUpEvent evt)
-    {
-        if (!_isDraggingWindow)
-        {
-            return;
-        }
-
-        _isDraggingWindow = false;
-        _titleBar.ReleasePointer(evt.pointerId);
-        evt.StopPropagation();
-    }
-
-    private void PrepareWindowForDragging()
-    {
-        if (_window == null || _window.parent == null)
-        {
-            return;
-        }
-
-        if (_window.style.left.keyword == StyleKeyword.Null || _window.style.top.keyword == StyleKeyword.Null)
-        {
-            Rect parentBounds = _window.parent.worldBound;
-            Rect windowBounds = _window.worldBound;
-            _window.style.left = windowBounds.xMin - parentBounds.xMin;
-            _window.style.top = windowBounds.yMin - parentBounds.yMin;
-        }
-
-        _window.style.right = StyleKeyword.Auto;
-        _window.style.bottom = StyleKeyword.Auto;
-        _window.style.translate = new Translate(0f, 0f, 0f);
-    }
-
-    private void PlaySound(AudioClip clip)
-    {
-        if (clip != null && AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayUISFX(clip, 0.5f);
-        }
-    }
+    private void SetStatus(string s) { if (_statusLabel != null) _statusLabel.text = s; }
+    private void PlaySound(AudioClip c) { if (c != null && AudioManager.Instance != null) AudioManager.Instance.PlayUISFX(c, 0.5f); }
 }
