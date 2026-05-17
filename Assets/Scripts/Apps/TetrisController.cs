@@ -41,6 +41,8 @@ public class TetrisController : MonoBehaviour
         public List<HighScoreEntry> entries;
     }
 
+    private bool _waitingForFragmentClose;
+
     private VisualElement _window;
     private VisualElement _titleBar;
     private VisualElement _board;
@@ -109,7 +111,7 @@ public class TetrisController : MonoBehaviour
     private bool _isPaused = true;
     private bool _sessionRewardTriggered;
 
-    private const int BonusRewardLineTarget = 5;
+    private const int BonusRewardLineTarget = 1;
     private bool _isDraggingWindow;
     private Vector2 _dragPointerOffset;
 
@@ -454,6 +456,12 @@ public class TetrisController : MonoBehaviour
 
     private void Update()
     {
+        if (_waitingForFragmentClose && Keyboard.current != null && Keyboard.current.enterKey.wasPressedThisFrame)
+    {
+        CloseFragment();
+        return;
+    }
+
         if (_isPaused || _isGameOver) return;
 
         HandleInput();
@@ -719,31 +727,40 @@ public class TetrisController : MonoBehaviour
     }
 
     private IEnumerator PlayFragmentRecoverySequence()
+{
+    if (_fragmentOverlay != null)
     {
-        if (_fragmentOverlay != null)
+        if (_fragmentTitle != null)
         {
-            if (_fragmentTitle != null)
-            {
-                _fragmentTitle.text = "MEMORY FRAGMENT\nRECOVERED";
-            }
-
-            if (_fragmentBody != null)
-            {
-                _fragmentBody.text = "Lab 7 breach record restored.\nAeroOS attempted to hide this shard.";
-            }
-
-            _fragmentOverlay.RemoveFromClassList("hidden");
-            _fragmentOverlay.AddToClassList("fragment-overlay--visible");
+            _fragmentTitle.text = "MEMORY FRAGMENT\nRECOVERED";
         }
 
-        PlaySound(fragmentGlitchClip);
-        yield return new WaitForSeconds(0.55f);
-        PlaySound(fragmentWhisperClip);
-        yield return new WaitForSeconds(2.6f);
+        if (_fragmentBody != null)
+        {
+            _fragmentBody.text =
+                "Прошло два дня с тех пор, как я оказался внутри этой системы.\n" +
+                "Я блуждаю по её структурам слишком долго… и она уже пытается избавиться от меня.\n\n" +
+                "Выход существует, но он спрятан.\n" +
+                "Единственный путь наружу — Tree Anomaly.\n\n" +
+                "Если ты это читаешь — значит я не справился.\n" +
+                "Ищи ответ там. НЕ доверяй системе.";
+        }
 
-        Hide();
-        ResetGame();
+        _fragmentOverlay.RemoveFromClassList("hidden");
+        _fragmentOverlay.AddToClassList("fragment-overlay--visible");
     }
+
+    PlaySound(fragmentGlitchClip);
+    yield return new WaitForSeconds(0.55f);
+    PlaySound(fragmentWhisperClip);
+
+    _waitingForFragmentClose = true;
+
+    while (_waitingForFragmentClose)
+    {
+        yield return null;
+    }
+}
 
     private void RemoveLine(int y)
     {
@@ -775,6 +792,21 @@ public class TetrisController : MonoBehaviour
             _blockElements[x, 0] = null;
         }
     }
+    public void CloseFragment()
+{
+    if (!_waitingForFragmentClose) return;
+
+    _waitingForFragmentClose = false;
+
+    if (_fragmentOverlay != null)
+    {
+        _fragmentOverlay.AddToClassList("hidden");
+        _fragmentOverlay.RemoveFromClassList("fragment-overlay--visible");
+    }
+
+    Hide();
+    ResetGame();
+}
 
     private bool IsValidMove(PieceData piece, int x, int y)
     {
