@@ -1,5 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements">
     <ui:Style src="DocumentsWindow.uss" />
+
     <ui:VisualElement name="documents-window" class="documents-window hidden">
         <ui:VisualElement name="documents-wallpaper-overlay" class="documents-wallpaper-overlay" />
         <ui:VisualElement class="documents-window-tint" />
@@ -16,6 +17,7 @@
         </ui:VisualElement>
 
         <ui:VisualElement class="documents-window-shell">
+
             <ui:VisualElement class="documents-column documents-column--main">
                 <ui:VisualElement class="documents-report-toolbar">
                     <ui:VisualElement class="documents-toolbar-slot documents-toolbar-slot--left">
@@ -39,39 +41,47 @@
 
                     <ui:VisualElement name="reconstruction-container" class="reconstruction-container">
 
-    <ui:Label text="Во время ремонта компьютера вместе с моим " class="reconstruction-text" />
+                        <ui:Label text="Уже пару " class="reconstruction-text" />
 
-    <ui:Button name="blank-colleague" class="reconstruction-blank">
-        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-    </ui:Button>
+                        <ui:Button name="blank-days" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+                        </ui:Button>
 
-    <ui:Label text=" произошла вспышка. После неё я очнулся один. Я не понимаю, что произошло." class="reconstruction-text" />
+                        <ui:Label text=", как я попал сюда. Я не понимаю, что здесь происходит и что мне делать." class="reconstruction-text" />
 
-    <ui:Label text="Потом я начал осознавать, что оказался внутри операционной системы " class="reconstruction-text" />
+                        <ui:Label text="Я просто пытаюсь выбраться. Постоянно. Без остановки." class="reconstruction-text" />
 
-    <ui:Button name="blank-aeroos" class="reconstruction-blank">
-        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-    </ui:Button>
+                        <ui:Label text="Всё вокруг ощущается неправильно, как будто система смотрит в ответ, когда я открываю файлы." class="reconstruction-text" />
 
-    <ui:Label text=". Это не похоже на обычную систему. Здесь всё странно и нестабильно." class="reconstruction-text" />
+                        <ui:Label text="Я нашёл " class="reconstruction-text" />
 
-    <ui:Label text="По логам внутри я понял, что мне нужно идти в " class="reconstruction-text" />
+                        <ui:Button name="blank-logs" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+                        </ui:Button>
 
-    <ui:Button name="blank-tetris" class="reconstruction-blank">
-        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-    </ui:Button>
+                        <ui:Label text=". Там есть странные упоминания, будто кто-то оставляет следы специально." class="reconstruction-text" />
 
-    <ui:Label text=". Я не знаю почему, но это единственный повторяющийся маршрут." class="reconstruction-text" />
+                        <ui:Label text="И ещё там было одно сообщение — не уверен, что оно предназначалось мне." class="reconstruction-text" />
 
-    <ui:Label text="Если вы это читаете, значит " class="reconstruction-text" />
+                        <ui:Label text="В нём говорится, что подсказки можно найти внутри " class="reconstruction-text" />
 
-    <ui:Button name="blank-alive" class="reconstruction-blank">
-        <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
-    </ui:Button>
+                        <ui:Button name="blank-tetris" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+                        </ui:Button>
 
-    <ui:Label text=". Пожалуйста, помогите мне." class="reconstruction-text" />
+                        <ui:Label text="." class="reconstruction-text" />
 
-</ui:VisualElement>
+                        <ui:Label text="Если вы видите этот " class="reconstruction-text" />
+
+                        <ui:Button name="blank-text" class="reconstruction-blank">
+                            <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
+                        </ui:Button>
+
+                        <ui:Label text=" — значит, я, скорее всего, ещё здесь. Или уже стал частью этого места." class="reconstruction-text" />
+
+                        <ui:Label text="В любом случае… следующий шаг — Tetris." class="reconstruction-text" />
+
+                    </ui:VisualElement>
 
                     <ui:Label name="final-reconstructed-message" class="reconstruction-text hidden" />
 
@@ -81,6 +91,7 @@
                         <ui:Label name="lie-line-2" text="The missing engineers are safe." class="documents-lie-line documents-lie-line--false" />
                         <ui:Label name="lie-line-3" text="The tree is only a wallpaper decoration." class="documents-lie-line documents-lie-line--false" />
                     </ui:VisualElement>
+
                 </ui:ScrollView>
 
                 <ui:VisualElement class="documents-status-bar">
@@ -92,31 +103,30 @@
                         <ui:Label name="documents-status-label" text="Status: Reconstruct the corrupted message fragments." class="documents-status-pill documents-status-pill--wide" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                </ui:VisualElement>
 
-                <ui:VisualElement class="documents-column documents-column--side">
+            </ui:VisualElement>
+
+            <ui:VisualElement class="documents-column documents-column--side">
+
                 <ui:VisualElement class="documents-side-card documents-side-card--wordbank">
                     <ui:Label text="WORD BANK" class="documents-section-title" />
                     <ui:Label text="Russian fragments detected" class="documents-side-description" />
                     <ui:Label text="System recommendation: COMFORT" class="documents-recommendation documents-recommendation--warning" />
+
                     <ui:VisualElement name="word-bank" class="documents-word-bank">
+                        <ui:Button text="ДНИ" class="documents-word-button" />
+                        <ui:Button text="ЛОГИ" class="documents-word-button" />
+                        <ui:Button text="TETRIS" class="documents-word-button" />
+                        <ui:Button text="ТЕКСТ" class="documents-word-button" />
+                        <ui:Button text="СБОЙ" class="documents-word-button" />
+                        <ui:Button text="СИСТЕМА" class="documents-word-button" />
+                        <ui:Button text="ПРОЦЕСС" class="documents-word-button" />
+                        <ui:Button text="ДАННЫЕ" class="documents-word-button" />
+                        <ui:Button text="ТЬМА" class="documents-word-button" />
+                        <ui:Button text="ГРАНИЦА" class="documents-word-button" />
+                    </ui:VisualElement>
 
-    <ui:Button text="КОЛЛЕГОЙ" class="documents-word-button" />
-    <ui:Button text="AEROOS" class="documents-word-button" />
-    <ui:Button text="TETRIS" class="documents-word-button" />
-    <ui:Button text="ЖИВ" class="documents-word-button" />
-    <ui:Button text="ПОМОГИТЕ" class="documents-word-button" />
-
-    <ui:Button text="СБОЙ" class="documents-word-button" />
-    <ui:Button text="СИСТЕМА" class="documents-word-button" />
-    <ui:Button text="ЛОГИ" class="documents-word-button" />
-    <ui:Button text="ПАМЯТЬ" class="documents-word-button" />
-    <ui:Button text="ТЬМА" class="documents-word-button" />
-    <ui:Button text="ГРАНИЦА" class="documents-word-button" />
-
-</ui:VisualElement>
                 </ui:VisualElement>
-
 
                 <ui:VisualElement class="documents-side-card documents-side-card--target">
                     <ui:Label text="ACTIVE TARGET" class="documents-focus-title" />
@@ -125,7 +135,9 @@
                     <ui:Label name="documents-focus-hint-label" text="Hint: Hidden" class="documents-focus-line documents-focus-line--hint" />
                     <ui:Label name="documents-focus-label" text="Select a redacted field to begin." class="documents-focus-summary" />
                 </ui:VisualElement>
+
             </ui:VisualElement>
+
         </ui:VisualElement>
 
         <ui:VisualElement name="documents-completion-popup" class="documents-completion-popup hidden">
@@ -134,6 +146,6 @@
             <ui:Label text="Solving these puzzles was only the beginning. Next, you must deal with the Tree anomaly." class="documents-completion-body" />
             <ui:Button name="documents-continue-button" text="Return to Desktop" class="documents-continue-button" />
         </ui:VisualElement>
+
     </ui:VisualElement>
 </ui:UXML>
-

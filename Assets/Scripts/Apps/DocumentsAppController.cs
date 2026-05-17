@@ -125,10 +125,10 @@ public class DocumentsAppController : MonoBehaviour
 {
     _blanks.Clear();
 
-    RegisterBlank(root, "blank-colleague", "Участник", "КОЛЛЕГОЙ");
-    RegisterBlank(root, "blank-aeroos", "Локация", "AEROOS");
-    RegisterBlank(root, "blank-tetris", "Цель", "TETRIS");
-    RegisterBlank(root, "blank-alive", "Статус", "ЖИВ");
+    RegisterBlank(root, "blank-days", "Состояние", "ДНИ");
+    RegisterBlank(root, "blank-logs", "Объект", "ЛОГИ");
+    RegisterBlank(root, "blank-tetris", "Подсказка", "TETRIS");
+    RegisterBlank(root, "blank-text", "Факт", "ТЕКСТ");
 }
 
     private void RegisterBlank(VisualElement root, string id, string fieldName, string correctWord)
