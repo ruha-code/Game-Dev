@@ -37,7 +37,7 @@ public class StoryIntroController : MonoBehaviour
     "INTERNAL INCIDENT REPORT",
     "Year: 2026",
     "Project: AeroOS",
-    "Lead Engineers Missing: 7",
+    "Lead Engineers Missing: 4",
     "Final Active Employee:",
     "YOU"
     };

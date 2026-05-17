@@ -108,9 +108,9 @@ public class ProgressionManager : MonoBehaviour
     {
         return location switch
         {
-            LocationId.TreeScene => HasKey(GameKey.DocumentsKey),
-            LocationId.CityScene => HasKey(GameKey.ComputerKey),
-            LocationId.BalloonScene => HasKey(GameKey.NetworkKey),
+            LocationId.TreeScene => HasKey(GameKey.ComputerKey),
+            LocationId.CityScene => false,
+            LocationId.BalloonScene => false,
             _ => false
         };
     }
@@ -170,16 +170,16 @@ public class ProgressionManager : MonoBehaviour
         return CurrentObjective switch
         {
             ObjectiveId.ReviewDocuments => "Current Task: Review Documents",
-            ObjectiveId.InvestigateTree => "Current Task: Investigate the Tree anomaly",
-            ObjectiveId.RecoverTreeMemory => "Current Task: Recover more memory through Pictures and Music",
-            ObjectiveId.AccessComputer => "Current Task: Open Computer and trace the system structure",
-            ObjectiveId.InvestigateCity => "Current Task: Investigate the City structure",
-            ObjectiveId.ConfigureControlPanel => "Current Task: Stabilize the Control Panel",
-            ObjectiveId.RepairNetwork => "Current Task: Repair the Network signal route",
-            ObjectiveId.InvestigateBalloon => "Current Task: Trace the Balloon signal",
-            ObjectiveId.RecoverVideoEvidence => "Current Task: Restore the Videos evidence",
+            ObjectiveId.InvestigateTree => "Current Task: Enter the Tree Anomaly and face the park",
+            ObjectiveId.RecoverTreeMemory => "Current Task: Clear Tetris and recover the hidden shard",
+            ObjectiveId.AccessComputer => "Current Task: Open Computer and trace the deletion command",
+            ObjectiveId.InvestigateCity => "Current Task: Continue investigation",
+            ObjectiveId.ConfigureControlPanel => "Current Task: Continue investigation",
+            ObjectiveId.RepairNetwork => "Current Task: Continue investigation",
+            ObjectiveId.InvestigateBalloon => "Current Task: Continue investigation",
+            ObjectiveId.RecoverVideoEvidence => "Current Task: Continue investigation",
             ObjectiveId.SearchRecycleBin => "Current Task: Search the Recycle Bin for truth fragments",
-            ObjectiveId.AccessCore => "Current Task: Resolve remaining anomalies before accessing the Core",
+            ObjectiveId.AccessCore => "Current Task: Resolve the remaining anomalies and prepare for the endgame",
             _ => "Current Task: Continue investigation"
         };
     }
@@ -189,16 +189,16 @@ public class ProgressionManager : MonoBehaviour
         return CurrentObjective switch
         {
             ObjectiveId.ReviewDocuments => "Recovery incomplete. Please review Documents.",
-            ObjectiveId.InvestigateTree => "Wallpaper anomaly detected: Tree object now responsive.",
-            ObjectiveId.RecoverTreeMemory => "Memory recovery tools available: Pictures, Music.",
-            ObjectiveId.AccessComputer => "Structural analysis tools are now available: Computer.",
-            ObjectiveId.InvestigateCity => "Structural access route identified in City layer.",
-            ObjectiveId.ConfigureControlPanel => "Administrative controls exposed: Control Panel.",
-            ObjectiveId.RepairNetwork => "Communications route degraded. Open Network.",
-            ObjectiveId.InvestigateBalloon => "Signal route restored: Balloon object responding.",
-            ObjectiveId.RecoverVideoEvidence => "Recovered media index points to Videos.",
-            ObjectiveId.SearchRecycleBin => "Discarded data cluster detected in Recycle Bin.",
-            ObjectiveId.AccessCore => "Primary branches resolved. Core access path is stabilizing.",
+            ObjectiveId.InvestigateTree => "Tree anomaly unlocked. The park is waiting.",
+            ObjectiveId.RecoverTreeMemory => "A hidden shard is trapped inside Tetris. Clear a line to pull it free.",
+            ObjectiveId.AccessComputer => "Computer diagnostics are now available. Follow the deletion trail.",
+            ObjectiveId.InvestigateCity => "Objective updated.",
+            ObjectiveId.ConfigureControlPanel => "Objective updated.",
+            ObjectiveId.RepairNetwork => "Objective updated.",
+            ObjectiveId.InvestigateBalloon => "Objective updated.",
+            ObjectiveId.RecoverVideoEvidence => "Objective updated.",
+            ObjectiveId.SearchRecycleBin => "Discarded personnel profiles detected in Recycle Bin.",
+            ObjectiveId.AccessCore => "Primary route resolved. Endgame path is stabilizing.",
             _ => "Objective updated."
         };
     }
@@ -297,14 +297,14 @@ public class ProgressionManager : MonoBehaviour
             return ObjectiveId.ReviewDocuments;
         }
 
-        if (!HasVisitedLocation(LocationId.TreeScene))
-        {
-            return ObjectiveId.InvestigateTree;
-        }
-
-        if (!HasKey(GameKey.PicturesKey) || !HasKey(GameKey.MusicKey))
+        if (!TetrisRewardClaimed)
         {
             return ObjectiveId.RecoverTreeMemory;
+        }
+
+        if (!HasKey(GameKey.RecycleBinKey))
+        {
+            return ObjectiveId.SearchRecycleBin;
         }
 
         if (!HasKey(GameKey.ComputerKey))
@@ -312,34 +312,9 @@ public class ProgressionManager : MonoBehaviour
             return ObjectiveId.AccessComputer;
         }
 
-        if (!HasVisitedLocation(LocationId.CityScene))
+        if (!HasVisitedLocation(LocationId.TreeScene))
         {
-            return ObjectiveId.InvestigateCity;
-        }
-
-        if (!HasKey(GameKey.ControlPanelKey))
-        {
-            return ObjectiveId.ConfigureControlPanel;
-        }
-
-        if (!HasKey(GameKey.NetworkKey))
-        {
-            return ObjectiveId.RepairNetwork;
-        }
-
-        if (!HasVisitedLocation(LocationId.BalloonScene))
-        {
-            return ObjectiveId.InvestigateBalloon;
-        }
-
-        if (!HasKey(GameKey.VideosKey))
-        {
-            return ObjectiveId.RecoverVideoEvidence;
-        }
-
-        if (!HasKey(GameKey.RecycleBinKey))
-        {
-            return ObjectiveId.SearchRecycleBin;
+            return ObjectiveId.InvestigateTree;
         }
 
         return ObjectiveId.AccessCore;

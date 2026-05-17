@@ -1,0 +1,578 @@
+:root {
+    --bin-panel: rgba(7, 17, 31, 0.82);
+    --bin-panel-soft: rgba(17, 33, 54, 0.58);
+    --bin-line: rgba(205, 234, 255, 0.16);
+    --bin-accent: #9fd6ff;
+    --bin-warn: #ff7f95;
+    --bin-success: #86ebb5;
+    --bin-text: #f1f8ff;
+    --bin-subtle: rgba(223, 239, 255, 0.74);
+}
+
+.recycle-bin-window {
+    position: absolute;
+    width: 1540px;
+    height: 860px;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    background-color: rgba(7, 15, 27, 0.98);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.22);
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.recycle-bin-window--glitch {
+    border-color: rgba(255, 122, 150, 0.52);
+}
+
+.recycle-bin-background-glow {
+    position: absolute;
+    border-radius: 999px;
+    background-color: rgba(120, 204, 255, 0.04);
+}
+
+.recycle-bin-background-glow--one {
+    width: 220px;
+    height: 220px;
+    right: -60px;
+    top: 84px;
+}
+
+.recycle-bin-background-glow--two {
+    width: 220px;
+    height: 220px;
+    left: -70px;
+    bottom: -26px;
+    background-color: rgba(255, 109, 129, 0.04);
+}
+
+.recycle-bin-window-header {
+    height: 58px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 0 18px;
+    border-bottom-width: 1px;
+    border-bottom-color: rgba(255, 255, 255, 0.12);
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.recycle-bin-window-title {
+    color: white;
+    font-size: 22px;
+    -unity-font-style: bold;
+}
+
+.recycle-bin-window-subtitle {
+    color: rgba(230, 244, 255, 0.7);
+    font-size: 12px;
+}
+
+.recycle-bin-close-button {
+    width: 28px;
+    height: 24px;
+    background-color: rgba(214, 68, 68, 0.95);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.18);
+    border-radius: 6px;
+    color: white;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.recycle-bin-window-shell {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 58px;
+    bottom: 0;
+    flex-direction: row;
+    padding: 18px;
+}
+
+.recycle-bin-column {
+    background-color: rgba(12, 24, 41, 0.94);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.12);
+    border-radius: 20px;
+    padding: 20px;
+}
+
+.recycle-bin-column--manifest {
+    width: 420px;
+    margin-right: 18px;
+}
+
+.recycle-bin-column--details {
+    flex-grow: 1;
+    justify-content: flex-start;
+}
+
+.recycle-bin-section-title {
+    color: var(--bin-accent);
+    font-size: 14px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.recycle-bin-manifest-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 14px;
+}
+
+.recycle-bin-manifest-header-copy {
+    flex-grow: 1;
+    margin-right: 12px;
+}
+
+.recycle-bin-manifest-badge {
+    min-width: 78px;
+    min-height: 34px;
+    padding: 8px 12px;
+    border-radius: 999px;
+    background-color: rgba(118, 206, 255, 0.14);
+    border-width: 1px;
+    border-color: rgba(184, 232, 255, 0.2);
+    align-items: center;
+    justify-content: center;
+}
+
+.recycle-bin-manifest-badge-text {
+    color: #ddf3ff;
+    font-size: 11px;
+    -unity-font-style: bold;
+    letter-spacing: 1px;
+}
+
+.recycle-bin-intro-text {
+    color: var(--bin-subtle);
+    font-size: 15px;
+    white-space: normal;
+    margin-bottom: 14px;
+}
+
+.recycle-bin-record-list {
+    flex-grow: 1;
+    background-color: rgba(0, 0, 0, 0.22);
+    border-radius: 16px;
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    padding: 10px;
+}
+
+.recycle-record-button {
+    min-height: 124px;
+    margin-bottom: 12px;
+    padding: 0;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    color: transparent;
+}
+
+.recycle-record-button:hover {
+    background-color: rgba(133, 211, 255, 0.08);
+}
+
+.recycle-record-button--selected {
+    border-color: rgba(145, 220, 255, 0.48);
+    background-color: rgba(145, 220, 255, 0.1);
+}
+
+.recycle-record-button--scanned {
+    border-color: rgba(255, 188, 118, 0.26);
+}
+
+.recycle-record-button--restored {
+    border-color: rgba(134, 235, 181, 0.34);
+    background-color: rgba(134, 235, 181, 0.08);
+}
+
+.recycle-record-button--stable {
+    border-color: rgba(132, 213, 255, 0.3);
+    background-color: rgba(132, 213, 255, 0.05);
+}
+
+.recycle-record-button-shell {
+    flex-grow: 1;
+    padding: 14px 16px;
+}
+
+.recycle-record-topline {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.recycle-record-title {
+    color: var(--bin-text);
+    font-size: 17px;
+    -unity-font-style: bold;
+    flex-grow: 1;
+    margin-right: 8px;
+}
+
+.recycle-record-subtitle {
+    color: var(--bin-subtle);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.recycle-record-summary {
+    color: rgba(217, 235, 249, 0.6);
+    font-size: 12px;
+    margin-top: 8px;
+    white-space: normal;
+}
+
+.recycle-record-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background-color: rgba(255, 121, 147, 0.82);
+}
+
+.recycle-record-state {
+    margin-top: 12px;
+    padding: 6px 12px;
+    min-height: 28px;
+    border-radius: 999px;
+    background-color: rgba(255, 111, 137, 0.12);
+    color: #ffdbe2;
+    font-size: 11px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    align-self: flex-start;
+}
+
+.recycle-bin-legend {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.035);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.recycle-bin-legend-title {
+    color: #e8f6ff;
+    font-size: 12px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+}
+
+.recycle-bin-legend-line {
+    color: rgba(223, 239, 255, 0.68);
+    font-size: 12px;
+    white-space: normal;
+    margin-bottom: 5px;
+}
+
+.recycle-bin-panel {
+    background-color: var(--bin-panel);
+    border-width: 1px;
+    border-color: var(--bin-line);
+    border-radius: 18px;
+    padding: 18px;
+    margin-bottom: 16px;
+}
+
+.recycle-bin-panel--selected {
+    min-height: 280px;
+}
+
+.recycle-bin-panel--note {
+    min-height: 96px;
+}
+
+.recycle-bin-panel--actions {
+    background-color: rgba(15, 28, 46, 0.8);
+    min-height: 280px;
+}
+
+.recycle-bin-panel--status {
+    margin-bottom: 0;
+    min-height: 132px;
+}
+
+.recycle-bin-selected-name {
+    color: white;
+    font-size: 32px;
+    -unity-font-style: bold;
+    margin-bottom: 8px;
+}
+
+.recycle-bin-selected-role {
+    color: rgba(198, 230, 255, 0.84);
+    font-size: 17px;
+    margin-bottom: 16px;
+}
+
+.recycle-bin-selected-meta-row {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+
+.recycle-bin-selected-meta {
+    color: rgba(216, 236, 255, 0.78);
+    font-size: 14px;
+    margin-bottom: 7px;
+}
+
+.recycle-bin-selected-meta--pill {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    padding: 7px 12px;
+    min-height: 30px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.recycle-bin-selected-meta--alert {
+    color: #ffd9df;
+}
+
+.recycle-bin-selected-body {
+    margin-top: 16px;
+    color: var(--bin-text);
+    font-size: 18px;
+    line-height: 1.25;
+    white-space: normal;
+    margin-bottom: 0;
+}
+
+.recycle-bin-learning-note {
+    color: rgba(226, 242, 255, 0.86);
+    font-size: 15px;
+    line-height: 1.2;
+    white-space: normal;
+}
+
+.recycle-bin-action-button {
+    min-height: 48px;
+    margin-bottom: 12px;
+    border-width: 1px;
+    border-radius: 14px;
+    color: white;
+    -unity-font-style: bold;
+    font-size: 16px;
+}
+
+.recycle-bin-action-button--pulse {
+    border-color: rgba(215, 246, 255, 0.46);
+    background-color: rgba(151, 215, 255, 0.24);
+}
+
+.recycle-bin-workflow {
+    flex-direction: row;
+    margin-bottom: 12px;
+}
+
+.recycle-bin-step-chip {
+    flex-direction: row;
+    align-items: center;
+    margin-right: 10px;
+    padding: 7px 12px;
+    min-height: 34px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.recycle-bin-step-chip-number {
+    width: 22px;
+    height: 22px;
+    margin-right: 8px;
+    border-radius: 999px;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #f3fbff;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    font-size: 12px;
+}
+
+.recycle-bin-step-chip-text {
+    color: rgba(227, 240, 255, 0.72);
+    font-size: 12px;
+    -unity-font-style: bold;
+}
+
+.recycle-bin-step-chip--active {
+    background-color: rgba(118, 206, 255, 0.16);
+    border-color: rgba(176, 231, 255, 0.24);
+}
+
+.recycle-bin-step-chip--active .recycle-bin-step-chip-number {
+    background-color: rgba(118, 206, 255, 0.26);
+}
+
+.recycle-bin-step-chip--done {
+    background-color: rgba(128, 231, 180, 0.14);
+    border-color: rgba(172, 241, 205, 0.2);
+}
+
+.recycle-bin-step-chip--done .recycle-bin-step-chip-number {
+    background-color: rgba(128, 231, 180, 0.24);
+}
+
+.recycle-bin-current-phase {
+    color: rgba(223, 241, 255, 0.78);
+    font-size: 13px;
+    white-space: normal;
+    margin-bottom: 12px;
+}
+
+.recycle-bin-action-button--scan {
+    background-color: rgba(116, 178, 255, 0.2);
+    border-color: rgba(165, 221, 255, 0.24);
+}
+
+.recycle-bin-action-button--restore {
+    background-color: rgba(129, 225, 182, 0.18);
+    border-color: rgba(170, 242, 205, 0.24);
+}
+
+.recycle-bin-challenge-shell {
+    margin-bottom: 12px;
+    padding: 14px;
+    border-radius: 16px;
+    background-color: rgba(255, 255, 255, 0.04);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+.recycle-bin-challenge-prompt {
+    color: rgba(235, 245, 255, 0.9);
+    font-size: 14px;
+    -unity-font-style: bold;
+    line-height: 1.15;
+    white-space: normal;
+    margin-bottom: 10px;
+}
+
+.recycle-bin-choice-button {
+    min-height: 42px;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    background-color: rgba(113, 174, 255, 0.12);
+    border-width: 1px;
+    border-color: rgba(168, 219, 255, 0.18);
+    border-radius: 12px;
+    color: rgba(243, 249, 255, 0.95);
+    white-space: normal;
+    -unity-text-align: middle-left;
+    font-size: 14px;
+    line-height: 1.1;
+}
+
+.recycle-bin-choice-button:hover {
+    background-color: rgba(138, 195, 255, 0.18);
+}
+
+.recycle-bin-choice-button--correct {
+    background-color: rgba(132, 228, 182, 0.18);
+    border-color: rgba(132, 228, 182, 0.32);
+}
+
+.recycle-bin-choice-button--wrong {
+    background-color: rgba(255, 108, 136, 0.15);
+    border-color: rgba(255, 108, 136, 0.3);
+}
+
+.recycle-bin-hint-label {
+    margin-top: 6px;
+    color: rgba(220, 238, 255, 0.72);
+    font-size: 14px;
+    line-height: 1.15;
+    white-space: normal;
+}
+
+.recycle-bin-progress-label {
+    color: white;
+    font-size: 20px;
+    -unity-font-style: bold;
+    margin-bottom: 12px;
+}
+
+.recycle-bin-status-label {
+    color: rgba(228, 242, 255, 0.86);
+    font-size: 15px;
+    line-height: 1.15;
+    white-space: normal;
+}
+
+.recycle-bin-completion-popup {
+    position: absolute;
+    width: 520px;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+    padding: 28px 26px 24px 26px;
+    background-color: rgba(9, 20, 34, 0.97);
+    border-width: 1px;
+    border-color: rgba(141, 219, 255, 0.34);
+    border-radius: 22px;
+}
+
+.recycle-bin-completion-title {
+    color: white;
+    font-size: 34px;
+    -unity-font-style: bold;
+    margin-bottom: 12px;
+}
+
+.recycle-bin-completion-body {
+    color: rgba(224, 241, 255, 0.9);
+    font-size: 17px;
+    white-space: normal;
+    margin-bottom: 20px;
+}
+
+.recycle-bin-completion-highlights {
+    margin-bottom: 16px;
+}
+
+.recycle-bin-completion-highlight {
+    margin-bottom: 6px;
+    padding: 8px 12px;
+    min-height: 32px;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.08);
+    color: rgba(232, 244, 255, 0.86);
+    font-size: 13px;
+    -unity-font-style: bold;
+}
+
+.recycle-bin-completion-next {
+    color: #9fe1ff;
+    font-size: 14px;
+    -unity-font-style: bold;
+    margin-bottom: 18px;
+}
+
+.recycle-bin-complete-button {
+    min-height: 46px;
+    background-color: rgba(118, 206, 255, 0.2);
+    border-width: 1px;
+    border-color: rgba(255, 255, 255, 0.2);
+    border-radius: 14px;
+    color: white;
+    -unity-font-style: bold;
+    font-size: 16px;
+}
+
+.hidden {
+    display: none;
+}

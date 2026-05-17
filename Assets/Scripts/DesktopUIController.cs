@@ -45,6 +45,7 @@ public class DesktopUIController : MonoBehaviour
     private Label _startMenuUserName;
     private DocumentsAppController _documentsController;
     private TetrisController _tetrisController;
+    private RecycleBinAppController _recycleBinController;
     private bool _hasPlayedDesktopAppearChime;
     private string _playerName;
     private string _stableClockText;
@@ -86,6 +87,11 @@ public class DesktopUIController : MonoBehaviour
 
         _documentsController = GetComponent<DocumentsAppController>();
         _tetrisController = GetComponent<TetrisController>();
+        _recycleBinController = GetComponent<RecycleBinAppController>();
+        if (_recycleBinController == null)
+        {
+            _recycleBinController = gameObject.AddComponent<RecycleBinAppController>();
+        }
         _playerName = PlayerPrefs.GetString("PlayerName", "User");
         _root = _uiDocument.rootVisualElement;
 
@@ -121,6 +127,11 @@ public class DesktopUIController : MonoBehaviour
         if (_tetrisController != null)
         {
             _tetrisController.Initialize(_root);
+        }
+
+        if (_recycleBinController != null)
+        {
+            _recycleBinController.Initialize(_root);
         }
 
         RegisterUiEvents();
@@ -291,14 +302,14 @@ public class DesktopUIController : MonoBehaviour
         }
 
         UpdateIconState("Documents", true, progression.CurrentObjective == ObjectiveId.ReviewDocuments);
-        UpdateIconState("Pictures", progression.HasKey(GameKey.DocumentsKey), progression.CurrentObjective == ObjectiveId.RecoverTreeMemory && !progression.HasKey(GameKey.PicturesKey));
-        UpdateIconState("Music", progression.HasKey(GameKey.DocumentsKey), progression.CurrentObjective == ObjectiveId.RecoverTreeMemory && !progression.HasKey(GameKey.MusicKey));
-        UpdateIconState("Computer", progression.HasKey(GameKey.PicturesKey) && progression.HasKey(GameKey.MusicKey), progression.CurrentObjective == ObjectiveId.AccessComputer);
-        UpdateIconState("Control Panel", progression.HasKey(GameKey.ComputerKey), progression.CurrentObjective == ObjectiveId.ConfigureControlPanel);
-        UpdateIconState("Network", progression.HasKey(GameKey.ControlPanelKey), progression.CurrentObjective == ObjectiveId.RepairNetwork);
-        UpdateIconState("Videos", progression.HasKey(GameKey.NetworkKey), progression.CurrentObjective == ObjectiveId.RecoverVideoEvidence);
-        UpdateIconState("Recycle Bin", progression.HasKey(GameKey.VideosKey), progression.CurrentObjective == ObjectiveId.SearchRecycleBin);
-        UpdateIconState("Tetris", true, false);
+        UpdateIconState("Tetris", true, progression.CurrentObjective == ObjectiveId.RecoverTreeMemory && !progression.TetrisRewardClaimed);
+        UpdateIconState("Recycle Bin", progression.TetrisRewardClaimed, progression.CurrentObjective == ObjectiveId.SearchRecycleBin && !progression.HasKey(GameKey.RecycleBinKey));
+        UpdateIconState("Computer", progression.HasKey(GameKey.RecycleBinKey), progression.CurrentObjective == ObjectiveId.AccessComputer && !progression.HasKey(GameKey.ComputerKey));
+        UpdateIconState("Pictures", progression.HasKey(GameKey.DocumentsKey), false);
+        UpdateIconState("Music", progression.HasKey(GameKey.DocumentsKey), false);
+        UpdateIconState("Control Panel", progression.HasKey(GameKey.ComputerKey), false);
+        UpdateIconState("Network", progression.HasKey(GameKey.ComputerKey), false);
+        UpdateIconState("Videos", progression.HasKey(GameKey.ComputerKey), false);
 
         SetHotspotVisible(_treeHotspot, progression.IsLocationUnlocked(LocationId.TreeScene));
         SetHotspotVisible(_cityHotspot, progression.IsLocationUnlocked(LocationId.CityScene));
@@ -320,7 +331,7 @@ public class DesktopUIController : MonoBehaviour
 
         icon.EnableInClassList("desktop-icon-wrapper--locked", !isEnabled);
         icon.EnableInClassList("desktop-icon-wrapper--objective", isObjective);
-        icon.SetEnabled(isEnabled || iconName == "Tetris");
+        icon.SetEnabled(isEnabled || iconName == "Tetris" || iconName == "Documents");
     }
 
     private void SetHotspotVisible(VisualElement hotspot, bool isVisible)
@@ -579,7 +590,16 @@ public class DesktopUIController : MonoBehaviour
                 HandleProgramLaunch("VideosMiniGame", IsIconEnabled(iconName));
                 break;
             case "Recycle Bin":
-                HandleProgramLaunch("RecycleBinMiniGame", IsIconEnabled(iconName));
+                if (!IsIconEnabled(iconName))
+                {
+                    ShowSystemToast("Recovery Incomplete", "The Recycle Bin is still sealed behind the Tetris fragment.");
+                    break;
+                }
+
+                if (_recycleBinController != null)
+                {
+                    _recycleBinController.Show();
+                }
                 break;
             case "Tetris":
                 if (_tetrisController != null)
@@ -883,7 +903,8 @@ public class DesktopUIController : MonoBehaviour
     private bool IsDesktopAppWindowOpen()
     {
         return (_documentsController != null && _documentsController.IsWindowOpen)
-            || (_tetrisController != null && _tetrisController.IsWindowOpen);
+            || (_tetrisController != null && _tetrisController.IsWindowOpen)
+            || (_recycleBinController != null && _recycleBinController.IsWindowOpen);
     }
 
     private void SetDesktopAnomaliesPaused(bool isPaused)
