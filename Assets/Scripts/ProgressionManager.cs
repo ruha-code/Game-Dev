@@ -76,7 +76,13 @@ public class ProgressionManager : MonoBehaviour
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Bootstrap()
     {
-        _ = Instance;
+        if (_instance == null)
+        {
+            _ = Instance;
+            return;
+        }
+
+        _instance.LoadProgress();
     }
 
     private void Awake()

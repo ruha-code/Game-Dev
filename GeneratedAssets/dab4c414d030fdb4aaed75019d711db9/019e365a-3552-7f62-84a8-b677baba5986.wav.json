@@ -1,0 +1,15 @@
+{
+    "asset": "dab4c414d030fdb4aaed75019d711db9",
+    "fileName": "019e365a-3552-7f62-84a8-b677baba5986.wav",
+    "prompt": "dark forest whisper ambience for psychological horror, distant layered human whispers, unintelligible words, cold air, soft breath texture, subtle stereo movement, seamless loop, unsettling but quiet, 10 seconds",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

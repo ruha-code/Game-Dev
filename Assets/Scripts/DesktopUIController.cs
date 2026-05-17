@@ -21,6 +21,13 @@ public class DesktopUIController : MonoBehaviour
     [SerializeField] private Sprite brokenGlassSprite;
     [SerializeField] private Sprite phantomChatIcon;
 
+    [Header("Scene Transition")]
+    [SerializeField] private float hotspotTransitionDuration = 1.1f;
+    [SerializeField] private Color hotspotTransitionColor = new Color(0.01f, 0.03f, 0.05f, 1f);
+    [SerializeField, Range(1f, 1.35f)] private float treeTransitionZoom = 1.12f;
+    [SerializeField] private Vector2 treeTransitionPan = new Vector2(-90f, -42f);
+    [SerializeField] private float treeTransitionGlitchLead = 0.28f;
+
     private UIDocument _uiDocument;
     private VisualElement _root;
     private VisualElement _startButton;
@@ -32,7 +39,9 @@ public class DesktopUIController : MonoBehaviour
     private Label _clockPanelDay;
     private Label _clockPanelDate;
     private VisualElement _calendarGrid;
+    private VisualElement _desktopBackground;
     private VisualElement _mainArea;
+    private VisualElement _wallpaperHotspots;
     private Label _startMenuUserName;
     private DocumentsAppController _documentsController;
     private TetrisController _tetrisController;
@@ -48,12 +57,15 @@ public class DesktopUIController : MonoBehaviour
     private Label _fakeWindowTitle;
     private Label _fakeWindowBody;
     private VisualElement _glassOverlay;
+    private VisualElement _sceneTransitionOverlay;
     private VisualElement _chatWindow;
     private Label _chatText;
     private Label _objectiveText;
     private Button _treeHotspot;
     private Button _cityHotspot;
     private Button _balloonHotspot;
+    private Coroutine _sceneTransitionRoutine;
+    private bool _isSceneTransitionInProgress;
 
     private readonly Dictionary<string, VisualElement> _iconMap = new Dictionary<string, VisualElement>();
 
@@ -69,6 +81,7 @@ public class DesktopUIController : MonoBehaviour
         }
 
         _ = ProgressionManager.Instance;
+        ProgressionManager.Instance.LoadProgress();
         _ = AudioManager.Instance;
 
         _documentsController = GetComponent<DocumentsAppController>();
@@ -85,8 +98,10 @@ public class DesktopUIController : MonoBehaviour
         _clockPanelDay = _root.Q<Label>("clock-panel-day");
         _clockPanelDate = _root.Q<Label>("clock-panel-date");
         _calendarGrid = _root.Q<VisualElement>("calendar-grid");
+        _desktopBackground = _root.Q<VisualElement>("background");
 
         _mainArea = _root.Q<VisualElement>("main-area");
+        _wallpaperHotspots = _root.Q<VisualElement>("wallpaper-hotspots");
         _startMenuUserName = _root.Q<Label>(className: "start-menu-user-name");
         _objectiveText = _root.Q<Label>("objective-text");
         _treeHotspot = _root.Q<Button>("tree-hotspot");
@@ -96,6 +111,7 @@ public class DesktopUIController : MonoBehaviour
         EnsureAnomalyUi();
         ApplyPersonalization();
         CacheDesktopIcons();
+        EnsureHotspotsAreClickable();
 
         if (_documentsController != null)
         {
@@ -194,12 +210,12 @@ public class DesktopUIController : MonoBehaviour
 
     private void RegisterHotspots()
     {
-        RegisterHotspot(_treeHotspot, LocationId.TreeScene, "TreeScene");
+        RegisterHotspot(_treeHotspot, LocationId.TreeScene, "Park", smoothTransition: true);
         RegisterHotspot(_cityHotspot, LocationId.CityScene, "CityScene");
         RegisterHotspot(_balloonHotspot, LocationId.BalloonScene, "BalloonScene");
     }
 
-    private void RegisterHotspot(Button hotspot, LocationId locationId, string sceneName)
+    private void RegisterHotspot(Button hotspot, LocationId locationId, string sceneName, bool smoothTransition = false)
     {
         if (hotspot == null)
         {
@@ -208,7 +224,19 @@ public class DesktopUIController : MonoBehaviour
 
         hotspot.clicked += () =>
         {
+            if (_isSceneTransitionInProgress)
+            {
+                return;
+            }
+
             PlayClickSound();
+
+            if (smoothTransition)
+            {
+                StartSceneTransition(sceneName, locationId);
+                return;
+            }
+
             if (TryLoadScene(sceneName))
             {
                 ProgressionManager.Instance.MarkLocationVisited(locationId);
@@ -228,6 +256,24 @@ public class DesktopUIController : MonoBehaviour
         _iconMap["Control Panel"] = _root.Q<VisualElement>("icon-wrapper-control-panel");
         _iconMap["Recycle Bin"] = _root.Q<VisualElement>("icon-wrapper-recycle-bin");
         _iconMap["Tetris"] = _root.Q<VisualElement>("icon-wrapper-tetris");
+    }
+
+    private void EnsureHotspotsAreClickable()
+    {
+        if (_wallpaperHotspots == null)
+        {
+            return;
+        }
+
+        _wallpaperHotspots.pickingMode = PickingMode.Ignore;
+        _wallpaperHotspots.BringToFront();
+
+        _treeHotspot.pickingMode = PickingMode.Position;
+        _cityHotspot.pickingMode = PickingMode.Position;
+        _balloonHotspot.pickingMode = PickingMode.Position;
+        _treeHotspot?.BringToFront();
+        _cityHotspot?.BringToFront();
+        _balloonHotspot?.BringToFront();
     }
 
     private void OnProgressionChanged()
@@ -576,6 +622,126 @@ public class DesktopUIController : MonoBehaviour
         return false;
     }
 
+    private void StartSceneTransition(string sceneName, LocationId locationId)
+    {
+        if (!Application.CanStreamedLevelBeLoaded(sceneName))
+        {
+            Debug.Log($"[Desktop] Scene '{sceneName}' is not available yet.");
+            ShowSystemToast("Module Missing", $"Scene '{sceneName}' has not been added yet.");
+            return;
+        }
+
+        if (_sceneTransitionRoutine != null)
+        {
+            StopCoroutine(_sceneTransitionRoutine);
+        }
+
+        _sceneTransitionRoutine = StartCoroutine(TransitionToScene(sceneName, locationId));
+    }
+
+    private IEnumerator TransitionToScene(string sceneName, LocationId locationId)
+    {
+        _isSceneTransitionInProgress = true;
+        SetDesktopAnomaliesPaused(true);
+        ClearDesktopAnomalyVisuals();
+
+        if (_sceneTransitionOverlay != null)
+        {
+            _sceneTransitionOverlay.style.display = DisplayStyle.Flex;
+            _sceneTransitionOverlay.BringToFront();
+        }
+
+        float elapsed = 0f;
+        while (elapsed < hotspotTransitionDuration)
+        {
+            elapsed += Time.deltaTime;
+            float progress = Mathf.Clamp01(elapsed / hotspotTransitionDuration);
+            float easedProgress = Mathf.SmoothStep(0f, 1f, progress);
+            float zoomProgress = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(progress / 0.7f));
+            float glitchProgress = Mathf.Clamp01((progress - treeTransitionGlitchLead) / Mathf.Max(0.01f, 1f - treeTransitionGlitchLead));
+
+            ApplyTreeTransitionVisuals(zoomProgress, glitchProgress);
+
+            if (_sceneTransitionOverlay != null)
+            {
+                _sceneTransitionOverlay.style.opacity = easedProgress;
+            }
+
+            if (AudioManager.HasInstance)
+            {
+                AudioManager.Instance.SetAmbientVolume(Mathf.Lerp(ambientVolume, 0f, easedProgress));
+            }
+
+            yield return null;
+        }
+
+        ProgressionManager.Instance.MarkLocationVisited(locationId);
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(sceneName);
+        if (loadOperation == null)
+        {
+            _isSceneTransitionInProgress = false;
+            yield break;
+        }
+
+        while (!loadOperation.isDone)
+        {
+            yield return null;
+        }
+    }
+
+    private void ApplyTreeTransitionVisuals(float zoomProgress, float glitchProgress)
+    {
+        if (_desktopBackground != null)
+        {
+            float scale = Mathf.Lerp(1f, treeTransitionZoom, zoomProgress);
+            _desktopBackground.style.scale = new Scale(new Vector2(scale, scale));
+            _desktopBackground.style.translate = new Translate(
+                Mathf.Lerp(0f, treeTransitionPan.x, zoomProgress),
+                Mathf.Lerp(0f, treeTransitionPan.y, zoomProgress),
+                0f);
+        }
+
+        if (_mainArea != null)
+        {
+            bool shouldGlitch = glitchProgress > 0.12f;
+            _mainArea.EnableInClassList("desktop-main-area--glitch", shouldGlitch);
+            _mainArea.style.opacity = Mathf.Lerp(1f, 0.25f, zoomProgress);
+            _mainArea.style.translate = new Translate(
+                Mathf.Sin(Time.unscaledTime * 60f) * 10f * glitchProgress,
+                Mathf.Cos(Time.unscaledTime * 48f) * 6f * glitchProgress,
+                0f);
+        }
+
+        if (_wallpaperHotspots != null)
+        {
+            _wallpaperHotspots.style.scale = new Scale(new Vector2(Mathf.Lerp(1f, 1.05f, zoomProgress), Mathf.Lerp(1f, 1.05f, zoomProgress)));
+            _wallpaperHotspots.style.opacity = Mathf.Lerp(1f, 0.78f, glitchProgress);
+        }
+
+        if (_treeHotspot != null)
+        {
+            float pulse = 1f + Mathf.Sin(Time.unscaledTime * 22f) * 0.04f * glitchProgress;
+            _treeHotspot.style.scale = new Scale(new Vector2(pulse, pulse));
+            _treeHotspot.style.opacity = Mathf.Lerp(1f, 0.55f, glitchProgress);
+        }
+
+        if (_objectiveText != null)
+        {
+            _objectiveText.style.opacity = Mathf.Lerp(1f, 0.35f, glitchProgress);
+        }
+
+        if (_clockLabel != null)
+        {
+            _clockLabel.EnableInClassList("tray-clock--glitch", glitchProgress > 0.2f);
+        }
+
+        if (_glassOverlay != null)
+        {
+            _glassOverlay.EnableInClassList("glass-overlay--active", glitchProgress > 0.78f);
+            _glassOverlay.style.opacity = Mathf.Lerp(0f, 0.9f, Mathf.Clamp01((glitchProgress - 0.78f) / 0.22f));
+        }
+    }
+
     private void ApplyPersonalization()
     {
         if (_startMenuUserName != null)
@@ -634,6 +800,24 @@ public class DesktopUIController : MonoBehaviour
             }
 
             _root.Add(_glassOverlay);
+        }
+
+        if (_sceneTransitionOverlay == null)
+        {
+            _sceneTransitionOverlay = new VisualElement
+            {
+                name = "desktop-scene-transition-overlay",
+                pickingMode = PickingMode.Ignore
+            };
+            _sceneTransitionOverlay.style.position = Position.Absolute;
+            _sceneTransitionOverlay.style.left = 0f;
+            _sceneTransitionOverlay.style.top = 0f;
+            _sceneTransitionOverlay.style.right = 0f;
+            _sceneTransitionOverlay.style.bottom = 0f;
+            _sceneTransitionOverlay.style.backgroundColor = new StyleColor(hotspotTransitionColor);
+            _sceneTransitionOverlay.style.opacity = 0f;
+            _sceneTransitionOverlay.style.display = DisplayStyle.None;
+            _root.Add(_sceneTransitionOverlay);
         }
 
         if (_chatWindow == null)
@@ -740,6 +924,7 @@ public class DesktopUIController : MonoBehaviour
         if (_glassOverlay != null)
         {
             _glassOverlay.RemoveFromClassList("glass-overlay--active");
+            _glassOverlay.style.opacity = 0f;
         }
 
         if (_chatWindow != null)
@@ -756,7 +941,31 @@ public class DesktopUIController : MonoBehaviour
         if (_mainArea != null)
         {
             _mainArea.RemoveFromClassList("desktop-main-area--glitch");
+            _mainArea.style.opacity = 1f;
             _mainArea.style.translate = new Translate(0f, 0f, 0f);
+        }
+
+        if (_desktopBackground != null)
+        {
+            _desktopBackground.style.scale = new Scale(Vector2.one);
+            _desktopBackground.style.translate = new Translate(0f, 0f, 0f);
+        }
+
+        if (_wallpaperHotspots != null)
+        {
+            _wallpaperHotspots.style.scale = new Scale(Vector2.one);
+            _wallpaperHotspots.style.opacity = 1f;
+        }
+
+        if (_treeHotspot != null)
+        {
+            _treeHotspot.style.scale = new Scale(Vector2.one);
+            _treeHotspot.style.opacity = 1f;
+        }
+
+        if (_objectiveText != null)
+        {
+            _objectiveText.style.opacity = 1f;
         }
 
         foreach (VisualElement icon in _iconMap.Values)

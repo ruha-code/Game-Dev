@@ -1,0 +1,15 @@
+{
+    "asset": "e9cbde8212ad46d4f8e3e7aac0eb16c9",
+    "fileName": "019e3659-4bee-707e-b24b-a22766fb8062.wav",
+    "prompt": "memory fragment recovered sound, reality crack, whisper fade, low cinematic hit, short dark magical confirmation, 2 seconds",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

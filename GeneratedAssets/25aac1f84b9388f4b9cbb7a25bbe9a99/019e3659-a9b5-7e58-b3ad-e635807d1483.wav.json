@@ -1,0 +1,15 @@
+{
+    "asset": "25aac1f84b9388f4b9cbb7a25bbe9a99",
+    "fileName": "019e3659-a9b5-7e58-b3ad-e635807d1483.wav",
+    "prompt": "short horror jump scare sting, sudden close presence, sharp inhale, metallic scrape, low impact hit, unnatural whisper burst, 2 seconds",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

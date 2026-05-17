@@ -1,0 +1,15 @@
+{
+    "asset": "dfa1ebf237664bd45a9099961a7fc214",
+    "fileName": "019e3659-b12d-7173-a3b9-dc17e65c5734.wav",
+    "prompt": "mysterious cursed letter opening sound, paper rustle mixed with spectral glitch, soft bass shimmer, short eerie activation, 2 seconds",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 2.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

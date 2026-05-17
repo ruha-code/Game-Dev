@@ -644,6 +644,7 @@ public class MainMenuController : MonoBehaviour
             return;
         }
 
+        ProgressionManager.Instance.LoadProgress();
         isTransitioning = true;
         anomaliesEnabled = false;
         root.pickingMode = PickingMode.Ignore;

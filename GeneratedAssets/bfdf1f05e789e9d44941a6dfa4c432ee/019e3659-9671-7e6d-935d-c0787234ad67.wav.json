@@ -1,0 +1,15 @@
+{
+    "asset": "bfdf1f05e789e9d44941a6dfa4c432ee",
+    "fileName": "019e3659-9671-7e6d-935d-c0787234ad67.wav",
+    "prompt": "subtle resonant stone hum, mystical low frequency vibration, ancient monolith energy, quiet dark atmospheric background, 10 seconds, loopable",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 10.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}

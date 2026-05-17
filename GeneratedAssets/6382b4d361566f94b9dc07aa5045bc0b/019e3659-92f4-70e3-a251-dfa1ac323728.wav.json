@@ -1,0 +1,15 @@
+{
+    "asset": "6382b4d361566f94b9dc07aa5045bc0b",
+    "fileName": "019e3659-92f4-70e3-a251-dfa1ac323728.wav",
+    "prompt": "anomalous fog pulse sound, reversed wind, ghostly pressure wave, cold atmospheric swell, glitchy air distortion, short horror transition, 3 seconds",
+    "negativePrompt": "",
+    "model": "elevenlabs-sound-effects-v2",
+    "modelName": "ElevenLabs Sound Effects V2",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "duration": 3.0,
+    "autoTrim": false,
+    "hasReference": false,
+    "voice": ""
+}
