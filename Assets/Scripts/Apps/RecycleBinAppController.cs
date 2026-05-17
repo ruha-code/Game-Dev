@@ -94,6 +94,8 @@ public class RecycleBinAppController : MonoBehaviour
 
     public void Initialize(VisualElement root)
     {
+        ResolveAudioFallbacks();
+
         _window = root.Q<VisualElement>("recycle-bin-window");
         if (_window == null) return;
 
@@ -187,6 +189,20 @@ public class RecycleBinAppController : MonoBehaviour
         yield return new WaitForSeconds(1.2f);
         _restoreButton.style.translate = new Translate(0, 0, 0);
         _isButtonFleeing = false;
+    }
+
+    private void ResolveAudioFallbacks()
+    {
+        clickSound ??= Resources.Load<AudioClip>("Audio/UI/Aero_Click");
+        scanSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/RestoreSuccess");
+        restoreSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/RestoreSuccess");
+        completeSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/ArchiveComplete");
+        errorSound ??= Resources.Load<AudioClip>("Audio/UI/StaticCrack");
+        glitchSound ??= Resources.Load<AudioClip>("Audio/UI/GlitchBurst");
+        ambientHum ??= Resources.Load<AudioClip>("Audio/RecycleBin/Bin_Forensic_Ambient");
+        whisperHelpSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/Bin_Whisper_Help");
+        scanLoopSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/ScanLoop");
+        stabilizationSuccessSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/StabilizationSuccess");
     }
 
     private void SetupHumSource()

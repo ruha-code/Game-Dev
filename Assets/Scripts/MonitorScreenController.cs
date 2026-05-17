@@ -24,17 +24,33 @@ public class MonitorScreenController : MonoBehaviour
     private bool isGlitching;
     private float glitchDuration;
     private float nextGlitchTime;
+    private bool ownsRuntimeMaterial;
     
     void Start()
     {
-        if (screenSurface == null) screenSurface = GetComponent<Renderer>();
+        ResolveReferences();
         if (screenSurface != null)
         {
             if (screenMaterial == null)
             {
-                screenMaterial = new Material(Shader.Find("Monitor/GlitchScreen"));
+                Shader shader = Shader.Find("Monitor/GlitchScreen");
+                if (shader != null)
+                {
+                    screenMaterial = new Material(shader);
+                    ownsRuntimeMaterial = true;
+                }
+                else if (screenSurface.sharedMaterial != null)
+                {
+                    screenMaterial = new Material(screenSurface.sharedMaterial);
+                    ownsRuntimeMaterial = true;
+                }
             }
-            screenSurface.material = screenMaterial;
+
+            if (screenMaterial != null)
+            {
+                screenSurface.material = screenMaterial;
+            }
+
             if (wallpaperTexture != null) screenMaterial.SetTexture("_MainTex", wallpaperTexture);
             if (creatureFaceTexture == null) { generatedFace = GenFace(); screenMaterial.SetTexture("_FaceTex", generatedFace); }
             else screenMaterial.SetTexture("_FaceTex", creatureFaceTexture);
@@ -44,6 +60,37 @@ public class MonitorScreenController : MonoBehaviour
             screenMaterial.SetFloat("_Brightness", brightness);
             screenMaterial.SetFloat("_Contrast", contrast);
             nextGlitchTime = Random.Range(2f, 5f);
+        }
+    }
+
+    private void ResolveReferences()
+    {
+        if (screenSurface == null)
+        {
+            screenSurface = GetComponent<Renderer>();
+            if (screenSurface == null)
+            {
+                screenSurface = GetComponentInChildren<Renderer>();
+            }
+        }
+
+        if (monitorLight == null)
+        {
+            Light[] lights = FindObjectsByType<Light>(FindObjectsInactive.Include);
+            foreach (Light lightSource in lights)
+            {
+                if (lightSource == null)
+                {
+                    continue;
+                }
+
+                string candidateName = lightSource.name.ToLowerInvariant();
+                if (candidateName.Contains("monitor"))
+                {
+                    monitorLight = lightSource;
+                    break;
+                }
+            }
         }
     }
 
@@ -121,6 +168,6 @@ public class MonitorScreenController : MonoBehaviour
     void OnDestroy()
     {
         if (generatedFace != null) Destroy(generatedFace);
-        if (screenMaterial != null) Destroy(screenMaterial);
+        if (ownsRuntimeMaterial && screenMaterial != null) Destroy(screenMaterial);
     }
 }

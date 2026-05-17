@@ -74,6 +74,7 @@ public class BootScreenController : MonoBehaviour
 
     private void Awake()
     {
+        ResolveReferences();
         EnsureTextMeshes();
 
         if (screenSurface != null)
@@ -89,6 +90,36 @@ public class BootScreenController : MonoBehaviour
         scanBasePositions = CachePositions(scanLines);
         vortexBaseScales = CacheScales(vortexLines);
         SetMode(ScreenMode.Idle, 0f);
+    }
+
+    private void ResolveReferences()
+    {
+        if (screenSurface == null)
+        {
+            screenSurface = GetComponent<Renderer>();
+            if (screenSurface == null)
+            {
+                screenSurface = GetComponentInChildren<Renderer>();
+            }
+        }
+
+        if (monitorLight == null)
+        {
+            Light[] lights = FindObjectsByType<Light>(FindObjectsInactive.Include);
+            foreach (Light lightSource in lights)
+            {
+                if (lightSource == null)
+                {
+                    continue;
+                }
+
+                if (lightSource.name.ToLowerInvariant().Contains("monitor"))
+                {
+                    monitorLight = lightSource;
+                    break;
+                }
+            }
+        }
     }
 
     private void EnsureTextMeshes()
