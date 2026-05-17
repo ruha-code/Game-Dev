@@ -1,0 +1,23 @@
+{
+    "asset": "d4099c58a3fe39f45af4912627bc5385",
+    "fileName": "019e356e-f334-75aa-99ef-2b20d6fafaae.glb",
+    "prompt": "low poly wooden fence section mesh, simple design, high quality, unity asset",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "5b40c8ee4376a7748bb4bbe71f1a3471",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

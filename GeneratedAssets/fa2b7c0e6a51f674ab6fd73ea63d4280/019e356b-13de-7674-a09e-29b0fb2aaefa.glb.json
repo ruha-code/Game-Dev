@@ -1,0 +1,23 @@
+{
+    "asset": "fa2b7c0e6a51f674ab6fd73ea63d4280",
+    "fileName": "019e356b-13de-7674-a09e-29b0fb2aaefa.glb",
+    "prompt": "arched wooden bridge mesh for a park pond, simple clean design, high quality, unity asset",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "25e5b6f497222424f9ad56e4cc7dfaa8",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

@@ -1,0 +1,23 @@
+{
+    "asset": "73f030d3a87c6bd4ba4809539197711b",
+    "fileName": "019e356b-112d-749d-882c-401bc5db1f27.glb",
+    "prompt": "wooden park bench mesh, simple design, wood seat with metal legs, high quality, unity asset",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "500e7a6f2bcc7ab4abda1557087ea260",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}

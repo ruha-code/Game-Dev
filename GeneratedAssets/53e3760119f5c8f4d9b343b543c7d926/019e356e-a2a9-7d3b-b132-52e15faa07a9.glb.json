@@ -1,0 +1,23 @@
+{
+    "asset": "53e3760119f5c8f4d9b343b543c7d926",
+    "fileName": "019e356e-a2a9-7d3b-b132-52e15faa07a9.glb",
+    "prompt": "low poly park lamp post mesh, metal, simple design, high quality, unity asset",
+    "negativePrompt": "",
+    "model": "model3d-tripo-p1",
+    "modelName": "Tripo P1",
+    "customSeed": -1,
+    "w3CTraceId": "",
+    "feedback": 0,
+    "refinementMode": "Generation",
+    "promptImageReferenceGuid": "5fb4143b90d40594c95b67142025a1f3",
+    "modelReferenceGuid": "",
+    "multiviewFrontGuid": "",
+    "multiviewBackGuid": "",
+    "multiviewLeftGuid": "",
+    "multiviewRightGuid": "",
+    "multiviewTopGuid": "",
+    "multiviewBottomGuid": "",
+    "multiviewLeftFrontGuid": "",
+    "multiviewRightFrontGuid": "",
+    "faceLimit": -1
+}
