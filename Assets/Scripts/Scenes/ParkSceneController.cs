@@ -10,10 +10,14 @@ using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 #endif
+using UnityEngine.EventSystems;
 
 public class ParkSceneController : MonoBehaviour
 {
     private const string DesktopSceneName = "AeroDesktopScene";
+    private const string MainMenuSceneName = "MainMenuScene";
+    private const string StoryIntroSceneName = "StoryIntroScene";
+    private const string SystemEndingFlagKey = "SystemEnding.Active";
     private const string PlayerRootName = "PlayerCapsule";
     private const string CameraName = "MainCamera";
 
@@ -52,6 +56,7 @@ public class ParkSceneController : MonoBehaviour
     private readonly List<GameObject> _riftSpikes = new List<GameObject>();
     private readonly List<Vector3> _riftSpikeBasePositions = new List<Vector3>();
     private readonly List<Renderer> _bloodStainRenderers = new List<Renderer>();
+    private readonly List<GameObject> _parkErasedObjects = new List<GameObject>();
     private readonly HashSet<int> _usedStoneIndices = new HashSet<int>();
     private readonly HashSet<int> _triggeredMilestoneScares = new HashSet<int>();
 
@@ -106,10 +111,27 @@ public class ParkSceneController : MonoBehaviour
     private Image _letterBloodSmearTop;
     private Image _letterBloodSmearBottom;
     private Image _flashOverlay;
+    private GameObject _endingOverlay;
+    private Image _endingOverlayBackground;
+    private Image _endingAuraGlow;
+    private Image _endingQuestionPlate;
+    private Text _endingHeaderLabel;
+    private Text _endingQuestionLabel;
+    private Text _endingConsequenceLabel;
+    private Text _endingHintLabel;
+    private Button _endingYesButton;
+    private Button _endingNoButton;
+    private readonly List<Image> _endingGlitchBars = new List<Image>();
+    private AudioClip _endingAcceptClip;
+    private AudioClip _endingRejectClip;
+    private AudioClip _endingGlitchClip;
 
     private int _currentStoneIndex;
     private int _fragmentsRecovered;
     private bool _letterOpen;
+    private bool _endingSequenceStarted;
+    private bool _endingChoiceMade;
+    private bool _endingInputEnabled;
     private float _nextFogFlashTime;
     private float _pressureTimer;
     private bool _pressureActive;
@@ -135,6 +157,7 @@ public class ParkSceneController : MonoBehaviour
     private bool _wasGroundedLastFrame;
     private float _movementTimer;
     private float _nextPresenceTime;
+    private bool _spawnedFallbackCamera;
 
     private GameObject _jumpWatcher;
     private Light _jumpWatcherLight;
@@ -175,6 +198,12 @@ public class ParkSceneController : MonoBehaviour
 
     private void Update()
     {
+        if (_endingSequenceStarted)
+        {
+            HandleEndingChoiceInput();
+            return;
+        }
+
         if (_player == null || _mainCamera == null || _stones.Count == 0)
         {
             return;
@@ -220,7 +249,7 @@ public class ParkSceneController : MonoBehaviour
         {
             if (_fragmentsRecovered >= _stones.Count)
             {
-                _statusLabel.text = "All fragments recovered. Pictures and Music now hold the next memories. Press R to return.";
+                _statusLabel.text = "All fragments recovered. The park is waiting for your answer.";
             }
             else if (_expellingPlayer)
             {
@@ -503,6 +532,11 @@ public class ParkSceneController : MonoBehaviour
             _mainCamera = Camera.main != null ? Camera.main : FindAnyObjectByType<Camera>();
         }
 
+        if (_mainCamera == null)
+        {
+            _mainCamera = CreateFallbackEndingCamera();
+        }
+
         if (directionalLight == null)
         {
             Light[] lights = FindObjectsByType<Light>(FindObjectsInactive.Include);
@@ -532,6 +566,18 @@ public class ParkSceneController : MonoBehaviour
                 break;
             }
         }
+    }
+
+    private Camera CreateFallbackEndingCamera()
+    {
+        GameObject cameraObject = new GameObject("MainCamera");
+        cameraObject.tag = "MainCamera";
+        Camera cameraComponent = cameraObject.AddComponent<Camera>();
+        cameraComponent.clearFlags = CameraClearFlags.Skybox;
+        cameraComponent.fieldOfView = 60f;
+        cameraObject.AddComponent<AudioListener>();
+        _spawnedFallbackCamera = true;
+        return cameraComponent;
     }
 
     private void CacheStones()
@@ -630,6 +676,10 @@ public class ParkSceneController : MonoBehaviour
         _presenceSource.maxDistance = 15f;
         _presenceSource.rolloffMode = AudioRolloffMode.Logarithmic;
 
+        _endingAcceptClip ??= fragmentCompleteClip != null ? fragmentCompleteClip : watcherStingClip;
+        _endingRejectClip ??= fogPulseClip != null ? fogPulseClip : letterOpenClip;
+        _endingGlitchClip ??= watcherStingClip != null ? watcherStingClip : fogPulseClip;
+
         _nextPresenceTime = Time.time + UnityEngine.Random.Range(10f, 25f);
         _nextFogFlashTime = Time.time + Random.Range(12f, 18f);
         }
@@ -687,6 +737,9 @@ public class ParkSceneController : MonoBehaviour
 
         _flashOverlay = CreateDecorativePanel("FlashOverlay", canvasObject.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, new Vector2(2400f, 1400f), new Color(0.75f, 0.88f, 1f, 0f), 0f);
         _flashOverlay.raycastTarget = false;
+
+        EnsureEventSystem();
+        BuildEndingOverlay(canvasObject.transform, font);
     }
 
     private static Text CreateText(string name, Transform parent, Font font, int fontSize, TextAnchor anchor, Vector2 anchorMin, Vector2 anchorMax, Vector2 anchoredPosition, Vector2 sizeDelta)
@@ -824,6 +877,138 @@ public class ParkSceneController : MonoBehaviour
         footer.alignment = TextAnchor.LowerRight;
         footer.color = new Color(0.45f, 0.72f, 0.82f, 0.85f);
         footer.text = "PARK ARCHIVE / TREE ANOMALY";
+    }
+
+    private void BuildEndingOverlay(Transform parent, Font font)
+    {
+        _endingOverlay = new GameObject("EndingOverlay", typeof(RectTransform), typeof(Image));
+        _endingOverlay.transform.SetParent(parent, false);
+        RectTransform overlayRect = _endingOverlay.GetComponent<RectTransform>();
+        overlayRect.anchorMin = Vector2.zero;
+        overlayRect.anchorMax = Vector2.one;
+        overlayRect.offsetMin = Vector2.zero;
+        overlayRect.offsetMax = Vector2.zero;
+
+        _endingOverlayBackground = _endingOverlay.GetComponent<Image>();
+        _endingOverlayBackground.color = new Color(0f, 0f, 0f, 0f);
+
+        _endingAuraGlow = CreateDecorativePanel("EndingAuraGlow", _endingOverlay.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 10f), new Vector2(1320f, 760f), new Color(0.2f, 0.7f, 0.85f, 0f), 0f);
+        _endingAuraGlow.raycastTarget = false;
+
+        _endingQuestionPlate = CreateDecorativePanel("EndingQuestionPlate", _endingOverlay.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 70f), new Vector2(1180f, 260f), new Color(0.1f, 0.16f, 0.2f, 0f), 0f);
+        _endingQuestionPlate.raycastTarget = false;
+
+        _endingHeaderLabel = CreateText("EndingHeader", _endingOverlay.transform, font, 20, TextAnchor.MiddleLeft, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(52f, -42f), new Vector2(280f, 32f));
+        _endingHeaderLabel.alignment = TextAnchor.MiddleLeft;
+        _endingHeaderLabel.color = new Color(0.55f, 0.68f, 0.82f, 0f);
+        _endingHeaderLabel.text = "02  THE CHOICE";
+
+        _endingQuestionLabel = CreateText("EndingQuestion", _endingOverlay.transform, font, 46, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, 8f), new Vector2(1180f, 220f));
+        _endingQuestionLabel.color = new Color(0.9f, 0.97f, 1f, 0f);
+        _endingQuestionLabel.alignment = TextAnchor.MiddleCenter;
+        _endingQuestionLabel.lineSpacing = 1.08f;
+
+        _endingConsequenceLabel = CreateText("EndingConsequence", _endingOverlay.transform, font, 30, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(0f, -136f), new Vector2(1060f, 210f));
+        _endingConsequenceLabel.color = new Color(0.84f, 0.92f, 0.96f, 0f);
+        _endingConsequenceLabel.alignment = TextAnchor.MiddleCenter;
+        _endingConsequenceLabel.lineSpacing = 1.08f;
+
+        _endingHintLabel = CreateText("EndingHint", _endingOverlay.transform, font, 18, TextAnchor.MiddleCenter, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -42f), new Vector2(900f, 40f));
+        _endingHintLabel.color = new Color(0.75f, 0.82f, 0.86f, 0f);
+        _endingHintLabel.alignment = TextAnchor.MiddleCenter;
+        _endingHintLabel.text = string.Empty;
+
+        CreateEndingGlitchBars();
+
+        _endingYesButton = CreateEndingButton("EndingYesButton", _endingOverlay.transform, font, "YES", new Vector2(-150f, -220f));
+        _endingNoButton = CreateEndingButton("EndingNoButton", _endingOverlay.transform, font, "NO", new Vector2(150f, -220f));
+
+        _endingYesButton.onClick.AddListener(() => ResolveEndingChoice(true));
+        _endingNoButton.onClick.AddListener(() => ResolveEndingChoice(false));
+
+        _endingOverlay.SetActive(false);
+    }
+
+    private Button CreateEndingButton(string name, Transform parent, Font font, string label, Vector2 anchoredPosition)
+    {
+        GameObject buttonObject = new GameObject(name, typeof(RectTransform), typeof(Image), typeof(Button));
+        buttonObject.transform.SetParent(parent, false);
+
+        RectTransform rect = buttonObject.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0.5f, 0.5f);
+        rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.anchoredPosition = anchoredPosition;
+        rect.sizeDelta = new Vector2(220f, 70f);
+
+        Image background = buttonObject.GetComponent<Image>();
+        bool isYes = label == "YES";
+        background.color = new Color(0.03f, 0.05f, 0.08f, 0.88f);
+
+        Button button = buttonObject.GetComponent<Button>();
+        ColorBlock colors = button.colors;
+        colors.normalColor = background.color;
+        colors.highlightedColor = isYes ? new Color(0.15f, 0.3f, 0.42f, 0.95f) : new Color(0.08f, 0.12f, 0.18f, 0.95f);
+        colors.pressedColor = isYes ? new Color(0.09f, 0.2f, 0.3f, 1f) : new Color(0.06f, 0.08f, 0.12f, 1f);
+        colors.selectedColor = colors.highlightedColor;
+        colors.disabledColor = new Color(0.12f, 0.12f, 0.12f, 0.6f);
+        button.colors = colors;
+
+        Outline outline = buttonObject.AddComponent<Outline>();
+        outline.effectColor = isYes ? new Color(0.58f, 0.82f, 1f, 0.85f) : new Color(0.36f, 0.5f, 0.66f, 0.55f);
+        outline.effectDistance = new Vector2(2f, -2f);
+
+        Shadow glow = buttonObject.AddComponent<Shadow>();
+        glow.effectColor = isYes ? new Color(0.46f, 0.78f, 1f, 0.45f) : new Color(0.3f, 0.4f, 0.55f, 0.28f);
+        glow.effectDistance = new Vector2(0f, 0f);
+
+        Text buttonLabel = CreateText($"{name}Label", buttonObject.transform, font, 28, TextAnchor.MiddleCenter, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), Vector2.zero, rect.sizeDelta);
+        buttonLabel.text = label;
+        buttonLabel.color = new Color(0.95f, 0.98f, 1f, 1f);
+
+        return button;
+    }
+
+    private void CreateEndingGlitchBars()
+    {
+        _endingGlitchBars.Clear();
+
+        Vector2[] positions =
+        {
+            new Vector2(0f, 26f),
+            new Vector2(-90f, 0f),
+            new Vector2(84f, -18f),
+            new Vector2(0f, -42f)
+        };
+
+        Vector2[] sizes =
+        {
+            new Vector2(620f, 2f),
+            new Vector2(420f, 3f),
+            new Vector2(520f, 2f),
+            new Vector2(360f, 2f)
+        };
+
+        for (int i = 0; i < positions.Length; i++)
+        {
+            Image bar = CreateDecorativePanel($"EndingGlitchBar_{i}", _endingOverlay.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), positions[i], sizes[i], new Color(0.72f, 0.88f, 1f, 0f), 0f);
+            bar.raycastTarget = false;
+            _endingGlitchBars.Add(bar);
+        }
+    }
+
+    private void EnsureEventSystem()
+    {
+        if (FindFirstObjectByType<EventSystem>() != null)
+        {
+            return;
+        }
+
+        GameObject eventSystemObject = new GameObject("EventSystem", typeof(EventSystem));
+#if ENABLE_INPUT_SYSTEM
+        eventSystemObject.AddComponent<InputSystemUIInputModule>();
+#else
+        eventSystemObject.AddComponent<StandaloneInputModule>();
+#endif
     }
 
     private void CreateActiveStoneMarker()
@@ -1643,7 +1828,7 @@ public class ParkSceneController : MonoBehaviour
 
         bool isLastStone = fragmentIndex >= _stones.Count - 1;
         _letterHintLabel.text = isLastStone
-            ? "Press E or Esc to close this fragment. Then press R to return to the desktop."
+            ? "Press E or Esc to close this fragment. The park will ask what comes next."
             : "Press E or Esc to close this fragment. Then find a different stone before the anomaly catches up.";
     }
 
@@ -1665,6 +1850,12 @@ public class ParkSceneController : MonoBehaviour
         _currentStoneIndex = FindNextUnusedStoneIndex();
 
         UpdateStonePresentation();
+
+        if (_fragmentsRecovered >= _stones.Count)
+        {
+            StartEndingSequence();
+            return;
+        }
 
         if (_fragmentsRecovered % 2 == 0 && _fragmentsRecovered < _stones.Count && !_triggeredMilestoneScares.Contains(_fragmentsRecovered) && _jumpScareRoutine == null)
         {
@@ -1706,6 +1897,681 @@ public class ParkSceneController : MonoBehaviour
         {
             _letterPanel.SetActive(isVisible);
         }
+    }
+
+    private void StartEndingSequence()
+    {
+        if (_endingSequenceStarted)
+        {
+            return;
+        }
+
+        _endingSequenceStarted = true;
+        _endingInputEnabled = false;
+        _pressureActive = false;
+        _pressureTimer = 0f;
+        _expellingPlayer = false;
+        if (_promptLabel != null) _promptLabel.enabled = false;
+        if (_statusLabel != null) _statusLabel.enabled = false;
+        if (_flashOverlay != null) _flashOverlay.color = new Color(0f, 0f, 0f, 0f);
+        StopParkAudio();
+        SetPlayerLocked(true);
+        StartCoroutine(EndingSequenceRoutine());
+    }
+
+    private IEnumerator EndingSequenceRoutine()
+    {
+        if (_endingOverlay == null)
+        {
+            yield break;
+        }
+
+        _endingOverlay.SetActive(true);
+        _endingChoiceMade = false;
+        _endingQuestionLabel.text = string.Empty;
+        _endingConsequenceLabel.text = string.Empty;
+        _endingHintLabel.text = string.Empty;
+        _endingHeaderLabel.text = "02  THE CHOICE";
+        _endingYesButton.gameObject.SetActive(false);
+        _endingNoButton.gameObject.SetActive(false);
+        SetEndingDecorAlpha(0f);
+
+        yield return StartCoroutine(FadeEndingOverlay(0f, 1f, 0.45f));
+        StartCoroutine(FadeText(_endingHeaderLabel, 0f, 0.75f, 0.35f));
+        StartCoroutine(AnimateEndingGlitchBars());
+        yield return StartCoroutine(TypeText(_endingQuestionLabel, "Ты хочешь узнать всю правду?\nТогда оставайся здесь.", 0.032f, playGlitchSound: true));
+
+        _endingHintLabel.text = "Выбери ответ";
+        StartCoroutine(FadeText(_endingHintLabel, 0f, 0.9f, 0.45f));
+
+        _endingYesButton.gameObject.SetActive(true);
+        _endingNoButton.gameObject.SetActive(true);
+        yield return StartCoroutine(FadeButtonGroup(0f, 1f, 0.35f));
+        _endingYesButton.interactable = true;
+        _endingNoButton.interactable = true;
+        _endingInputEnabled = true;
+    }
+
+    private void ResolveEndingChoice(bool stayHere)
+    {
+        if (_endingChoiceMade)
+        {
+            return;
+        }
+
+        _endingChoiceMade = true;
+        _endingYesButton.interactable = false;
+        _endingNoButton.interactable = false;
+        StartCoroutine(ResolveEndingChoiceRoutine(stayHere));
+    }
+
+    private IEnumerator ResolveEndingChoiceRoutine(bool stayHere)
+    {
+        _endingInputEnabled = false;
+
+        if (!stayHere)
+        {
+            yield return StartCoroutine(PlaySystemVictimEnding());
+            yield break;
+        }
+
+        string consequence = stayHere
+            ? "Ты остаёшься.\nГладкий свет парка больше не кажется мягким.\nВетви смыкаются, небо запечатывается стеклянной синевой,\nи AeroOS записывает твоё имя туда, где уже шепчут остальные."
+            : "Ты говоришь «нет».\nПарк дёргается, будто теряет над тобой власть.\nТропа назад открывается лишь на миг,\nи ты уносишь с собой обрывок правды, оставляя шёпот позади.";
+
+        Color consequenceColor = stayHere
+            ? new Color(1f, 0.78f, 0.78f, 0f)
+            : new Color(0.82f, 0.96f, 1f, 0f);
+
+        _endingConsequenceLabel.color = consequenceColor;
+        _endingHintLabel.text = string.Empty;
+
+        if (_scareSource != null)
+        {
+            AudioClip choiceClip = stayHere ? _endingAcceptClip : _endingRejectClip;
+            if (choiceClip != null)
+            {
+                _scareSource.PlayOneShot(choiceClip, stayHere ? scareVolume : scareVolume * 0.75f);
+            }
+        }
+
+        yield return StartCoroutine(FadeButtonGroup(1f, 0f, 0.25f));
+        _endingYesButton.gameObject.SetActive(false);
+        _endingNoButton.gameObject.SetActive(false);
+        StartCoroutine(FadeText(_endingHeaderLabel, 0.75f, 0f, 0.2f));
+        yield return StartCoroutine(FadeText(_endingQuestionLabel, 1f, 0f, 0.2f));
+        yield return StartCoroutine(PlayEndingChoiceFlash(stayHere));
+
+        yield return StartCoroutine(TypeText(_endingConsequenceLabel, consequence, 0.026f, playGlitchSound: true));
+        yield return new WaitForSeconds(stayHere ? 3.2f : 2.8f);
+
+        yield return StartCoroutine(FadeEndingOverlay(1f, 1f, 0.1f));
+
+        if (stayHere)
+        {
+            PlayerPrefs.SetInt(SystemEndingFlagKey, 1);
+            PlayerPrefs.Save();
+            SceneManager.LoadScene(StoryIntroSceneName);
+            yield break;
+        }
+
+        SceneManager.LoadScene(MainMenuSceneName);
+    }
+
+    private IEnumerator FadeEndingOverlay(float startAlpha, float targetAlpha, float duration)
+    {
+        if (_endingOverlayBackground == null)
+        {
+            yield break;
+        }
+
+        float elapsed = 0f;
+        Color color = _endingOverlayBackground.color;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / duration);
+            _endingOverlayBackground.color = new Color(color.r, color.g, color.b, alpha);
+            yield return null;
+        }
+
+        _endingOverlayBackground.color = new Color(color.r, color.g, color.b, targetAlpha);
+    }
+
+    private IEnumerator PlaySystemVictimEnding()
+    {
+        if (_endingOverlay != null)
+        {
+            _endingOverlay.SetActive(false);
+        }
+
+        if (_scareSource != null && _endingRejectClip != null)
+        {
+            _scareSource.PlayOneShot(_endingRejectClip, scareVolume * 0.95f);
+        }
+
+        yield return StartCoroutine(PlayEndingChoiceFlash(false));
+        PrepareSilentParkState();
+        SetPlayerLocked(false);
+        yield return new WaitForSeconds(10f);
+        yield return StartCoroutine(PlayEraseShockwave(GetParkCenterPoint()));
+        yield return StartCoroutine(EraseParkObjectsWave(GetParkCenterPoint()));
+        yield return new WaitForSeconds(7f);
+
+        if (_endingOverlay != null)
+        {
+            _endingOverlay.SetActive(true);
+        }
+
+        _endingHeaderLabel.text = "03  SYSTEM VERDICT";
+        _endingQuestionLabel.text = string.Empty;
+        _endingConsequenceLabel.text = string.Empty;
+        _endingHintLabel.text = string.Empty;
+        _endingYesButton.gameObject.SetActive(false);
+        _endingNoButton.gameObject.SetActive(false);
+        SetEndingDecorAlpha(0f);
+
+        yield return StartCoroutine(FadeEndingOverlay(0f, 1f, 0.8f));
+        StartCoroutine(FadeText(_endingHeaderLabel, 0f, 0.75f, 0.35f));
+        StartCoroutine(AnimateEndingGlitchBars());
+        yield return StartCoroutine(TypeText(_endingQuestionLabel, "Ты стал жертвой системы.\nПравда была рядом, но выбор уже был сделан.", 0.034f, playGlitchSound: true));
+        yield return new WaitForSeconds(3.4f);
+        SceneManager.LoadScene(MainMenuSceneName);
+    }
+
+    private void PrepareSilentParkState()
+    {
+        StopParkAudio();
+        _pressureActive = false;
+        _pressureTimer = 0f;
+        _nextGlitchTime = float.MaxValue;
+        _nextPresenceTime = float.MaxValue;
+
+        if (_statusLabel != null) _statusLabel.enabled = false;
+        if (_promptLabel != null) _promptLabel.enabled = false;
+        SetLetterPanelVisible(false);
+
+        if (_activeMarkerRoot != null)
+        {
+            _activeMarkerRoot.SetActive(false);
+        }
+
+        foreach (GameObject watcher in _watchers)
+        {
+            if (watcher != null) watcher.SetActive(false);
+        }
+
+        foreach (GameObject orb in _anomalyOrbs)
+        {
+            if (orb != null) orb.SetActive(false);
+        }
+
+        foreach (GameObject spike in _riftSpikes)
+        {
+            if (spike != null) spike.SetActive(false);
+        }
+
+        if (_jumpWatcher != null)
+        {
+            _jumpWatcher.SetActive(false);
+        }
+    }
+
+    private Vector3 GetParkCenterPoint()
+    {
+        Vector3 center = Vector3.zero;
+        int count = 0;
+        foreach (Transform stone in _stones)
+        {
+            if (stone == null) continue;
+            center += stone.position;
+            count++;
+        }
+
+        if (count == 0)
+        {
+            if (_mainCamera != null)
+            {
+                return _mainCamera.transform.position + _mainCamera.transform.forward * 12f;
+            }
+
+            return Vector3.zero;
+        }
+
+        return center / count;
+    }
+
+    private IEnumerator PlayEraseShockwave(Vector3 center)
+    {
+        if (_scareSource != null && _endingGlitchClip != null)
+        {
+            _scareSource.PlayOneShot(_endingGlitchClip, scareVolume);
+        }
+
+        float duration = 0.45f;
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float pulse = Mathf.Sin((elapsed / duration) * Mathf.PI);
+
+            if (_flashOverlay != null)
+            {
+                _flashOverlay.color = new Color(0.75f, 0.9f, 1f, pulse * 0.18f);
+            }
+
+            if (_chromaticAberration != null)
+            {
+                _chromaticAberration.intensity.Override(Mathf.Lerp(0f, 0.7f, pulse));
+            }
+
+            if (_mainCamera != null)
+            {
+                _mainCamera.transform.position += Random.insideUnitSphere * 0.03f;
+            }
+
+            yield return null;
+        }
+
+        if (_flashOverlay != null)
+        {
+            _flashOverlay.color = new Color(0f, 0f, 0f, 0f);
+        }
+
+        if (_chromaticAberration != null)
+        {
+            _chromaticAberration.intensity.Override(0f);
+        }
+    }
+
+    private IEnumerator EraseParkObjectsWave(Vector3 center)
+    {
+        _parkErasedObjects.Clear();
+        GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj == null || !obj.activeInHierarchy)
+            {
+                continue;
+            }
+
+            if (ShouldPreserveAfterParkErase(obj))
+            {
+                continue;
+            }
+
+            _parkErasedObjects.Add(obj);
+        }
+
+        _parkErasedObjects.Sort((a, b) =>
+            Vector3.Distance(center, a.transform.position).CompareTo(Vector3.Distance(center, b.transform.position)));
+
+        foreach (GameObject obj in _parkErasedObjects)
+        {
+            obj.SetActive(false);
+            if (_scareSource != null && _endingRejectClip != null && Random.value > 0.82f)
+            {
+                _scareSource.PlayOneShot(_endingRejectClip, 0.18f);
+            }
+
+            yield return new WaitForSeconds(0.035f);
+        }
+    }
+
+    private bool ShouldPreserveAfterParkErase(GameObject obj)
+    {
+        if (obj == gameObject || obj == _endingOverlay || obj == _flashOverlay?.gameObject || obj == _activeMarkerRoot)
+        {
+            return true;
+        }
+
+        if (_player != null && (obj == _player.gameObject || obj.transform.IsChildOf(_player)))
+        {
+            return true;
+        }
+
+        if (_mainCamera != null && (obj == _mainCamera.gameObject || obj.transform.IsChildOf(_mainCamera.transform)))
+        {
+            return true;
+        }
+
+        if (obj.GetComponent<Canvas>() != null || obj.GetComponent<EventSystem>() != null)
+        {
+            return true;
+        }
+
+        if (obj.GetComponent<Terrain>() != null || obj.GetComponent<TerrainCollider>() != null)
+        {
+            return true;
+        }
+
+        if (obj.GetComponent<Light>() != null || obj.GetComponent<Volume>() != null)
+        {
+            return true;
+        }
+
+        string lowerName = obj.name.ToLowerInvariant();
+        if (lowerName.Contains("terrain") || lowerName.Contains("ground") || lowerName.Contains("grass"))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private IEnumerator FadeEndingDecor(float startAlpha, float targetAlpha, float duration)
+    {
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / duration);
+            SetEndingDecorAlpha(alpha);
+            yield return null;
+        }
+
+        SetEndingDecorAlpha(targetAlpha);
+    }
+
+    private void SetEndingDecorAlpha(float alpha)
+    {
+        if (_endingAuraGlow != null)
+        {
+            _endingAuraGlow.color = new Color(0.45f, 0.72f, 1f, alpha * 0.08f);
+        }
+
+        if (_endingQuestionPlate != null)
+        {
+            _endingQuestionPlate.color = new Color(0f, 0f, 0f, alpha * 0.18f);
+        }
+
+        foreach (Image bar in _endingGlitchBars)
+        {
+            if (bar != null)
+            {
+                Color c = bar.color;
+                bar.color = new Color(c.r, c.g, c.b, alpha * 0.18f);
+            }
+        }
+    }
+
+    private IEnumerator FadeText(Text text, float startAlpha, float targetAlpha, float duration)
+    {
+        if (text == null)
+        {
+            yield break;
+        }
+
+        float elapsed = 0f;
+        Color baseColor = text.color;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / duration);
+            text.color = new Color(baseColor.r, baseColor.g, baseColor.b, alpha);
+            yield return null;
+        }
+
+        text.color = new Color(baseColor.r, baseColor.g, baseColor.b, targetAlpha);
+    }
+
+    private IEnumerator FadeButtonGroup(float startAlpha, float targetAlpha, float duration)
+    {
+        float elapsed = 0f;
+        Image yesImage = _endingYesButton != null ? _endingYesButton.GetComponent<Image>() : null;
+        Image noImage = _endingNoButton != null ? _endingNoButton.GetComponent<Image>() : null;
+        Text yesText = _endingYesButton != null ? _endingYesButton.GetComponentInChildren<Text>() : null;
+        Text noText = _endingNoButton != null ? _endingNoButton.GetComponentInChildren<Text>() : null;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / duration);
+            SetButtonVisualAlpha(yesImage, yesText, alpha);
+            SetButtonVisualAlpha(noImage, noText, alpha);
+            yield return null;
+        }
+
+        SetButtonVisualAlpha(yesImage, yesText, targetAlpha);
+        SetButtonVisualAlpha(noImage, noText, targetAlpha);
+    }
+
+    private void SetButtonVisualAlpha(Image image, Text text, float alpha)
+    {
+        if (image != null)
+        {
+            Color imageColor = image.color;
+            image.color = new Color(imageColor.r, imageColor.g, imageColor.b, alpha * 0.92f);
+        }
+
+        if (text != null)
+        {
+            Color textColor = text.color;
+            text.color = new Color(textColor.r, textColor.g, textColor.b, alpha);
+        }
+    }
+
+    private IEnumerator PlayEndingChoiceFlash(bool stayHere)
+    {
+        if (_flashOverlay == null)
+        {
+            yield break;
+        }
+
+        Color flashColor = stayHere
+            ? new Color(0.78f, 0.12f, 0.16f, 0f)
+            : new Color(0.25f, 0.82f, 0.95f, 0f);
+        float strength = stayHere ? 0.38f : 0.24f;
+        float duration = stayHere ? 0.7f : 0.5f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float pulse = Mathf.Sin((elapsed / duration) * Mathf.PI);
+            _flashOverlay.color = new Color(flashColor.r, flashColor.g, flashColor.b, pulse * strength);
+            yield return null;
+        }
+
+        _flashOverlay.color = new Color(0f, 0f, 0f, 0f);
+    }
+
+    private IEnumerator AnimateEndingGlitchBars()
+    {
+        if (_endingGlitchBars.Count == 0)
+        {
+            yield break;
+        }
+
+        float lifetime = 6f;
+        float elapsed = 0f;
+        while (_endingOverlay != null && _endingOverlay.activeSelf && !_endingChoiceMade && elapsed < lifetime)
+        {
+            elapsed += Time.deltaTime;
+            for (int i = 0; i < _endingGlitchBars.Count; i++)
+            {
+                Image bar = _endingGlitchBars[i];
+                if (bar == null)
+                {
+                    continue;
+                }
+
+                RectTransform rect = bar.rectTransform;
+                Vector2 basePos = rect.anchoredPosition;
+                rect.anchoredPosition = new Vector2(basePos.x + Random.Range(-36f, 36f), basePos.y + Random.Range(-4f, 4f));
+                float alpha = Random.Range(0.1f, 0.38f);
+                bar.color = new Color(0.72f, 0.88f, 1f, alpha);
+            }
+
+            if (_flashOverlay != null && Random.value > 0.72f)
+            {
+                _flashOverlay.color = new Color(0.52f, 0.82f, 1f, Random.Range(0.04f, 0.1f));
+            }
+
+            yield return new WaitForSeconds(Random.Range(0.02f, 0.08f));
+        }
+
+        foreach (Image bar in _endingGlitchBars)
+        {
+            if (bar != null)
+            {
+                bar.color = new Color(0.72f, 0.88f, 1f, 0f);
+            }
+        }
+    }
+
+    private IEnumerator TypeText(Text text, string content, float characterDelay, bool playGlitchSound = false)
+    {
+        if (text == null)
+        {
+            yield break;
+        }
+
+        RectTransform rect = text.rectTransform;
+        Vector2 originalPosition = rect.anchoredPosition;
+        Color originalColor = text.color;
+        text.text = string.Empty;
+        yield return StartCoroutine(FadeText(text, 0f, 1f, 0.35f));
+
+        for (int i = 0; i < content.Length; i++)
+        {
+            char nextChar = content[i];
+            bool shouldGlitch = playGlitchSound && !char.IsWhiteSpace(nextChar) && nextChar != '\n';
+            string confirmedText = text.text;
+
+            if (shouldGlitch)
+            {
+                yield return StartCoroutine(PlayTypingGlitch(text, originalPosition, originalColor, confirmedText, nextChar, i, content));
+            }
+
+            text.text = confirmedText + nextChar;
+            if (playGlitchSound && _scareSource != null && _endingGlitchClip != null && !char.IsWhiteSpace(content[i]) && i % 2 == 0)
+            {
+                _scareSource.PlayOneShot(_endingGlitchClip, 0.2f);
+            }
+            yield return new WaitForSeconds(characterDelay);
+        }
+
+        rect.anchoredPosition = originalPosition;
+        text.color = new Color(originalColor.r, originalColor.g, originalColor.b, text.color.a);
+    }
+
+    private IEnumerator PlayTypingGlitch(Text text, Vector2 originalPosition, Color originalColor, string confirmedText, char finalChar, int index, string content)
+    {
+        RectTransform rect = text.rectTransform;
+        char[] glitchChars = { '#', '/', '\\', '|', '_', '-', '=', '+', '0', '1' };
+        char fakeChar = glitchChars[(index + content.Length) % glitchChars.Length];
+
+        for (int step = 0; step < 3; step++)
+        {
+            rect.anchoredPosition = originalPosition + new Vector2(Random.Range(-7f, 7f), Random.Range(-3f, 3f));
+            text.color = step % 2 == 0
+                ? new Color(0.72f, 0.9f, 1f, text.color.a)
+                : new Color(1f, 0.86f, 0.9f, text.color.a);
+            text.text = confirmedText + fakeChar;
+
+            foreach (Image bar in _endingGlitchBars)
+            {
+                if (bar != null)
+                {
+                    bar.color = new Color(0.82f, 0.94f, 1f, Random.Range(0.2f, 0.5f));
+                }
+            }
+
+            if (_flashOverlay != null)
+            {
+                _flashOverlay.color = step % 2 == 0
+                    ? new Color(0.55f, 0.82f, 1f, 0.06f)
+                    : new Color(1f, 0.22f, 0.28f, 0.035f);
+            }
+
+            yield return new WaitForSeconds(0.012f);
+        }
+
+        rect.anchoredPosition = originalPosition + new Vector2(Random.Range(-2f, 2f), Random.Range(-1f, 1f));
+        text.color = new Color(0.96f, 0.99f, 1f, text.color.a);
+        text.text = confirmedText + finalChar;
+
+        if (_flashOverlay != null)
+        {
+            _flashOverlay.color = new Color(0.55f, 0.82f, 1f, 0.07f);
+        }
+
+        yield return new WaitForSeconds(0.01f);
+
+        rect.anchoredPosition = originalPosition;
+        text.color = new Color(originalColor.r, originalColor.g, originalColor.b, text.color.a);
+        text.text = confirmedText;
+
+        foreach (Image bar in _endingGlitchBars)
+        {
+            if (bar != null)
+            {
+                bar.color = new Color(0.72f, 0.88f, 1f, 0.04f);
+            }
+        }
+
+        if (_flashOverlay != null)
+        {
+            _flashOverlay.color = new Color(0f, 0f, 0f, 0f);
+        }
+    }
+
+    private void StopParkAudio()
+    {
+        StopAudioSource(_whisperSource);
+        StopAudioSource(_stoneHumSource);
+        StopAudioSource(_footstepSource);
+        StopAudioSource(_breathingSource);
+        StopAudioSource(_pressureSource);
+        StopAudioSource(_presenceSource);
+    }
+
+    private static void StopAudioSource(AudioSource source)
+    {
+        if (source == null)
+        {
+            return;
+        }
+
+        source.Stop();
+        source.volume = 0f;
+        source.enabled = false;
+    }
+
+    private void HandleEndingChoiceInput()
+    {
+        if (!_endingInputEnabled || _endingChoiceMade)
+        {
+            return;
+        }
+
+#if ENABLE_INPUT_SYSTEM
+        if (Keyboard.current != null)
+        {
+            if (Keyboard.current.yKey.wasPressedThisFrame)
+            {
+                ResolveEndingChoice(true);
+                return;
+            }
+
+            if (Keyboard.current.nKey.wasPressedThisFrame)
+            {
+                ResolveEndingChoice(false);
+            }
+        }
+#else
+        if (Input.GetKeyDown(KeyCode.Y))
+        {
+            ResolveEndingChoice(true);
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            ResolveEndingChoice(false);
+        }
+#endif
     }
 
     private System.Collections.IEnumerator EnsureGameplayCursorState()

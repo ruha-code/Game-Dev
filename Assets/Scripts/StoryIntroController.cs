@@ -7,6 +7,8 @@ using System.Linq;
 
 public class StoryIntroController : MonoBehaviour
 {
+    private const string SystemEndingFlagKey = "SystemEnding.Active";
+
     private VisualElement root;
     private Label storyLabel;
     private Label glitchLabelR;
@@ -31,6 +33,7 @@ public class StoryIntroController : MonoBehaviour
     
     private AudioSource ambientSource;
     private AudioSource sfxSource;
+    private bool _isSystemEnding;
 
     private string[] initialLines = {
     "AETHER DYNAMICS",
@@ -38,6 +41,16 @@ public class StoryIntroController : MonoBehaviour
     "Year: 2026",
     "Project: AeroOS",
     "Lead Engineers Missing: 4",
+    "Final Active Employee:",
+    "YOU"
+    };
+
+    private string[] systemEndingInitialLines = {
+    "AETHER DYNAMICS",
+    "INTERNAL INCIDENT REPORT",
+    "Year: 2026",
+    "Project: AeroOS",
+    "Lead Engineers Missing: 5",
     "Final Active Employee:",
     "YOU"
     };
@@ -71,6 +84,8 @@ public class StoryIntroController : MonoBehaviour
         root = uiDocument.rootVisualElement;
         yield return new WaitForEndOfFrame();
 
+        _isSystemEnding = PlayerPrefs.GetInt(SystemEndingFlagKey, 0) == 1;
+
         storyLabel = root.Q<Label>("story-text");
         glitchLabelR = root.Q<Label>("glitch-text-r");
         glitchLabelB = root.Q<Label>("glitch-text-b");
@@ -103,11 +118,12 @@ public class StoryIntroController : MonoBehaviour
             ambientSource.Play();
 
         StringBuilder fullText = new StringBuilder();
+        string[] activeInitialLines = _isSystemEnding ? systemEndingInitialLines : initialLines;
         
-        for (int i = 0; i < initialLines.Length; i++)
+        for (int i = 0; i < activeInitialLines.Length; i++)
         {
-            string line = initialLines[i];
-            bool isYOU = (i == initialLines.Length - 1);
+            string line = activeInitialLines[i];
+            bool isYOU = (i == activeInitialLines.Length - 1);
             
             yield return StartCoroutine(TypewriteLine(line, fullText));
 
@@ -121,6 +137,14 @@ public class StoryIntroController : MonoBehaviour
                 if (storyLabel != null) storyLabel.text = fullText.ToString();
                 yield return new WaitForSeconds(lineDelay);
             }
+        }
+
+        if (_isSystemEnding)
+        {
+            yield return new WaitForSeconds(0.8f);
+            yield return StartCoroutine(TriggerSystemEndingMutation(fullText));
+            yield return StartCoroutine(ShowSystemEndingResult());
+            yield break;
         }
 
         fullText.Append("\n\n");
@@ -322,5 +346,138 @@ public class StoryIntroController : MonoBehaviour
             yield return null;
         }
         root.style.display = DisplayStyle.None;
+    }
+
+    private IEnumerator ShowSystemEndingResult()
+    {
+        if (ambientSource != null)
+        {
+            ambientSource.Stop();
+        }
+
+        if (sfxSource != null && staticCrackClip != null)
+        {
+            sfxSource.PlayOneShot(staticCrackClip, 0.85f);
+        }
+
+        if (root != null)
+        {
+            root.style.backgroundColor = new StyleColor(new Color(0f, 0f, 0f, 1f));
+        }
+
+        if (glitchLabelR != null) glitchLabelR.style.display = DisplayStyle.None;
+        if (glitchLabelB != null) glitchLabelB.style.display = DisplayStyle.None;
+
+        if (storyLabel != null)
+        {
+            storyLabel.style.unityTextAlign = TextAnchor.MiddleCenter;
+            storyLabel.style.fontSize = 34;
+            storyLabel.style.whiteSpace = WhiteSpace.Normal;
+            storyLabel.style.position = Position.Absolute;
+            storyLabel.style.left = 180;
+            storyLabel.style.right = 180;
+            storyLabel.style.top = 0;
+            storyLabel.style.bottom = 0;
+            storyLabel.style.color = new StyleColor(new Color(0.94f, 0.96f, 1f, 1f));
+            storyLabel.text = string.Empty;
+        }
+
+        string endingText = "Ты теперь стал частью системы.\n\nТы узнал правду о системе.\nНо какой ценой?";
+        StringBuilder endingBuilder = new StringBuilder();
+        for (int i = 0; i < endingText.Length; i++)
+        {
+            endingBuilder.Append(endingText[i]);
+            if (storyLabel != null)
+            {
+                storyLabel.text = endingBuilder.ToString();
+            }
+
+            if (!char.IsWhiteSpace(endingText[i]) && sfxSource != null && glitchClip != null && i % 3 == 0)
+            {
+                sfxSource.PlayOneShot(glitchClip, 0.25f);
+            }
+
+            yield return new WaitForSeconds(0.06f);
+        }
+
+        yield return new WaitForSeconds(2.8f);
+        PlayerPrefs.DeleteKey(SystemEndingFlagKey);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene("MainMenuScene");
+    }
+
+    private IEnumerator TriggerSystemEndingMutation(StringBuilder fullText)
+    {
+        if (storyLabel == null)
+        {
+            yield break;
+        }
+
+        string baseText = fullText.ToString();
+        int youIndex = baseText.LastIndexOf("YOU");
+        if (youIndex < 0)
+        {
+            yield break;
+        }
+
+        if (sfxSource != null && staticCrackClip != null)
+        {
+            sfxSource.PlayOneShot(staticCrackClip, 0.95f);
+        }
+
+        if (glitchLabelR != null)
+        {
+            glitchLabelR.style.display = DisplayStyle.Flex;
+        }
+
+        if (glitchLabelB != null)
+        {
+            glitchLabelB.style.display = DisplayStyle.Flex;
+        }
+
+        string[] mutationFrames =
+        {
+            baseText,
+            baseText.Substring(0, youIndex) + "Y0U",
+            baseText.Substring(0, youIndex) + "FOU",
+            baseText.Substring(0, youIndex) + "FIVE",
+            baseText.Substring(0, youIndex) + "FIVE",
+            baseText
+        };
+
+        for (int i = 0; i < mutationFrames.Length; i++)
+        {
+            string frame = mutationFrames[i];
+            storyLabel.text = frame;
+
+            if (glitchLabelR != null)
+            {
+                glitchLabelR.text = frame;
+                glitchLabelR.style.translate = new Translate(Random.Range(-18f, 18f), Random.Range(-8f, 8f), 0);
+            }
+
+            if (glitchLabelB != null)
+            {
+                glitchLabelB.text = frame;
+                glitchLabelB.style.translate = new Translate(Random.Range(-18f, 18f), Random.Range(-8f, 8f), 0);
+            }
+
+            storyLabel.style.opacity = Random.Range(0.65f, 1f);
+
+            if (sfxSource != null && glitchClip != null && i > 0 && i < mutationFrames.Length - 1)
+            {
+                sfxSource.PlayOneShot(glitchClip, 0.35f);
+            }
+
+            yield return new WaitForSeconds(i == 3 ? 0.18f : 0.08f);
+        }
+
+        storyLabel.style.opacity = 1f;
+        storyLabel.text = baseText;
+
+        if (glitchLabelR != null) glitchLabelR.style.display = DisplayStyle.None;
+        if (glitchLabelB != null) glitchLabelB.style.display = DisplayStyle.None;
+
+        yield return new WaitForSeconds(0.45f);
     }
 }
