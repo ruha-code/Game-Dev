@@ -55,7 +55,9 @@
         <ui:Label text="[CORRUPTED]" class="reconstruction-blank-label" />
     </ui:Button>
 
-    <ui:Label text=". Там есть странные упоминания, будто кто-то оставляет следы специально." class="reconstruction-text" />
+    <ui:Label text="." class="reconstruction-text" />
+
+    <ui:Label text="Там есть странные упоминания, будто кто-то оставляет следы специально." class="reconstruction-text" />
 
     <ui:Label text="И ещё там было одно сообщение — не уверен, что оно предназначалось мне." class="reconstruction-text" />
 
