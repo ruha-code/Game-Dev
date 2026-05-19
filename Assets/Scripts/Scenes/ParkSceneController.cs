@@ -18,6 +18,7 @@ public class ParkSceneController : MonoBehaviour
     private const string MainMenuSceneName = "MainMenuScene";
     private const string StoryIntroSceneName = "StoryIntroScene";
     private const string SystemEndingFlagKey = "SystemEnding.Active";
+    private const string NoEndingRestartFlagKey = "SystemEnding.NoRestart";
     private const string PlayerRootName = "PlayerCapsule";
     private const string CameraName = "MainCamera";
 
@@ -92,6 +93,9 @@ public class ParkSceneController : MonoBehaviour
     [SerializeField] private float pressureDecayPerFragment = 3f;
     [SerializeField] private float pressureFreezeSeconds = 0.75f;
     [SerializeField] private int pressureFailuresBeforeExpulsion = 3;
+    [Header("No Ending")]
+    [SerializeField] private float noEndingWalkDuration = 8f;
+    [SerializeField] private float noEndingTerrainDuration = 8f;
 
     private Transform _player;
     private Camera _mainCamera;
@@ -132,6 +136,9 @@ public class ParkSceneController : MonoBehaviour
     private bool _endingSequenceStarted;
     private bool _endingChoiceMade;
     private bool _endingInputEnabled;
+    private bool _brokenEndingWalkPhase;
+    private bool _endingCursorForcedVisible;
+    private bool _startInNoEndingRestartMode;
     private float _nextFogFlashTime;
     private float _pressureTimer;
     private bool _pressureActive;
@@ -164,9 +171,18 @@ public class ParkSceneController : MonoBehaviour
     private Vector3 _jumpWatcherBaseScale;
     private Coroutine _jumpScareRoutine;
     private Coroutine _pressureRoutine;
+    private Coroutine _cursorVisibilityRoutine;
+    private bool _noEndingRestartSequenceStarted;
 
     private void Awake()
     {
+        _startInNoEndingRestartMode = PlayerPrefs.GetInt(NoEndingRestartFlagKey, 0) == 1;
+        if (_startInNoEndingRestartMode)
+        {
+            PlayerPrefs.DeleteKey(NoEndingRestartFlagKey);
+            PlayerPrefs.Save();
+        }
+
         ProgressionManager.Instance.MarkLocationVisited(LocationId.TreeScene);
         FindSceneReferences();
         PrepareRuntimeEnvironment();
@@ -187,12 +203,22 @@ public class ParkSceneController : MonoBehaviour
         _pressureTimer = 0f;
         _pressureFailures = 0;
         _expellingPlayer = false;
+        _brokenEndingWalkPhase = false;
+        _endingCursorForcedVisible = false;
+        _noEndingRestartSequenceStarted = false;
         _nextGlitchTime = Time.time + Random.Range(5f, 10f);
     }
 
     private void Start()
     {
         SetPlayerLocked(false);
+        if (_startInNoEndingRestartMode)
+        {
+            _noEndingRestartSequenceStarted = true;
+            StartCoroutine(BeginNoEndingRestartSequence());
+            return;
+        }
+
         StartCoroutine(EnsureGameplayCursorState());
     }
 
@@ -201,6 +227,20 @@ public class ParkSceneController : MonoBehaviour
         if (_endingSequenceStarted)
         {
             HandleEndingChoiceInput();
+            return;
+        }
+
+        if (_startInNoEndingRestartMode && !_noEndingRestartSequenceStarted)
+        {
+            _noEndingRestartSequenceStarted = true;
+            StartCoroutine(BeginNoEndingRestartSequence());
+            return;
+        }
+
+        if (_brokenEndingWalkPhase)
+        {
+            EnsureActiveCameraReady();
+            UpdatePlayerAudio();
             return;
         }
 
@@ -333,7 +373,7 @@ public class ParkSceneController : MonoBehaviour
         if (isGrounded && !_wasGroundedLastFrame)
         {
             // Just landed
-            if (landingClip != null && _footstepSource != null)
+            if (landingClip != null && _footstepSource != null && _footstepSource.enabled)
                 _footstepSource.PlayOneShot(landingClip, 0.7f);
         }
 
@@ -345,7 +385,7 @@ public class ParkSceneController : MonoBehaviour
             if (_footstepDistanceCounter >= strideLength)
             {
                 _footstepDistanceCounter = 0f;
-                if (footstepClips != null && footstepClips.Length > 0 && _footstepSource != null)
+                if (footstepClips != null && footstepClips.Length > 0 && _footstepSource != null && _footstepSource.enabled)
                 {
                     AudioClip clip = footstepClips[UnityEngine.Random.Range(0, footstepClips.Length)];
                     _footstepSource.PlayOneShot(clip, UnityEngine.Random.Range(0.35f, 0.5f));
@@ -537,6 +577,8 @@ public class ParkSceneController : MonoBehaviour
             _mainCamera = CreateFallbackEndingCamera();
         }
 
+        EnsureActiveCameraReady();
+
         if (directionalLight == null)
         {
             Light[] lights = FindObjectsByType<Light>(FindObjectsInactive.Include);
@@ -578,6 +620,54 @@ public class ParkSceneController : MonoBehaviour
         cameraObject.AddComponent<AudioListener>();
         _spawnedFallbackCamera = true;
         return cameraComponent;
+    }
+
+    private void EnsureActiveCameraReady()
+    {
+        if (_mainCamera == null)
+        {
+            _mainCamera = Camera.main != null ? Camera.main : FindAnyObjectByType<Camera>();
+        }
+
+        if (_mainCamera == null)
+        {
+            _mainCamera = CreateFallbackEndingCamera();
+        }
+
+        if (_mainCamera == null)
+        {
+            return;
+        }
+
+        if (!_mainCamera.gameObject.activeSelf)
+        {
+            _mainCamera.gameObject.SetActive(true);
+        }
+
+        if (!_mainCamera.enabled)
+        {
+            _mainCamera.enabled = true;
+        }
+
+        AudioListener listener = _mainCamera.GetComponent<AudioListener>();
+        if (listener == null)
+        {
+            listener = _mainCamera.gameObject.AddComponent<AudioListener>();
+        }
+
+        listener.enabled = true;
+
+        if (_player != null && _spawnedFallbackCamera)
+        {
+            Transform followTarget = _player;
+            Transform cameraRoot = _player.Find("PlayerCameraRoot");
+            if (cameraRoot != null)
+            {
+                followTarget = cameraRoot;
+            }
+
+            _mainCamera.transform.SetPositionAndRotation(followTarget.position, followTarget.rotation);
+        }
     }
 
     private void CacheStones()
@@ -1911,11 +2001,13 @@ public class ParkSceneController : MonoBehaviour
         _pressureActive = false;
         _pressureTimer = 0f;
         _expellingPlayer = false;
+        _brokenEndingWalkPhase = false;
         if (_promptLabel != null) _promptLabel.enabled = false;
         if (_statusLabel != null) _statusLabel.enabled = false;
         if (_flashOverlay != null) _flashOverlay.color = new Color(0f, 0f, 0f, 0f);
         StopParkAudio();
         SetPlayerLocked(true);
+        BeginEndingCursorOverride();
         StartCoroutine(EndingSequenceRoutine());
     }
 
@@ -1941,7 +2033,7 @@ public class ParkSceneController : MonoBehaviour
         StartCoroutine(AnimateEndingGlitchBars());
         yield return StartCoroutine(TypeText(_endingQuestionLabel, "Ты хочешь узнать всю правду?\nТогда оставайся здесь.", 0.032f, playGlitchSound: true));
 
-        _endingHintLabel.text = "Выбери ответ";
+        _endingHintLabel.text = "Y = остаться // 0 = отказаться";
         StartCoroutine(FadeText(_endingHintLabel, 0f, 0.9f, 0.45f));
 
         _endingYesButton.gameObject.SetActive(true);
@@ -2011,10 +2103,12 @@ public class ParkSceneController : MonoBehaviour
         {
             PlayerPrefs.SetInt(SystemEndingFlagKey, 1);
             PlayerPrefs.Save();
+            EndEndingCursorOverride();
             SceneManager.LoadScene(StoryIntroSceneName);
             yield break;
         }
 
+        EndEndingCursorOverride();
         SceneManager.LoadScene(MainMenuSceneName);
     }
 
@@ -2040,23 +2134,26 @@ public class ParkSceneController : MonoBehaviour
 
     private IEnumerator PlaySystemVictimEnding()
     {
-        if (_endingOverlay != null)
-        {
-            _endingOverlay.SetActive(false);
-        }
+        EndEndingCursorOverride();
+        PlayerPrefs.SetInt(NoEndingRestartFlagKey, 1);
+        PlayerPrefs.Save();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        yield break;
+    }
 
-        if (_scareSource != null && _endingRejectClip != null)
-        {
-            _scareSource.PlayOneShot(_endingRejectClip, scareVolume * 0.95f);
-        }
-
-        yield return StartCoroutine(PlayEndingChoiceFlash(false));
-        PrepareSilentParkState();
+    private IEnumerator BeginNoEndingRestartSequence()
+    {
+        yield return null;
+        PrepareBrokenEndingWalkPhase();
+        EnsureActiveCameraReady();
+        EndEndingCursorOverride();
         SetPlayerLocked(false);
-        yield return new WaitForSeconds(10f);
-        yield return StartCoroutine(PlayEraseShockwave(GetParkCenterPoint()));
-        yield return StartCoroutine(EraseParkObjectsWave(GetParkCenterPoint()));
-        yield return new WaitForSeconds(7f);
+        yield return new WaitForSeconds(noEndingWalkDuration);
+        ApplyNoEndingNightState();
+        CollapseParkToTerrainOnly();
+        yield return new WaitForSeconds(noEndingTerrainDuration);
+        yield return StartCoroutine(EraseGroundAndDropPlayer());
+        yield return new WaitForSeconds(3.5f);
 
         if (_endingOverlay != null)
         {
@@ -2073,23 +2170,37 @@ public class ParkSceneController : MonoBehaviour
 
         yield return StartCoroutine(FadeEndingOverlay(0f, 1f, 0.8f));
         StartCoroutine(FadeText(_endingHeaderLabel, 0f, 0.75f, 0.35f));
-        StartCoroutine(AnimateEndingGlitchBars());
-        yield return StartCoroutine(TypeText(_endingQuestionLabel, "Ты стал жертвой системы.\nПравда была рядом, но выбор уже был сделан.", 0.034f, playGlitchSound: true));
+        yield return StartCoroutine(TypeText(_endingQuestionLabel, "Ты сказал нет.\nПарк перезапустился, будто ничего не произошло.\nА потом система стёрла даже саму землю под тобой.", 0.032f, playGlitchSound: true));
         yield return new WaitForSeconds(3.4f);
+        EndEndingCursorOverride();
         SceneManager.LoadScene(MainMenuSceneName);
     }
 
-    private void PrepareSilentParkState()
+    private void PrepareBrokenEndingWalkPhase()
     {
         StopParkAudio();
+        RestartNoEndingEssentialAudio();
         _pressureActive = false;
         _pressureTimer = 0f;
+        _pressureFailures = 0;
         _nextGlitchTime = float.MaxValue;
         _nextPresenceTime = float.MaxValue;
+        _brokenEndingWalkPhase = true;
+        _endingSequenceStarted = false;
+        _endingChoiceMade = false;
+        _endingInputEnabled = false;
+        _letterOpen = false;
+        _expellingPlayer = false;
+        _fragmentsRecovered = 0;
+        _currentStoneIndex = 0;
 
         if (_statusLabel != null) _statusLabel.enabled = false;
         if (_promptLabel != null) _promptLabel.enabled = false;
         SetLetterPanelVisible(false);
+        if (_endingOverlay != null) _endingOverlay.SetActive(false);
+        if (_flashOverlay != null) _flashOverlay.color = new Color(0f, 0f, 0f, 0f);
+
+        ApplyAtmosphereStage(0);
 
         if (_activeMarkerRoot != null)
         {
@@ -2114,6 +2225,22 @@ public class ParkSceneController : MonoBehaviour
         if (_jumpWatcher != null)
         {
             _jumpWatcher.SetActive(false);
+        }
+
+        foreach (Transform stone in _stones)
+        {
+            if (stone != null && !stone.gameObject.activeSelf)
+            {
+                stone.gameObject.SetActive(true);
+            }
+        }
+
+        foreach (Renderer stainRenderer in _bloodStainRenderers)
+        {
+            if (stainRenderer != null && !stainRenderer.gameObject.activeSelf)
+            {
+                stainRenderer.gameObject.SetActive(true);
+            }
         }
     }
 
@@ -2141,50 +2268,7 @@ public class ParkSceneController : MonoBehaviour
         return center / count;
     }
 
-    private IEnumerator PlayEraseShockwave(Vector3 center)
-    {
-        if (_scareSource != null && _endingGlitchClip != null)
-        {
-            _scareSource.PlayOneShot(_endingGlitchClip, scareVolume);
-        }
-
-        float duration = 0.45f;
-        float elapsed = 0f;
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            float pulse = Mathf.Sin((elapsed / duration) * Mathf.PI);
-
-            if (_flashOverlay != null)
-            {
-                _flashOverlay.color = new Color(0.75f, 0.9f, 1f, pulse * 0.18f);
-            }
-
-            if (_chromaticAberration != null)
-            {
-                _chromaticAberration.intensity.Override(Mathf.Lerp(0f, 0.7f, pulse));
-            }
-
-            if (_mainCamera != null)
-            {
-                _mainCamera.transform.position += Random.insideUnitSphere * 0.03f;
-            }
-
-            yield return null;
-        }
-
-        if (_flashOverlay != null)
-        {
-            _flashOverlay.color = new Color(0f, 0f, 0f, 0f);
-        }
-
-        if (_chromaticAberration != null)
-        {
-            _chromaticAberration.intensity.Override(0f);
-        }
-    }
-
-    private IEnumerator EraseParkObjectsWave(Vector3 center)
+    private void CollapseParkToTerrainOnly()
     {
         _parkErasedObjects.Clear();
         GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
@@ -2203,18 +2287,70 @@ public class ParkSceneController : MonoBehaviour
             _parkErasedObjects.Add(obj);
         }
 
-        _parkErasedObjects.Sort((a, b) =>
-            Vector3.Distance(center, a.transform.position).CompareTo(Vector3.Distance(center, b.transform.position)));
-
         foreach (GameObject obj in _parkErasedObjects)
         {
             obj.SetActive(false);
-            if (_scareSource != null && _endingRejectClip != null && Random.value > 0.82f)
+        }
+
+        Terrain[] terrains = FindObjectsByType<Terrain>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (Terrain terrain in terrains)
+        {
+            if (terrain == null)
             {
-                _scareSource.PlayOneShot(_endingRejectClip, 0.18f);
+                continue;
             }
 
-            yield return new WaitForSeconds(0.035f);
+            terrain.drawTreesAndFoliage = false;
+        }
+    }
+
+    private void ApplyNoEndingNightState()
+    {
+        RenderSettings.fog = true;
+        RenderSettings.fogMode = FogMode.ExponentialSquared;
+        RenderSettings.fogDensity = 0.048f;
+        RenderSettings.fogColor = new Color(0.02f, 0.03f, 0.06f, 1f);
+        RenderSettings.ambientMode = AmbientMode.Trilight;
+        RenderSettings.ambientIntensity = 0.18f;
+        RenderSettings.ambientSkyColor = new Color(0.05f, 0.08f, 0.12f, 1f);
+        RenderSettings.ambientEquatorColor = new Color(0.03f, 0.04f, 0.06f, 1f);
+        RenderSettings.ambientGroundColor = new Color(0.01f, 0.015f, 0.02f, 1f);
+
+        if (_runtimeSkybox != null)
+        {
+            _runtimeSkybox.SetColor("_Tint", new Color(0.14f, 0.16f, 0.22f, 1f));
+            _runtimeSkybox.SetFloat("_Exposure", 0.16f);
+            _runtimeSkybox.SetFloat("_Rotation", 214f);
+        }
+
+        if (directionalLight != null)
+        {
+            directionalLight.intensity = 0.08f;
+            directionalLight.color = new Color(0.18f, 0.24f, 0.35f, 1f);
+            directionalLight.transform.rotation = Quaternion.Euler(8f, 210f, 0f);
+        }
+
+        if (_colorAdjustments != null)
+        {
+            _colorAdjustments.postExposure.Override(-1.8f);
+            _colorAdjustments.contrast.Override(72f);
+            _colorAdjustments.saturation.Override(-72f);
+        }
+
+        if (_vignette != null)
+        {
+            _vignette.intensity.Override(0.28f);
+        }
+
+        if (_bloom != null)
+        {
+            _bloom.intensity.Override(0f);
+            _bloom.threshold.Override(1.2f);
+        }
+
+        if (_chromaticAberration != null)
+        {
+            _chromaticAberration.intensity.Override(0f);
         }
     }
 
@@ -2225,12 +2361,12 @@ public class ParkSceneController : MonoBehaviour
             return true;
         }
 
-        if (_player != null && (obj == _player.gameObject || obj.transform.IsChildOf(_player)))
+        if (IsHierarchyLinkedToTransform(obj, _player))
         {
             return true;
         }
 
-        if (_mainCamera != null && (obj == _mainCamera.gameObject || obj.transform.IsChildOf(_mainCamera.transform)))
+        if (IsHierarchyLinkedToTransform(obj, _mainCamera != null ? _mainCamera.transform : null))
         {
             return true;
         }
@@ -2245,7 +2381,7 @@ public class ParkSceneController : MonoBehaviour
             return true;
         }
 
-        if (obj.GetComponent<Light>() != null || obj.GetComponent<Volume>() != null)
+        if (obj.GetComponent<Camera>() != null || obj.GetComponent<AudioListener>() != null)
         {
             return true;
         }
@@ -2257,6 +2393,67 @@ public class ParkSceneController : MonoBehaviour
         }
 
         return false;
+    }
+
+    private static bool IsHierarchyLinkedToTransform(GameObject obj, Transform target)
+    {
+        if (obj == null || target == null)
+        {
+            return false;
+        }
+
+        Transform candidate = obj.transform;
+        return obj == target.gameObject || candidate.IsChildOf(target) || target.IsChildOf(candidate);
+    }
+
+    private IEnumerator EraseGroundAndDropPlayer()
+    {
+        Terrain[] terrains = FindObjectsByType<Terrain>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (Terrain terrain in terrains)
+        {
+            if (terrain == null)
+            {
+                continue;
+            }
+
+            terrain.drawHeightmap = false;
+            terrain.drawTreesAndFoliage = false;
+
+            TerrainCollider terrainCollider = terrain.GetComponent<TerrainCollider>();
+            if (terrainCollider != null)
+            {
+                terrainCollider.enabled = false;
+            }
+
+            terrain.gameObject.SetActive(false);
+        }
+
+        GameObject[] allObjects = FindObjectsByType<GameObject>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj == null || !obj.activeInHierarchy)
+            {
+                continue;
+            }
+
+            if (IsHierarchyLinkedToTransform(obj, _player))
+            {
+                continue;
+            }
+
+            if (IsHierarchyLinkedToTransform(obj, _mainCamera != null ? _mainCamera.transform : null))
+            {
+                continue;
+            }
+
+            string lowerName = obj.name.ToLowerInvariant();
+            if (lowerName.Contains("terrain") || lowerName.Contains("ground") || lowerName.Contains("grass"))
+            {
+                obj.SetActive(false);
+            }
+        }
+
+        yield return null;
     }
 
     private IEnumerator FadeEndingDecor(float startAlpha, float targetAlpha, float duration)
@@ -2527,6 +2724,28 @@ public class ParkSceneController : MonoBehaviour
         StopAudioSource(_presenceSource);
     }
 
+    private void RestartNoEndingEssentialAudio()
+    {
+        if (_footstepSource != null)
+        {
+            _footstepSource.enabled = true;
+            _footstepSource.Stop();
+            _footstepSource.volume = 1f;
+        }
+
+        if (_breathingSource != null)
+        {
+            _breathingSource.enabled = true;
+            _breathingSource.clip = breathingLoopClip;
+            _breathingSource.volume = 0f;
+
+            if (breathingLoopClip != null && !_breathingSource.isPlaying)
+            {
+                _breathingSource.Play();
+            }
+        }
+    }
+
     private static void StopAudioSource(AudioSource source)
     {
         if (source == null)
@@ -2546,6 +2765,20 @@ public class ParkSceneController : MonoBehaviour
             return;
         }
 
+        ForceEndingCursorVisibleIfNeeded();
+
+        if (WasEndingButtonClicked(_endingYesButton))
+        {
+            ResolveEndingChoice(true);
+            return;
+        }
+
+        if (WasEndingButtonClicked(_endingNoButton))
+        {
+            ResolveEndingChoice(false);
+            return;
+        }
+
 #if ENABLE_INPUT_SYSTEM
         if (Keyboard.current != null)
         {
@@ -2556,6 +2789,12 @@ public class ParkSceneController : MonoBehaviour
             }
 
             if (Keyboard.current.nKey.wasPressedThisFrame)
+            {
+                ResolveEndingChoice(false);
+                return;
+            }
+
+            if (Keyboard.current.digit0Key.wasPressedThisFrame || Keyboard.current.numpad0Key.wasPressedThisFrame)
             {
                 ResolveEndingChoice(false);
             }
@@ -2570,8 +2809,59 @@ public class ParkSceneController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.N))
         {
             ResolveEndingChoice(false);
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha0) || Input.GetKeyDown(KeyCode.Keypad0))
+        {
+            ResolveEndingChoice(false);
         }
 #endif
+    }
+
+    private bool WasEndingButtonClicked(Button button)
+    {
+        if (button == null || !button.gameObject.activeInHierarchy || !button.interactable)
+        {
+            return false;
+        }
+
+        if (!WasPointerPrimaryPressedThisFrame())
+        {
+            return false;
+        }
+
+        Vector2 pointerPosition = GetCurrentPointerScreenPosition();
+        Camera eventCamera = null;
+
+        Canvas parentCanvas = button.GetComponentInParent<Canvas>();
+        if (parentCanvas != null && parentCanvas.renderMode != RenderMode.ScreenSpaceOverlay)
+        {
+            eventCamera = parentCanvas.worldCamera != null ? parentCanvas.worldCamera : _mainCamera;
+        }
+
+        RectTransform rectTransform = button.transform as RectTransform;
+        return rectTransform != null && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, pointerPosition, eventCamera);
+    }
+
+    private static bool WasPointerPrimaryPressedThisFrame()
+    {
+#if ENABLE_INPUT_SYSTEM
+        return Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame;
+#else
+        return Input.GetMouseButtonDown(0);
+#endif
+    }
+
+    private static Vector2 GetCurrentPointerScreenPosition()
+    {
+#if ENABLE_INPUT_SYSTEM
+        if (Mouse.current != null)
+        {
+            return Mouse.current.position.ReadValue();
+        }
+#endif
+        return Input.mousePosition;
     }
 
     private System.Collections.IEnumerator EnsureGameplayCursorState()
@@ -2583,6 +2873,49 @@ public class ParkSceneController : MonoBehaviour
         {
             SetPlayerLocked(false);
         }
+    }
+
+    private void BeginEndingCursorOverride()
+    {
+        _endingCursorForcedVisible = true;
+        ForceEndingCursorVisibleIfNeeded();
+
+        if (_cursorVisibilityRoutine == null)
+        {
+            _cursorVisibilityRoutine = StartCoroutine(EndingCursorVisibilityRoutine());
+        }
+    }
+
+    private void EndEndingCursorOverride()
+    {
+        _endingCursorForcedVisible = false;
+        if (_cursorVisibilityRoutine != null)
+        {
+            StopCoroutine(_cursorVisibilityRoutine);
+            _cursorVisibilityRoutine = null;
+        }
+    }
+
+    private IEnumerator EndingCursorVisibilityRoutine()
+    {
+        while (_endingCursorForcedVisible)
+        {
+            ForceEndingCursorVisibleIfNeeded();
+            yield return null;
+        }
+
+        _cursorVisibilityRoutine = null;
+    }
+
+    private void ForceEndingCursorVisibleIfNeeded()
+    {
+        if (!_endingCursorForcedVisible)
+        {
+            return;
+        }
+
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
     }
 
     private static bool WasCancelPressed()
