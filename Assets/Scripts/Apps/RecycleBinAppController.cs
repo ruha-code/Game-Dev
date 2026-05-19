@@ -279,24 +279,48 @@ public class RecycleBinAppController : MonoBehaviour
             Velocity = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * 0.4f
         };
 
-        label.RegisterCallback<ClickEvent>(evt => OnFragmentClick(state));
+        // Ensure the label itself is always the target for clicks
+        label.RegisterCallback<ClickEvent>(evt => 
+        {
+            OnFragmentClick(state);
+            evt.StopPropagation();
+        });
         _fragments.Add(state);
     }
 
     private void OnFragmentClick(FragmentState state)
     {
-        if (_isComplete || state.IsCaught) return;
+        if (_isComplete) return;
 
-        // Find first empty slot
-        SlotState emptySlot = _slots.Find(s => s.AssignedFragment == null);
-        if (emptySlot != null)
+        if (state.IsCaught)
         {
-            AssignFragmentToSlot(state, emptySlot);
+            // If it's already in a slot, find which slot and unassign it
+            SlotState slot = _slots.Find(s => s.AssignedFragment == state);
+            if (slot != null)
+            {
+                UnassignFragmentFromSlot(slot);
+            }
+        }
+        else
+        {
+            // Find first empty slot and assign
+            SlotState emptySlot = _slots.Find(s => s.AssignedFragment == null);
+            if (emptySlot != null)
+            {
+                AssignFragmentToSlot(state, emptySlot);
+            }
+            else
+            {
+                // Optional: visual feedback that no slots are available
+                PlaySound(errorSound);
+            }
         }
     }
 
     private void OnSlotClick(SlotState slot)
     {
+        if (_isComplete) return;
+        
         if (slot.AssignedFragment != null)
         {
             UnassignFragmentFromSlot(slot);
@@ -305,11 +329,13 @@ public class RecycleBinAppController : MonoBehaviour
 
     private void AssignFragmentToSlot(FragmentState fragment, SlotState slot)
     {
+        // Instant freeze and hide from floating area
         fragment.IsCaught = true;
         fragment.IsFrozen = true;
         fragment.Velocity = Vector2.zero;
         fragment.Element.AddToClassList("hidden");
 
+        // Instant update to slot UI
         slot.AssignedFragment = fragment;
         slot.WordLabel.text = fragment.Text;
         slot.Element.AddToClassList("sentence-slot--filled");
@@ -322,15 +348,19 @@ public class RecycleBinAppController : MonoBehaviour
     private void UnassignFragmentFromSlot(SlotState slot)
     {
         FragmentState fragment = slot.AssignedFragment;
+        if (fragment == null) return;
+
+        // Instant clear from slot UI
         slot.AssignedFragment = null;
         slot.WordLabel.text = "";
         slot.Element.RemoveFromClassList("sentence-slot--filled");
 
+        // Instant return to floating area
         fragment.IsCaught = false;
         fragment.IsFrozen = false;
         fragment.Element.RemoveFromClassList("hidden");
         
-        // Randomize position
+        // Resume physics immediately at current or slightly randomized position
         Rect area = _voidArea.contentRect;
         fragment.Position = new Vector2(Random.Range(50, area.width - 150), Random.Range(50, area.height - 100));
         fragment.Velocity = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * 0.4f;
@@ -348,9 +378,19 @@ public class RecycleBinAppController : MonoBehaviour
         {
             if (slot.AssignedFragment != null)
             {
-                Label barLabel = new Label(slot.AssignedFragment.Text);
+                FragmentState fragment = slot.AssignedFragment;
+                Label barLabel = new Label(fragment.Text);
                 barLabel.AddToClassList("memory-fragment");
                 barLabel.AddToClassList("memory-fragment--placed");
+                barLabel.pickingMode = PickingMode.Position;
+                
+                // Allow clicking the word in the bar to return it
+                barLabel.RegisterCallback<ClickEvent>(evt => 
+                {
+                    OnFragmentClick(fragment);
+                    evt.StopPropagation();
+                });
+                
                 _reconstructionArea.Add(barLabel);
             }
         }
