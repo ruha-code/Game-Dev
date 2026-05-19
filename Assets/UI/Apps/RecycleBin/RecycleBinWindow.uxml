@@ -1,174 +1,73 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements">
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
     <ui:Style src="RecycleBinWindow.uss" />
     <ui:VisualElement name="recycle-bin-window" class="recycle-bin-window hidden">
-        <ui:VisualElement class="recycle-bin-background-glow recycle-bin-background-glow--one" />
-        <ui:VisualElement class="recycle-bin-background-glow recycle-bin-background-glow--two" />
-
+        <ui:VisualElement class="scanline-overlay" />
+        <ui:VisualElement class="digital-fog" />
+        
         <ui:VisualElement class="recycle-bin-window-header">
             <ui:VisualElement class="recycle-bin-window-title-block">
                 <ui:Label name="recycle-bin-window-title" text="Recycle Bin" class="recycle-bin-window-title" />
-                <ui:Label text="Deleted personnel residue archive" class="recycle-bin-window-subtitle" />
+                <ui:Label text="Memory Residue Recovery Shell" class="recycle-bin-window-subtitle" />
             </ui:VisualElement>
             <ui:Button name="recycle-bin-close-button" text="X" class="recycle-bin-close-button" />
         </ui:VisualElement>
 
         <ui:VisualElement class="recycle-bin-window-shell">
-            <ui:VisualElement class="recycle-bin-column recycle-bin-column--manifest">
-                <ui:VisualElement class="recycle-bin-manifest-header">
-                    <ui:VisualElement class="recycle-bin-manifest-header-copy">
-                        <ui:Label text="DELETED MANIFEST" class="recycle-bin-section-title" />
-                        <ui:Label text="Four employee profiles were flagged as disposable. Scan residue to recover the truth." class="recycle-bin-intro-text" />
-                    </ui:VisualElement>
-                    <ui:VisualElement class="recycle-bin-manifest-badge">
-                        <ui:Label text="4 FILES" class="recycle-bin-manifest-badge-text" />
+            <ui:VisualElement class="recycle-bin-main-layout">
+                <ui:VisualElement name="bin-void" class="bin-void">
+                    <ui:Label name="void-status-text" text="AWAITING INPUT..." class="void-status-text" />
+                    
+                    <ui:VisualElement name="sentence-container" class="sentence-container hidden" />
+
+                    <ui:VisualElement name="fragment-spawn-area" class="fragment-spawn-area" />
+                    
+                    <ui:VisualElement name="engineer-selection" class="engineer-selection">
+                        <ui:Button name="engineer-btn-0" class="engineer-sphere-btn">
+                            <ui:VisualElement class="sphere-icon sphere-icon--botanist" />
+                            <ui:Label text="CHARACTER 1" class="sphere-label" />
+                        </ui:Button>
+                        <ui:Button name="engineer-btn-1" class="engineer-sphere-btn">
+                            <ui:VisualElement class="sphere-icon sphere-icon--loop" />
+                            <ui:Label text="CHARACTER 2" class="sphere-label" />
+                        </ui:Button>
                     </ui:VisualElement>
                 </ui:VisualElement>
 
-                <ui:ScrollView mode="Vertical" class="recycle-bin-record-list">
-                    <ui:Button name="recycle-record-01" class="recycle-record-button">
-                        <ui:VisualElement class="recycle-record-button-shell">
-                            <ui:VisualElement class="recycle-record-topline">
-                                <ui:Label text="ENG-01 // MARAT KEBEKOV" class="recycle-record-title" />
-                                <ui:VisualElement class="recycle-record-dot" />
-                            </ui:VisualElement>
-                            <ui:Label text="Containment Arborist" class="recycle-record-subtitle" />
-                            <ui:Label name="recycle-record-01-state" text="DELETED" class="recycle-record-state" />
-                        </ui:VisualElement>
-                    </ui:Button>
-
-                    <ui:Button name="recycle-record-02" class="recycle-record-button">
-                        <ui:VisualElement class="recycle-record-button-shell">
-                            <ui:VisualElement class="recycle-record-topline">
-                                <ui:Label text="ENG-02 // LINA VOSS" class="recycle-record-title" />
-                                <ui:VisualElement class="recycle-record-dot" />
-                            </ui:VisualElement>
-                            <ui:Label text="Memory Cartographer" class="recycle-record-subtitle" />
-                            <ui:Label name="recycle-record-02-state" text="DELETED" class="recycle-record-state" />
-                        </ui:VisualElement>
-                    </ui:Button>
-
-                    <ui:Button name="recycle-record-03" class="recycle-record-button">
-                        <ui:VisualElement class="recycle-record-button-shell">
-                            <ui:VisualElement class="recycle-record-topline">
-                                <ui:Label text="ENG-03 // TIMUR SERIK" class="recycle-record-title" />
-                                <ui:VisualElement class="recycle-record-dot" />
-                            </ui:VisualElement>
-                            <ui:Label text="Kernel Recovery Engineer" class="recycle-record-subtitle" />
-                            <ui:Label name="recycle-record-03-state" text="DELETED" class="recycle-record-state" />
-                        </ui:VisualElement>
-                    </ui:Button>
-
-                    <ui:Button name="recycle-record-04" class="recycle-record-button">
-                        <ui:VisualElement class="recycle-record-button-shell">
-                            <ui:VisualElement class="recycle-record-topline">
-                                <ui:Label text="ENG-04 // AIDA NURPEIS" class="recycle-record-title" />
-                                <ui:VisualElement class="recycle-record-dot" />
-                            </ui:VisualElement>
-                            <ui:Label text="Interface Behavior Designer" class="recycle-record-subtitle" />
-                            <ui:Label name="recycle-record-04-state" text="DELETED" class="recycle-record-state" />
-                        </ui:VisualElement>
-                    </ui:Button>
-
-                    <ui:Button name="recycle-record-ghost" class="recycle-record-button hidden">
-                        <ui:VisualElement class="recycle-record-button-shell">
-                            <ui:VisualElement class="recycle-record-topline">
-                                <ui:Label text="ENG-00 // ERROR" class="recycle-record-title" />
-                                <ui:VisualElement class="recycle-record-dot" style="background-color: white;" />
-                            </ui:VisualElement>
-                            <ui:Label text="UNAUTHORIZED RESIDUE" class="recycle-record-subtitle" />
-                            <ui:Label text="VOID" class="recycle-record-state" />
-                        </ui:VisualElement>
-                    </ui:Button>
-                    </ui:ScrollView>
-
-                <ui:VisualElement class="recycle-bin-legend">
-                    <ui:Label text="Status Legend" class="recycle-bin-legend-title" />
-                    <ui:Label text="DELETED: Untouched residue" class="recycle-bin-legend-line" />
-                    <ui:Label text="ANALYZED: Residue scanned" class="recycle-bin-legend-line" />
-                    <ui:Label text="STABLE: Evidence interpreted" class="recycle-bin-legend-line" />
-                    <ui:Label text="RESTORED: Snapshot recovered" class="recycle-bin-legend-line" />
+                <ui:VisualElement class="reconstruction-bar-container">
+                    <ui:Label text="RECONSTRUCTION SEQUENCE" class="reconstruction-bar-label" />
+                    <ui:VisualElement name="reconstruction-area" class="reconstruction-bar" />
                 </ui:VisualElement>
             </ui:VisualElement>
 
-            <ui:ScrollView mode="Vertical" class="recycle-bin-column recycle-bin-column--details">
-                <ui:VisualElement class="recycle-bin-panel recycle-bin-panel--selected">
-                    <ui:Label text="SELECTED PROFILE" class="recycle-bin-section-title" />
-                    <ui:Label name="recycle-bin-selected-name" text="ENG-01 // MARAT KEBEKOV" class="recycle-bin-selected-name" />
-                    <ui:Label name="recycle-bin-selected-role" text="Containment Arborist" class="recycle-bin-selected-role" />
-                    <ui:VisualElement class="recycle-bin-selected-meta-row">
-                        <ui:Label name="recycle-bin-selected-deleted-at" text="Deleted 21:14" class="recycle-bin-selected-meta recycle-bin-selected-meta--pill" />
-                        <ui:Label name="recycle-bin-selected-corruption" text="Corruption: 61%" class="recycle-bin-selected-meta recycle-bin-selected-meta--pill" />
+            <ui:VisualElement class="reconstruction-sidebar">
+                <ui:Label text="DIAGNOSTICS" class="reconstruction-title" />
+                <ui:Label name="reconstruction-integrity" text="INTEGRITY: 100%" class="reconstruction-integrity" />
+                
+                <ui:VisualElement class="corruption-meter-container">
+                    <ui:Label text="SYSTEM CORRUPTION" class="meter-label" />
+                    <ui:VisualElement class="meter-bg">
+                        <ui:VisualElement name="corruption-fill" class="meter-fill" />
                     </ui:VisualElement>
-                    <ui:Label name="recycle-bin-selected-body" text="Record is still compressed under deletion residue." class="recycle-bin-selected-body" />
                 </ui:VisualElement>
 
-                <ui:VisualElement class="recycle-bin-panel recycle-bin-panel--message">
-                    <ui:Label text="RECOVERED MESSAGE" class="recycle-bin-section-title" />
-                    <ui:Label name="recycle-bin-recovered-message" text="..." class="recycle-bin-recovered-message" />
+                <ui:VisualElement name="engineer-info" class="engineer-info-card hidden">
+                    <ui:Label name="info-name" text="Unknown" class="info-name" />
+                    <ui:Label name="info-role" text="Unknown Role" class="info-role" />
+                    <ui:Label text="DELETED" class="info-status" />
                 </ui:VisualElement>
 
-                <ui:VisualElement class="recycle-bin-panel recycle-bin-panel--actions">
-                    <ui:Label text="FORENSIC ACTIONS" class="recycle-bin-section-title" />
-                    <ui:VisualElement class="recycle-bin-workflow">
-                        <ui:VisualElement name="recycle-bin-step-scan" class="recycle-bin-step-chip">
-                            <ui:Label text="1" class="recycle-bin-step-chip-number" />
-                            <ui:Label text="Scan" class="recycle-bin-step-chip-text" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="recycle-bin-step-stabilize" class="recycle-bin-step-chip">
-                            <ui:Label text="2" class="recycle-bin-step-chip-number" />
-                            <ui:Label text="Stabilize" class="recycle-bin-step-chip-text" />
-                        </ui:VisualElement>
-                        <ui:VisualElement name="recycle-bin-step-restore" class="recycle-bin-step-chip">
-                            <ui:Label text="3" class="recycle-bin-step-chip-number" />
-                            <ui:Label text="Restore" class="recycle-bin-step-chip-text" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    
-                    <ui:VisualElement class="recycle-bin-action-row">
-                        <ui:Button name="recycle-bin-scan-button" text="Scan Residue" class="recycle-bin-action-button recycle-bin-action-button--scan" />
-                        <ui:VisualElement class="recycle-bin-progress-bg">
-                            <ui:VisualElement name="recycle-bin-scan-progress-fill" class="recycle-bin-progress-fill" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-
-                    <ui:VisualElement class="recycle-bin-challenge-shell">
-                        <ui:Label name="recycle-bin-challenge-prompt" text="Stabilization challenge will appear after scanning." class="recycle-bin-challenge-prompt" />
-                        <ui:Button name="recycle-bin-choice-0" text="Option 1" class="recycle-bin-choice-button" />
-                        <ui:Button name="recycle-bin-choice-1" text="Option 2" class="recycle-bin-choice-button" />
-                        <ui:Button name="recycle-bin-choice-2" text="Option 3" class="recycle-bin-choice-button" />
-                    </ui:VisualElement>
-
-                    <ui:VisualElement class="recycle-bin-action-row">
-                        <ui:Button name="recycle-bin-restore-button" text="Restore Snapshot" class="recycle-bin-action-button recycle-bin-action-button--restore" />
-                        <ui:VisualElement class="recycle-bin-progress-bg">
-                            <ui:VisualElement name="recycle-bin-restore-progress-fill" class="recycle-bin-progress-fill" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    
-                    <ui:Button name="recycle-bin-stabilize-button" text="Stabilize System Noise" class="recycle-bin-action-button recycle-bin-action-button--stabilize" />
-                    <ui:Label name="recycle-bin-hint-label" text="Deleted profiles can be scanned, then restored one by one." class="recycle-bin-hint-label" />
+                <ui:VisualElement class="bin-instructions">
+                    <ui:Label text="Filter noise fragments." class="instruction-line" />
+                    <ui:Label text="Sequence valid residue." class="instruction-line" />
+                    <ui:Label text="Click reconstruction items to undo." class="instruction-line" />
                 </ui:VisualElement>
-
-                <ui:VisualElement class="recycle-bin-panel recycle-bin-panel--status">
-                    <ui:VisualElement class="recycle-bin-status-top">
-                        <ui:Label name="recycle-bin-progress-label" text="Recovered Profiles: 0 / 4" class="recycle-bin-progress-label" />
-                        <ui:VisualElement class="recycle-bin-levels">
-                            <ui:Label name="recycle-bin-contamination-label" text="Contamination: 0%" class="recycle-bin-level-label" />
-                            <ui:Label name="recycle-bin-suspicion-label" text="Suspicion: 0%" class="recycle-bin-level-label" />
-                        </ui:VisualElement>
-                    </ui:VisualElement>
-                    <ui:Label name="recycle-bin-status-label" text="Select a deleted engineer profile and begin residue scanning." class="recycle-bin-status-label" />
-                </ui:VisualElement>
-            </ui:ScrollView>
-</ui:VisualElement>
-
-        <ui:VisualElement name="recycle-bin-popup-layer" class="recycle-bin-popup-layer" picking-mode="Ignore" />
+            </ui:VisualElement>
+        </ui:VisualElement>
 
         <ui:VisualElement name="recycle-bin-completion-popup" class="recycle-bin-completion-popup hidden">
-            <ui:Label text="BIN ARCHIVE RESTORED" class="recycle-bin-completion-title" />
-            <ui:Label name="recycle-bin-final-summary" text="Recovered deletions point toward the park. The tree on the desktop is waking up." class="recycle-bin-completion-body" />
-            <ui:Label text="Next destination: Park anomaly via the desktop tree" class="recycle-bin-completion-next" />
-            <ui:Button name="recycle-bin-complete-button" text="Close Bin" class="recycle-bin-complete-button" />
+            <ui:Label text="ARCHIVE RESTORED" class="recycle-bin-completion-title" />
+            <ui:Label name="recycle-bin-final-summary" text="The memory fragments have been reassembled. The truth is surfacing." class="recycle-bin-completion-body" />
+            <ui:Button name="recycle-bin-complete-button" text="Return to Desktop" class="recycle-bin-complete-button" />
         </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

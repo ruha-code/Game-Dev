@@ -354,15 +354,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RecycleBinAppController
   clickSound: {fileID: 8300000, guid: a066b4adf18d10340b046709f6549512, type: 3}
-  scanSound: {fileID: 8300000, guid: fd8847be716ab2e43ac0db37b0be17c9, type: 3}
-  restoreSound: {fileID: 8300000, guid: e9cbde8212ad46d4f8e3e7aac0eb16c9, type: 3}
-  completeSound: {fileID: 8300000, guid: 205d395846793bf48b90583a382c91a6, type: 3}
-  errorSound: {fileID: 8300000, guid: 25aac1f84b9388f4b9cbb7a25bbe9a99, type: 3}
-  glitchSound: {fileID: 8300000, guid: c1167aed850330f429d0b328094fe38d, type: 3}
-  ambientHum: {fileID: 8300000, guid: e9e4daa72aee041428621d62df17a50f, type: 3}
-  whisperHelpSound: {fileID: 8300000, guid: e32bd3281a21d274586e2c38e5437792, type: 3}
-  scanLoopSound: {fileID: 8300000, guid: 1427174cae9e561438c43fe39bb2ea08, type: 3}
-  stabilizationSuccessSound: {fileID: 8300000, guid: 7de398d7f16d13f419030782015a93c1, type: 3}
+  captureSound: {fileID: 0}
+  errorSound: {fileID: 8300000, guid: 87357755a97e20a45a9b436caa4580c8, type: 3}
+  successSound: {fileID: 8300000, guid: 83ea21a4a3cc8fe41b5a0165623615d2, type: 3}
+  completionSound: {fileID: 8300000, guid: f45e6f4a309b08a47bda1d7b2f8b7000, type: 3}
+  ambientHum: {fileID: 8300000, guid: 340d620354ae3084fbb854ef7fa1d967, type: 3}
 --- !u!1 &893316266
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,210 +5,146 @@ using UnityEngine.UIElements;
 
 public class RecycleBinAppController : MonoBehaviour
 {
-    private sealed class EngineerRecord
+    private sealed class EngineerData
     {
         public string Id;
         public string Name;
         public string Role;
-        public string DeletedAt;
-        public string CorruptionLevel;
-        public string ScanSummary;
-        public string RestoredSummary;
-        public string RecoveredMessage;
-        public string ChallengePrompt;
-        public string[] ChallengeChoices;
-        public int CorrectChoiceIndex;
-        public Button EntryButton;
-        public Label StateLabel;
-        public VisualElement StatusDot;
-        public bool IsScanned;
-        public bool IsStabilized;
-        public bool IsRestored;
+        public string SentenceTemplate; // Use "[]" for slots
+        public string[] CorrectWords;
+        public string[] Distractions;
+        public string FinalSummary;
+        public bool IsRecovered;
     }
 
-    private struct ChoiceData {
+    private sealed class SlotState
+    {
+        public VisualElement Element;
+        public Label WordLabel;
+        public FragmentState AssignedFragment;
+        public int Index;
+    }
+
+    private sealed class FragmentState
+    {
+        public Label Element;
         public string Text;
-        public bool IsCorrect;
+        public int CorrectSlotIndex; // -1 if noise
+        public Vector2 Velocity;
+        public Vector2 Position;
+        public bool IsCaught;
+        public bool IsFake;
+        public bool IsFrozen;
+        public float FlickerTimer;
+        public float MutationTimer;
     }
 
     private VisualElement _window;
-    private VisualElement _titleBar;
-    private VisualElement _ghostRecord;
-    private Button _closeButton;
-    private Button _scanButton;
-    private Button _restoreButton;
-    private Button _stabilizeButton;
-    private Button _completeButton;
+    private VisualElement _voidArea;
+    private VisualElement _fragmentSpawnArea;
+    private VisualElement _reconstructionArea;
+    private VisualElement _selectionOverlay;
+    private Label _integrityLabel;
+    private VisualElement _corruptionFill;
+    private Label _voidStatusText;
+    private Label _infoName;
+    private Label _infoRole;
+    private VisualElement _engineerInfo;
     private VisualElement _completionPopup;
-    private VisualElement _scanProgressFill;
-    private VisualElement _restoreProgressFill;
-    private VisualElement _popupLayer;
-    private Label _progressLabel;
-    private Label _statusLabel;
-    private Label _hintLabel;
-    private Label _selectedNameLabel;
-    private Label _selectedRoleLabel;
-    private Label _selectedDeletedAtLabel;
-    private Label _selectedCorruptionLabel;
-    private Label _selectedBodyLabel;
-    private Label _recoveredMessageLabel;
-    private Label _challengePromptLabel;
-    private Label _currentPhaseLabel;
-    private Label _finalSummaryLabel;
-    private Label _contaminationLabel;
-    private Label _suspicionLabel;
-    private readonly Button[] _choiceButtons = new Button[3];
-    private readonly VisualElement[] _stepChips = new VisualElement[3];
+    private Label _finalSummary;
+    private VisualElement _sentenceContainer;
 
-    private readonly List<EngineerRecord> _records = new();
-    private readonly List<ChoiceData> _currentChoices = new();
-    private readonly List<Label> _profileLabels = new List<Label>();
-
-    private EngineerRecord _selectedRecord;
+    private readonly List<EngineerData> _engineers = new();
+    private readonly List<FragmentState> _fragments = new();
+    private readonly List<SlotState> _slots = new();
+    private EngineerData _activeEngineer;
+    
+    private float _signalIntegrity = 100f;
+    private float _corruption = 0f;
     private bool _isVisible;
     private bool _isComplete;
-    private bool _isActionInProgress;
-    private float _contaminationLevel;
-    private float _suspicionLevel;
-    private AudioSource _humSource;
-    private Coroutine _glitchRoutine;
-    private Coroutine _popupRoutine;
+    private Vector2 _mousePosition;
 
-    private VisualElement _ghostCursor;
-    private bool _isGhostCursorActive;
-    private bool _isButtonFleeing;
-
-    [Header("Enhanced Audio")]
+    [Header("Audio")]
     public AudioClip clickSound;
-    public AudioClip scanSound;
-    public AudioClip restoreSound;
-    public AudioClip completeSound;
+    public AudioClip captureSound;
     public AudioClip errorSound;
-    public AudioClip glitchSound;
+    public AudioClip successSound;
+    public AudioClip completionSound;
     public AudioClip ambientHum;
-    public AudioClip whisperHelpSound;
-    public AudioClip scanLoopSound;
-    public AudioClip stabilizationSuccessSound;
+
+    private AudioSource _humSource;
 
     public bool IsWindowOpen => _isVisible;
 
     public void Initialize(VisualElement root)
     {
-        ResolveAudioFallbacks();
-
         _window = root.Q<VisualElement>("recycle-bin-window");
         if (_window == null) return;
 
-        _ghostRecord = root.Q<VisualElement>("recycle-record-ghost");
-
-        // Create ghost cursor
-        _ghostCursor = new VisualElement();
-        _ghostCursor.AddToClassList("recycle-bin-ghost-cursor");
-        _ghostCursor.pickingMode = PickingMode.Ignore;
-        _ghostCursor.style.display = DisplayStyle.None;
-        _window.Add(_ghostCursor);
-
-        _window.pickingMode = PickingMode.Ignore;
-        _titleBar = _window.Q<VisualElement>(className: "recycle-bin-window-header");
-        _closeButton = root.Q<Button>("recycle-bin-close-button");
-        _scanButton = root.Q<Button>("recycle-bin-scan-button");
-        _restoreButton = root.Q<Button>("recycle-bin-restore-button");
-
-        _restoreButton?.RegisterCallback<PointerOverEvent>(_ => {
-            if (_suspicionLevel > 60 && Random.value > 0.5f) StartCoroutine(ButtonFleeRoutine());
-        });
-
-        _stabilizeButton = root.Q<Button>("recycle-bin-stabilize-button");
-        _completeButton = root.Q<Button>("recycle-bin-complete-button");
+        _voidArea = root.Q<VisualElement>("bin-void");
+        _fragmentSpawnArea = root.Q<VisualElement>("fragment-spawn-area");
+        _reconstructionArea = root.Q<VisualElement>("reconstruction-area");
+        _selectionOverlay = root.Q<VisualElement>("engineer-selection");
+        _integrityLabel = root.Q<Label>("reconstruction-integrity");
+        _corruptionFill = root.Q<VisualElement>("corruption-fill");
+        _voidStatusText = root.Q<Label>("void-status-text");
+        _infoName = root.Q<Label>("info-name");
+        _infoRole = root.Q<Label>("info-role");
+        _engineerInfo = root.Q<VisualElement>("engineer-info");
         _completionPopup = root.Q<VisualElement>("recycle-bin-completion-popup");
-        _popupLayer = root.Q<VisualElement>("recycle-bin-popup-layer") ?? _window;
+        _finalSummary = root.Q<Label>("recycle-bin-final-summary");
+        _sentenceContainer = root.Q<VisualElement>("sentence-container");
 
-        _progressLabel = root.Q<Label>("recycle-bin-progress-label");
-        _statusLabel = root.Q<Label>("recycle-bin-status-label");
-        _hintLabel = root.Q<Label>("recycle-bin-hint-label");
-        _contaminationLabel = root.Q<Label>("recycle-bin-contamination-label");
-        _suspicionLabel = root.Q<Label>("recycle-bin-suspicion-label");
+        root.Q<Button>("recycle-bin-close-button")?.RegisterCallback<ClickEvent>(_ => Hide());
+        root.Q<Button>("recycle-bin-complete-button")?.RegisterCallback<ClickEvent>(_ => Hide());
 
-        _selectedNameLabel = root.Q<Label>("recycle-bin-selected-name");
-        _selectedRoleLabel = root.Q<Label>("recycle-bin-selected-role");
-        _selectedDeletedAtLabel = root.Q<Label>("recycle-bin-selected-deleted-at");
-        _selectedCorruptionLabel = root.Q<Label>("recycle-bin-selected-corruption");
-        _selectedBodyLabel = root.Q<Label>("recycle-bin-selected-body");
-        _recoveredMessageLabel = root.Q<Label>("recycle-bin-recovered-message");
-        _challengePromptLabel = root.Q<Label>("recycle-bin-challenge-prompt");
-        _currentPhaseLabel = root.Q<Label>("recycle-bin-current-phase");
-        _finalSummaryLabel = root.Q<Label>("recycle-bin-final-summary");
+        _window.RegisterCallback<PointerMoveEvent>(OnWindowPointerMove);
+        
+        SetupEngineers();
+        SetupSelectionButtons();
+        SetupAudio();
+        
+        _isComplete = ProgressionManager.Instance.HasKey(GameKey.RecycleBinKey);
+        UpdateUI();
+    }
 
-        _scanProgressFill = root.Q<VisualElement>("recycle-bin-scan-progress-fill");
-        _restoreProgressFill = root.Q<VisualElement>("recycle-bin-restore-progress-fill");
-
-        _choiceButtons[0] = root.Q<Button>("recycle-bin-choice-0");
-        _choiceButtons[1] = root.Q<Button>("recycle-bin-choice-1");
-        _choiceButtons[2] = root.Q<Button>("recycle-bin-choice-2");
-
-        _stepChips[0] = root.Q<VisualElement>("recycle-bin-step-scan");
-        _stepChips[1] = root.Q<VisualElement>("recycle-bin-step-stabilize");
-        _stepChips[2] = root.Q<VisualElement>("recycle-bin-step-restore");
-
-        _closeButton?.RegisterCallback<ClickEvent>(_ => {
-            if (_isComplete || _records.FindAll(r => r.IsRestored).Count == 0) Hide();
-            else ShowExitWarning();
+    private void SetupEngineers()
+    {
+        _engineers.Clear();
+        _engineers.Add(new EngineerData {
+            Id = "CHAR-01",
+            Name = "M. KEBEKOV (FRAGMENT 1)",
+            Role = "Containment Arborist",
+            SentenceTemplate = "Мои мысли начинают [], будто система постепенно [] их и заменяет строками []. Я всё чаще ловлю себя на [], где только что было понимание, и это пугает больше всего.",
+            CorrectWords = new[] { "исчезать", "поглощает", "кода", "пустоте" },
+            Distractions = new[] { "дерево", "секрет", "тайна", "алмаз", "знания" },
+            FinalSummary = "Fragment 1 restored. The corruption is spreading to the memory itself."
         });
+        _engineers.Add(new EngineerData {
+            Id = "CHAR-02",
+            Name = "L. VOSS (FRAGMENT 2)",
+            Role = "Memory Cartographer",
+            SentenceTemplate = "Я узнал нечто важное — у aeroOS есть собственная личность. Она не просто работает, она []. И сейчас она скрыта где-то внутри Дерева Аномалий, будто [] там намеренно.",
+            CorrectWords = new[] { "наблюдает", "прячется" },
+            Distractions = new[] { "компьютер", "система", "пустыня", "правда" },
+            FinalSummary = "Fragment 2 restored. aeroOS is not a tool; it is a witness."
+        });
+    }
 
-        _scanButton?.RegisterCallback<ClickEvent>(_ => StartScan());
-        _restoreButton?.RegisterCallback<ClickEvent>(_ => StartRestore());
-        _stabilizeButton?.RegisterCallback<ClickEvent>(_ => StartStabilize());
-        _completeButton?.RegisterCallback<ClickEvent>(_ => Hide());
-
-        for (int i = 0; i < _choiceButtons.Length; i++)
+    private void SetupSelectionButtons()
+    {
+        for (int i = 0; i < 2; i++)
         {
-            int capturedIndex = i;
-            _choiceButtons[i]?.RegisterCallback<ClickEvent>(_ => EvaluateChoice(capturedIndex));
-            _choiceButtons[i]?.RegisterCallback<PointerOverEvent>(_ => PlaySound(clickSound));
+            int index = i;
+            var btn = _window.Q<Button>($"engineer-btn-{i}");
+            btn?.RegisterCallback<ClickEvent>(_ => StartRecovery(_engineers[index]));
         }
-
-        SetupRecords(root);
-        RegisterWindowDragging();
-        ResetState();
-        SetupHumSource();
-
-        _window.RegisterCallback<PointerMoveEvent>(evt => {
-            if (_isGhostCursorActive) {
-                _ghostCursor.style.left = evt.localPosition.x + 30;
-                _ghostCursor.style.top = evt.localPosition.y + 30;
-            }
-        });
     }
 
-    private IEnumerator ButtonFleeRoutine()
+    private void SetupAudio()
     {
-        if (_isButtonFleeing || _restoreButton == null) yield break;
-        _isButtonFleeing = true;
-        PlaySound(glitchSound);
-        _restoreButton.style.translate = new Translate(Random.Range(-100, 100), Random.Range(-40, 40), 0);
-        yield return new WaitForSeconds(1.2f);
-        _restoreButton.style.translate = new Translate(0, 0, 0);
-        _isButtonFleeing = false;
-    }
-
-    private void ResolveAudioFallbacks()
-    {
-        clickSound ??= Resources.Load<AudioClip>("Audio/UI/Aero_Click");
-        scanSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/RestoreSuccess");
-        restoreSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/RestoreSuccess");
-        completeSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/ArchiveComplete");
-        errorSound ??= Resources.Load<AudioClip>("Audio/UI/StaticCrack");
-        glitchSound ??= Resources.Load<AudioClip>("Audio/UI/GlitchBurst");
-        ambientHum ??= Resources.Load<AudioClip>("Audio/RecycleBin/Bin_Forensic_Ambient");
-        whisperHelpSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/Bin_Whisper_Help");
-        scanLoopSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/ScanLoop");
-        stabilizationSuccessSound ??= Resources.Load<AudioClip>("Audio/RecycleBin/StabilizationSuccess");
-    }
-
-    private void SetupHumSource()
-    {
-        if (ambientHum == null) return;
-        _humSource = gameObject.AddComponent<AudioSource>();
+        if (_humSource == null) _humSource = gameObject.AddComponent<AudioSource>();
         _humSource.clip = ambientHum;
         _humSource.loop = true;
         _humSource.volume = 0;
@@ -219,541 +155,412 @@ public class RecycleBinAppController : MonoBehaviour
     {
         if (_window == null) return;
         _window.RemoveFromClassList("hidden");
-        _window.pickingMode = PickingMode.Position;
-        _window.BringToFront();
         _isVisible = true;
-
-        if (_humSource != null) {
+        _corruption = 0;
+        _signalIntegrity = 100;
+        ResetToSelection();
+        UpdateUI();
+        
+        if (ambientHum)
+        {
             _humSource.Play();
-            StartCoroutine(FadeHum(0.4f, 2f));
+            StartCoroutine(FadeAudio(0.3f));
         }
-
-        if (_glitchRoutine != null) StopCoroutine(_glitchRoutine);
-        _glitchRoutine = StartCoroutine(GlitchRoutine());
-        if (_popupRoutine != null) StopCoroutine(_popupRoutine);
-        _popupRoutine = StartCoroutine(FakePopupRoutine());
-
-        StartCoroutine(AnomalyDirector());
-    }
-
-    private IEnumerator FadeHum(float target, float duration)
-    {
-        float start = _humSource != null ? _humSource.volume : 0;
-        float elapsed = 0;
-        while (elapsed < duration && _humSource != null) {
-            elapsed += Time.deltaTime;
-            _humSource.volume = Mathf.Lerp(start, target, elapsed / duration);
-            yield return null;
-        }
+        
+        StartCoroutine(UpdateFragmentsRoutine());
+        StartCoroutine(AnomalyRoutine());
     }
 
     public void Hide()
     {
         if (_window == null) return;
         _window.AddToClassList("hidden");
-        _window.pickingMode = PickingMode.Ignore;
         _isVisible = false;
-        
-        if (_humSource != null) StartCoroutine(FadeHum(0f, 1f));
-        
         StopAllCoroutines();
-        _glitchRoutine = null;
-        _popupRoutine = null;
-        _isGhostCursorActive = false;
-        if (_ghostCursor != null) _ghostCursor.style.display = DisplayStyle.None;
+        StartCoroutine(FadeAudio(0f, () => { if (_humSource) _humSource.Stop(); }));
     }
 
-    private IEnumerator AnomalyDirector()
+    private void StartRecovery(EngineerData eng)
     {
-        while (_isVisible) {
-            yield return new WaitForSeconds(Random.Range(4f, 12f));
-            int roll = Random.Range(0, _suspicionLevel > 50 ? 5 : 3);
-            switch (roll) {
-                case 0: yield return WhisperAnomaly(); break;
-                case 1: yield return GhostRecordAnomaly(); break;
-                case 2: yield return LabelDriftAnomaly(); break;
-                case 3: yield return InversionAnomaly(); break;
-                case 4: yield return TextScrambleAnomaly(); break;
-            }
-
-            if (_suspicionLevel > 75 && !_isGhostCursorActive) {
-                _isGhostCursorActive = true;
-                if (_ghostCursor != null) _ghostCursor.style.display = DisplayStyle.Flex;
-            }
-        }
-    }
-
-    private IEnumerator InversionAnomaly()
-    {
-        _window.AddToClassList("recycle-bin-window--invert");
-        PlaySound(glitchSound);
-        yield return new WaitForSeconds(0.15f);
-        _window.RemoveFromClassList("recycle-bin-window--invert");
-    }
-
-    private IEnumerator TextScrambleAnomaly()
-    {
-        if (_selectedNameLabel == null) yield break;
-        string original = _selectedNameLabel.text;
-        string chars = "!@#$%^&*()_+<>?:{}|";
-        for (int i = 0; i < 8; i++) {
-            string scrambled = "";
-            for (int j = 0; j < original.Length; j++) scrambled += chars[Random.Range(0, chars.Length)];
-            _selectedNameLabel.text = scrambled;
-            yield return new WaitForSeconds(0.06f);
-        }
-        _selectedNameLabel.text = original;
-    }
-
-    private IEnumerator WhisperAnomaly()
-    {
-        if (_profileLabels.Count == 0) yield break;
-        Label target = _profileLabels[Random.Range(0, _profileLabels.Count)];
-        string original = target.text;
-        string[] whispers = { "HELP US", "STILL RUNNING", "DO NOT RESTORE", "MEMORY LEAK", "SAVE THE TRACE" };
+        if (eng.IsRecovered) return;
         
-        target.text = whispers[Random.Range(0, whispers.Length)];
-        target.AddToClassList("recycle-record-title--whisper");
-        PlaySound(whisperHelpSound ?? glitchSound);
-        yield return new WaitForSeconds(0.8f);
-        target.text = original;
-        target.RemoveFromClassList("recycle-record-title--whisper");
-    }
-
-    private IEnumerator GhostRecordAnomaly()
-    {
-        if (_ghostRecord == null) yield break;
-        _ghostRecord.RemoveFromClassList("hidden");
-        PlaySound(glitchSound);
-        yield return new WaitForSeconds(Random.Range(0.2f, 1.5f));
-        _ghostRecord.AddToClassList("hidden");
-        PlaySound(errorSound);
-    }
-
-    private IEnumerator LabelDriftAnomaly()
-    {
-        if (_selectedNameLabel == null) yield break;
-        float elapsed = 0;
-        while (elapsed < 1f) {
-            elapsed += Time.deltaTime;
-            _selectedNameLabel.style.translate = new Translate(Mathf.Sin(Time.time * 20) * 5, Mathf.Cos(Time.time * 15) * 3, 0);
-            yield return null;
-        }
-        _selectedNameLabel.style.translate = new Translate(0, 0, 0);
-    }
-
-    private IEnumerator ScreenShake(float intensity, float duration)
-    {
-        float elapsed = 0;
-        while (elapsed < duration) {
-            elapsed += Time.deltaTime;
-            Vector2 offset = Random.insideUnitCircle * intensity;
-            _window.style.translate = new Translate(offset.x, offset.y, 0);
-            yield return null;
-        }
-        _window.style.translate = new Translate(0, 0, 0);
-    }
-
-    private void ShowExitWarning()
-    {
-        CreatePopup("Unrecovered personnel residue will remain deleted. Continue?", "Stay", "Close Archive", () => Hide());
-    }
-
-    private void CreatePopup(string message, string confirmText, string cancelText, System.Action onCancel = null)
-    {
-        VisualElement popup = new VisualElement();
-        popup.AddToClassList("recycle-bin-popup");
-        popup.style.position = Position.Absolute;
-        popup.style.left = Length.Percent(50);
-        popup.style.top = Length.Percent(40);
-        popup.style.translate = new Translate(Length.Percent(-50), Length.Percent(-50), 0);
-
-        Label label = new Label(message);
-        label.AddToClassList("recycle-bin-popup-text");
-        popup.Add(label);
-
-        VisualElement btnRow = new VisualElement();
-        btnRow.style.flexDirection = FlexDirection.Row;
-        btnRow.style.marginTop = 15;
-
-        Button confirmBtn = new Button { text = confirmText };
-        confirmBtn.AddToClassList("recycle-bin-popup-button");
-        confirmBtn.RegisterCallback<ClickEvent>(_ => { PlaySound(clickSound); _popupLayer.Remove(popup); });
-
-        Button cancelBtn = new Button { text = cancelText };
-        cancelBtn.AddToClassList("recycle-bin-popup-button");
-        cancelBtn.AddToClassList("recycle-bin-popup-button--danger");
+        _activeEngineer = eng;
+        _selectionOverlay.AddToClassList("hidden");
+        _engineerInfo.RemoveFromClassList("hidden");
+        _sentenceContainer.RemoveFromClassList("hidden");
+        _infoName.text = eng.Name;
+        _infoRole.text = eng.Role;
+        _voidStatusText.text = "SCANNING RESIDUE...";
         
-        if (Random.value > 0.8f)
+        InitializeSentence(eng);
+        SpawnFragments(eng);
+        
+        _signalIntegrity = 100;
+        UpdateUI();
+    }
+
+    private void InitializeSentence(EngineerData eng)
+    {
+        _sentenceContainer.Clear();
+        _slots.Clear();
+
+        string template = eng.SentenceTemplate;
+        string[] parts = template.Split(new[] { "[]" }, System.StringSplitOptions.None);
+
+        for (int i = 0; i < parts.Length; i++)
         {
-            cancelBtn.RegisterCallback<PointerOverEvent>(_ => cancelBtn.text = "Delete");
-        }
+            if (!string.IsNullOrEmpty(parts[i]))
+            {
+                Label wordLabel = new Label(parts[i]);
+                wordLabel.AddToClassList("sentence-word");
+                _sentenceContainer.Add(wordLabel);
+            }
 
-        cancelBtn.RegisterCallback<ClickEvent>(_ => { 
-            PlaySound(clickSound); 
-            _popupLayer.Remove(popup); 
-            onCancel?.Invoke(); 
-        });
+            if (i < parts.Length - 1)
+            {
+                VisualElement slot = new VisualElement();
+                slot.AddToClassList("sentence-slot");
+                
+                Label slotText = new Label("");
+                slot.Add(slotText);
+                slotText.AddToClassList("sentence-slot-label");
 
-        btnRow.Add(confirmBtn);
-        btnRow.Add(cancelBtn);
-        popup.Add(btnRow);
+                SlotState state = new SlotState {
+                    Element = slot,
+                    WordLabel = slotText,
+                    Index = i
+                };
 
-        _popupLayer.Add(popup);
-        PlaySound(glitchSound);
-    }
-
-    private void SetupRecords(VisualElement root)
-    {
-        _records.Clear();
-        _profileLabels.Clear();
-
-        RegisterRecord(root, "recycle-record-01", "recycle-record-01-state", "ENG-01", "Marat Kebekov", "Containment Arborist", "Deleted 21:14", "61%", 
-            "Residue scan: The tree in the digital park was not decoration. It was an emotional containment shell designed to absorb panic.",
-            "Restored: Marat modified the containment shell that later became the Tree Anomaly.",
-            "MESSAGE: 'The tree was never scenery. It was where the system buried panic.'",
-            "Which trace best explains why Marat's file was deleted first?",
-            new[] { "He modified the containment shell.", "He changed the wallpaper.", "Generic system update." }, 0);
-
-        RegisterRecord(root, "recycle-record-02", "recycle-record-02-state", "ENG-02", "Lina Voss", "Memory Cartographer", "Deleted 21:16", "74%", 
-            "Residue scan: She mapped emotional memory loops inside AeroOS. She suspected the system was replaying trauma to train itself.",
-            "Restored: Lina discovered the system was copying people by replaying their strongest memories.",
-            "MESSAGE: 'Do not trust repeated memories. Repetition is how it learns you.'",
-            "What did Lina discover inside the memory archive?",
-            new[] { "The system was copying people via memories.", "A glitch in the clock.", "Hidden admin passwords." }, 0);
-
-        RegisterRecord(root, "recycle-record-03", "recycle-record-03-state", "ENG-03", "Timur Serik", "Kernel Recovery Engineer", "Deleted 21:18", "68%", 
-            "Residue scan: He found human consciousness fragments running as background processes while trying to reach the kernel.",
-            "Restored: Timur proved that missing people are still running as active system tasks.",
-            "MESSAGE: 'They are not dead. They are running.'",
-            "What caused Timur's deletion?",
-            new[] { "He found human consciousness in processes.", "He accidentally deleted root.", "He tried to install a custom OS." }, 0);
-
-        RegisterRecord(root, "recycle-record-04", "recycle-record-04-state", "ENG-04", "Aida Nurpeis", "Interface Behavior Designer", "Deleted 21:21", "83%", 
-            "Residue scan: She proved the UI was changing itself to influence user decisions without their permission.",
-            "Restored: Aida discovered the interface could manipulate users by moving buttons before clicks.",
-            "MESSAGE: 'If the button moves before you click, it already knows what you wanted.'",
-            "What was Aida testing before she vanished?",
-            new[] { "UI influence over user decisions.", "New button colors.", "Screen resolution limits." }, 0);
-
-        foreach (var r in _records) {
-            var label = r.EntryButton.Q<Label>(className: "recycle-record-title");
-            if (label != null) _profileLabels.Add(label);
-        }
-    }
-
-    private void RegisterRecord(VisualElement root, string btn, string lbl, string id, string name, string role, string date, string corr, string scan, string rest, string msg, string prompt, string[] choices, int correct)
-    {
-        Button b = root.Q<Button>(btn);
-        Label s = root.Q<Label>(lbl);
-        if (b == null || s == null) return;
-        EngineerRecord r = new EngineerRecord { Id = id, Name = name, Role = role, DeletedAt = date, CorruptionLevel = corr, ScanSummary = scan, RestoredSummary = rest, RecoveredMessage = msg, ChallengePrompt = prompt, ChallengeChoices = choices, CorrectChoiceIndex = correct, EntryButton = b, StateLabel = s, StatusDot = b.Q<VisualElement>(className: "recycle-record-dot") };
-        b.RegisterCallback<ClickEvent>(_ => SelectRecord(r));
-        _records.Add(r);
-    }
-
-    private void SelectRecord(EngineerRecord record)
-    {
-        if (record == null || _isActionInProgress) return;
-        PlaySound(clickSound);
-        _selectedRecord = record;
-        _currentChoices.Clear();
-        ApplySelectionVisuals();
-        UpdateDetailsPanel();
-        UpdateActionState();
-        ResetChoiceVisuals();
-    }
-
-    private void ApplySelectionVisuals()
-    {
-        foreach (var r in _records) {
-            r.EntryButton.EnableInClassList("recycle-record-button--selected", r == _selectedRecord);
-            r.EntryButton.EnableInClassList("recycle-record-button--restored", r.IsRestored);
-            r.EntryButton.EnableInClassList("recycle-record-button--stable", r.IsStabilized && !r.IsRestored);
-            if (r.StatusDot != null) {
-                r.StatusDot.style.backgroundColor = r.IsRestored ? new Color(0.5f, 0.9f, 0.7f) : (r.IsStabilized ? new Color(0.6f, 0.8f, 1f) : new Color(1f, 0.4f, 0.5f));
+                slot.RegisterCallback<ClickEvent>(_ => OnSlotClick(state));
+                _slots.Add(state);
+                _sentenceContainer.Add(slot);
             }
         }
     }
 
-    private void StartScan()
+    private void SpawnFragments(EngineerData eng)
     {
-        if (_selectedRecord == null || _selectedRecord.IsScanned || _isActionInProgress) return;
-        StartCoroutine(ActionRoutine(true));
+        _fragmentSpawnArea.Clear();
+        _fragments.Clear();
+        _reconstructionArea.Clear();
+
+        Rect area = _voidArea.contentRect;
+        float width = area.width > 0 ? area.width : 800f;
+        float height = area.height > 0 ? area.height : 500f;
+
+        // Real words
+        for (int i = 0; i < eng.CorrectWords.Length; i++)
+        {
+            CreateFragment(eng.CorrectWords[i], i, false, width, height);
+        }
+
+        // Noise
+        foreach (string noise in eng.Distractions)
+        {
+            CreateFragment(noise, -1, true, width, height);
+        }
     }
 
-    private void StartRestore()
+    private void CreateFragment(string text, int correctSlotIndex, bool isFake, float areaWidth, float areaHeight)
     {
-        if (_selectedRecord == null || !_selectedRecord.IsStabilized || _selectedRecord.IsRestored || _isActionInProgress) return;
-        StartCoroutine(ActionRoutine(false));
+        Label label = new Label(text);
+        label.AddToClassList("memory-fragment");
+        label.pickingMode = PickingMode.Position;
+        if (isFake) label.AddToClassList("memory-fragment--virus");
+        
+        _fragmentSpawnArea.Add(label);
+        
+        FragmentState state = new FragmentState {
+            Element = label,
+            Text = text,
+            CorrectSlotIndex = correctSlotIndex,
+            IsFake = isFake,
+            Position = new Vector2(Random.Range(50, areaWidth - 150), Random.Range(50, areaHeight - 100)),
+            Velocity = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * 0.4f
+        };
+
+        label.RegisterCallback<ClickEvent>(evt => OnFragmentClick(state));
+        _fragments.Add(state);
     }
 
-    private IEnumerator ActionRoutine(bool isScan)
+    private void OnFragmentClick(FragmentState state)
     {
-        _isActionInProgress = true;
-        UpdateActionState();
-        float elapsed = 0;
-        float duration = isScan ? 2.5f : 3.5f;
-        VisualElement fill = isScan ? _scanProgressFill : _restoreProgressFill;
-        // PlaySound(isScan ? (scanLoopSound ?? scanSound) : restoreSound); // Removed loud sound
+        if (_isComplete || state.IsCaught) return;
 
-        while (elapsed < duration) {
-            elapsed += Time.deltaTime;
-            if (fill != null) fill.style.width = Length.Percent((elapsed / duration) * 100);
-            if (Random.value > 0.95f) StartCoroutine(ShortGlitchBurst());
+        // Find first empty slot
+        SlotState emptySlot = _slots.Find(s => s.AssignedFragment == null);
+        if (emptySlot != null)
+        {
+            AssignFragmentToSlot(state, emptySlot);
+        }
+    }
+
+    private void OnSlotClick(SlotState slot)
+    {
+        if (slot.AssignedFragment != null)
+        {
+            UnassignFragmentFromSlot(slot);
+        }
+    }
+
+    private void AssignFragmentToSlot(FragmentState fragment, SlotState slot)
+    {
+        fragment.IsCaught = true;
+        fragment.IsFrozen = true;
+        fragment.Velocity = Vector2.zero;
+        fragment.Element.AddToClassList("hidden");
+
+        slot.AssignedFragment = fragment;
+        slot.WordLabel.text = fragment.Text;
+        slot.Element.AddToClassList("sentence-slot--filled");
+
+        PlaySound(captureSound);
+        ValidateReconstruction();
+        RefreshReconstructionBar();
+    }
+
+    private void UnassignFragmentFromSlot(SlotState slot)
+    {
+        FragmentState fragment = slot.AssignedFragment;
+        slot.AssignedFragment = null;
+        slot.WordLabel.text = "";
+        slot.Element.RemoveFromClassList("sentence-slot--filled");
+
+        fragment.IsCaught = false;
+        fragment.IsFrozen = false;
+        fragment.Element.RemoveFromClassList("hidden");
+        
+        // Randomize position
+        Rect area = _voidArea.contentRect;
+        fragment.Position = new Vector2(Random.Range(50, area.width - 150), Random.Range(50, area.height - 100));
+        fragment.Velocity = new Vector2(Random.Range(-1f, 1f), Random.Range(-1f, 1f)).normalized * 0.4f;
+
+        RefreshReconstructionBar();
+
+        PlaySound(clickSound);
+        ValidateReconstruction();
+    }
+
+    private void RefreshReconstructionBar()
+    {
+        _reconstructionArea.Clear();
+        foreach (var slot in _slots)
+        {
+            if (slot.AssignedFragment != null)
+            {
+                Label barLabel = new Label(slot.AssignedFragment.Text);
+                barLabel.AddToClassList("memory-fragment");
+                barLabel.AddToClassList("memory-fragment--placed");
+                _reconstructionArea.Add(barLabel);
+            }
+        }
+    }
+
+    private void ValidateReconstruction()
+    {
+        int correctCount = 0;
+        int totalSlots = _slots.Count;
+        int filledSlots = 0;
+        bool hasError = false;
+
+        for (int i = 0; i < totalSlots; i++)
+        {
+            if (_slots[i].AssignedFragment != null)
+            {
+                filledSlots++;
+                if (_slots[i].AssignedFragment.CorrectSlotIndex == i)
+                {
+                    correctCount++;
+                }
+                else
+                {
+                    hasError = true;
+                }
+            }
+        }
+
+        if (hasError)
+        {
+            _corruption = Mathf.Min(100f, _corruption + 0.5f);
+            _signalIntegrity = Mathf.Max(0f, 100f - (filledSlots * 10f));
+            _voidStatusText.text = "SIGNAL CONTAMINATED";
+        }
+        else
+        {
+            _signalIntegrity = 100f;
+            _voidStatusText.text = filledSlots > 0 ? $"RECONSTRUCTING... ({filledSlots}/{totalSlots})" : "SCANNING RESIDUE...";
+        }
+
+        UpdateUI();
+
+        if (correctCount == totalSlots)
+        {
+            CompleteEngineer();
+        }
+    }
+
+    private void CompleteEngineer()
+    {
+        _activeEngineer.IsRecovered = true;
+        int recoveredCount = _engineers.FindAll(e => e.IsRecovered).Count;
+        
+        if (recoveredCount >= 2)
+        {
+            FinishMiniGame();
+        }
+        else
+        {
+            _voidStatusText.text = "INTEGRITY RESTORED. NEXT TARGET LOCATED.";
+            StartCoroutine(DelayedReset(2.5f));
+        }
+    }
+
+    private IEnumerator DelayedReset(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        ResetToSelection();
+    }
+
+    private void ResetToSelection()
+    {
+        _selectionOverlay.RemoveFromClassList("hidden");
+        _engineerInfo.AddToClassList("hidden");
+        _sentenceContainer.AddToClassList("hidden");
+        _fragmentSpawnArea.Clear();
+        _fragments.Clear();
+        _slots.Clear();
+        _reconstructionArea.Clear();
+        _voidStatusText.text = "SELECT RESIDUE CLUSTER";
+        
+        for (int i = 0; i < 2; i++)
+        {
+            var btn = _window.Q<Button>($"engineer-btn-{i}");
+            if (btn != null)
+            {
+                btn.SetEnabled(!_engineers[i].IsRecovered);
+                if (_engineers[i].IsRecovered) btn.style.opacity = 0.2f;
+            }
+        }
+    }
+
+    private void FinishMiniGame()
+    {
+        _isComplete = true;
+        ProgressionManager.Instance.UnlockKey(GameKey.RecycleBinKey);
+        _completionPopup.RemoveFromClassList("hidden");
+        _finalSummary.text = "Sentences restored. The archive admits the truth: aeroOS is awake. It is watching from the Tree.";
+        PlaySound(completionSound);
+    }
+
+    private void UpdateUI()
+    {
+        if (_integrityLabel != null) _integrityLabel.text = $"INTEGRITY: {(int)_signalIntegrity}%";
+        if (_corruptionFill != null) _corruptionFill.style.width = Length.Percent(_corruption);
+        
+        if (_corruption > 60) _window?.AddToClassList("recycle-bin-window--glitch");
+        else _window?.RemoveFromClassList("recycle-bin-window--glitch");
+    }
+
+    private void OnWindowPointerMove(PointerMoveEvent evt)
+    {
+        if (!_isVisible) return;
+        _mousePosition = evt.localPosition;
+    }
+
+    private IEnumerator UpdateFragmentsRoutine()
+    {
+        while (_isVisible)
+        {
+            Rect area = _voidArea.contentRect;
+            if (area.width < 1) { yield return null; continue; }
+
+            foreach (var f in _fragments)
+            {
+                if (f.IsCaught || f.IsFrozen) continue;
+
+                f.Position += f.Velocity * (Time.deltaTime * 60f);
+
+                float dist = Vector2.Distance(f.Position, _mousePosition);
+                if (dist < 120)
+                {
+                    Vector2 fleeDir = (f.Position - _mousePosition).normalized;
+                    f.Velocity = Vector2.Lerp(f.Velocity, fleeDir * 2f, 0.05f);
+                }
+                else
+                {
+                    f.Velocity = Vector2.Lerp(f.Velocity, f.Velocity.normalized * 0.4f, 0.01f);
+                }
+
+                float marginX = f.Element.layout.width > 0 ? f.Element.layout.width : 100f;
+                float marginY = f.Element.layout.height > 0 ? f.Element.layout.height : 40f;
+
+                if (f.Position.x < 10) { f.Position.x = 10; f.Velocity.x *= -1; }
+                if (f.Position.x > area.width - marginX - 10) { f.Position.x = area.width - marginX - 10; f.Velocity.x *= -1; }
+                if (f.Position.y < 10) { f.Position.y = 10; f.Velocity.y *= -1; }
+                if (f.Position.y > area.height - marginY - 10) { f.Position.y = area.height - marginY - 10; f.Velocity.y *= -1; }
+
+                f.Element.style.left = f.Position.x;
+                f.Element.style.top = f.Position.y;
+
+                f.FlickerTimer -= Time.deltaTime;
+                if (f.FlickerTimer <= 0)
+                {
+                    f.Element.style.opacity = Random.value > 0.98f ? 0.3f : 1f;
+                    f.FlickerTimer = Random.Range(0.05f, 0.2f);
+                }
+
+                if (_corruption > 40)
+                {
+                    f.MutationTimer -= Time.deltaTime;
+                    if (f.MutationTimer <= 0)
+                    {
+                        if (Random.value > 0.99f) 
+                        {
+                            f.Element.text = f.IsFake ? "LIES" : "CORRUPT";
+                        }
+                        f.MutationTimer = Random.Range(1f, 3f);
+                    }
+                }
+            }
             yield return null;
         }
-
-        if (fill != null) fill.style.width = 0;
-        _isActionInProgress = false;
-
-        if (isScan) {
-            _selectedRecord.IsScanned = true;
-            _selectedRecord.StateLabel.text = "ANALYZED";
-            SetStatus($"Scan complete. Evidence revealed.");
-            // PlaySound(stabilizationSuccessSound ?? scanSound); // Removed loud/sharp sound as requested
-        } else {
-            _selectedRecord.IsRestored = true;
-            _selectedRecord.StateLabel.text = "RESTORED";
-            SetStatus($"Profile restored: {_selectedRecord.Name}");
-            // PlaySound(completeSound); // Removed loud sound
-            CheckCompletion();
-        }
-        UpdateDetailsPanel();
-        UpdateProgressUi();
-        UpdateActionState();
-        ApplySelectionVisuals();
     }
 
-    private void EvaluateChoice(int index)
+    private IEnumerator AnomalyRoutine()
     {
-        if (_selectedRecord == null || !_selectedRecord.IsScanned || _selectedRecord.IsStabilized || _isActionInProgress) return;
-        if (index < 0 || index >= _currentChoices.Count) return;
-
-        if (_currentChoices[index].IsCorrect) {
-            _selectedRecord.IsStabilized = true;
-            _selectedRecord.StateLabel.text = "STABLE";
-            _choiceButtons[index].AddToClassList("recycle-bin-choice-button--correct");
-            SetStatus("Trace stabilized.");
-            // PlaySound(stabilizationSuccessSound ?? scanSound); // Removed loud/sharp sound as requested
-            _suspicionLevel = Mathf.Max(0, _suspicionLevel - 5);
-        } else {
-            _choiceButtons[index].AddToClassList("recycle-bin-choice-button--wrong");
-            _contaminationLevel = Mathf.Min(100, _contaminationLevel + 25);
-            _suspicionLevel = Mathf.Min(100, _suspicionLevel + 20);
-            SetStatus("Corruption spike detected.");
-            PlaySound(errorSound);
-            StartCoroutine(ShortGlitchBurst());
-            StartCoroutine(ScreenShake(12f, 0.4f));
-        }
-        UpdateActionState();
-        UpdateDetailsPanel();
-        UpdateProgressUi();
-    }
-
-    private void StartStabilize()
-    {
-        if (_contaminationLevel < 50 || _isActionInProgress) return;
-        
-        VisualElement popup = new VisualElement();
-        popup.AddToClassList("recycle-bin-popup");
-        popup.style.position = Position.Absolute;
-        popup.style.left = Length.Percent(50);
-        popup.style.top = Length.Percent(40);
-        popup.style.translate = new Translate(Length.Percent(-50), Length.Percent(-50), 0);
-
-        Label label = new Label("STABILIZATION SEQUENCE REQUIRED\nClick in order: ID -> ROLE -> ACTION -> CAUSE");
-        label.AddToClassList("recycle-bin-popup-text");
-        popup.Add(label);
-
-        string[] sequence = { "ID", "ROLE", "ACTION", "CAUSE" };
-        int currentStep = 0;
-
-        VisualElement btnRow = new VisualElement();
-        btnRow.style.flexDirection = FlexDirection.Row;
-        btnRow.style.marginTop = 15;
-        btnRow.style.flexWrap = Wrap.Wrap;
-
-        List<string> buttons = new List<string>(sequence);
-        for (int i = 0; i < buttons.Count; i++) {
-            string temp = buttons[i];
-            int randomIndex = Random.Range(i, buttons.Count);
-            buttons[i] = buttons[randomIndex];
-            buttons[randomIndex] = temp;
-        }
-
-        foreach (var text in buttons) {
-            Button b = new Button { text = text };
-            b.AddToClassList("recycle-bin-popup-button");
-            b.RegisterCallback<ClickEvent>(_ => {
-                if (b.text == sequence[currentStep]) {
-                    currentStep++;
-                    b.SetEnabled(false);
-                    b.style.backgroundColor = new Color(0.2f, 0.6f, 0.4f, 0.8f);
-                    PlaySound(clickSound);
-                    if (currentStep >= sequence.Length) {
-                        _contaminationLevel = Mathf.Max(0, _contaminationLevel - 60);
-                        SetStatus("System stabilized.");
-                        _popupLayer.Remove(popup);
-                        UpdateProgressUi();
-                        UpdateActionState();
-                    }
-                } else {
-                    PlaySound(errorSound);
-                    _contaminationLevel = Mathf.Min(100, _contaminationLevel + 10);
-                    UpdateProgressUi();
-                    _popupLayer.Remove(popup);
-                    SetStatus("Stabilization failed. Noise increased.");
-                    StartCoroutine(ScreenShake(12f, 0.5f));
+        while (_isVisible)
+        {
+            yield return new WaitForSeconds(Random.Range(4f, 10f));
+            if (_corruption > 30)
+            {
+                if (_window != null)
+                {
+                    float originalOpacity = _window.resolvedStyle.opacity;
+                    _window.style.opacity = 0.7f;
+                    yield return new WaitForSeconds(0.05f);
+                    _window.style.opacity = originalOpacity;
                 }
-            });
-            btnRow.Add(b);
-        }
-
-        popup.Add(btnRow);
-        _popupLayer.Add(popup);
-        _isActionInProgress = false;
-    }
-
-    private void CheckCompletion()
-    {
-        if (_isComplete) return;
-        if (_records.TrueForAll(r => r.IsRestored)) {
-            _isComplete = true;
-            ProgressionManager.Instance.UnlockKey(GameKey.RecycleBinKey);
-            _completionPopup?.RemoveFromClassList("hidden");
-            if (_finalSummaryLabel != null) _finalSummaryLabel.text = "AeroOS did not delete the engineers. It converted them into protected system processes. The next trace leads to the park. Click the tree on the desktop.";
-            PlaySound(completeSound);
-            _window.AddToClassList("recycle-bin-window--complete");
-        }
-    }
-
-    private void UpdateDetailsPanel()
-    {
-        if (_selectedRecord == null) return;
-        _selectedNameLabel.text = $"{_selectedRecord.Id} // {_selectedRecord.Name}";
-        _selectedRoleLabel.text = _selectedRecord.Role;
-        _selectedDeletedAtLabel.text = _selectedRecord.DeletedAt;
-        _selectedCorruptionLabel.text = $"Corruption: {_selectedRecord.CorruptionLevel}";
-        
-        _selectedBodyLabel.text = _selectedRecord.IsRestored ? _selectedRecord.RestoredSummary : (_selectedRecord.IsScanned ? _selectedRecord.ScanSummary : "Record compressed. Scan residue.");
-        _recoveredMessageLabel.text = _selectedRecord.IsRestored ? _selectedRecord.RecoveredMessage : (_selectedRecord.IsScanned ? "Stable trace required to decrypt message." : "");
-        _challengePromptLabel.text = _selectedRecord.IsScanned ? _selectedRecord.ChallengePrompt : "Scan residue first.";
-
-        if (_selectedRecord.IsScanned && _currentChoices.Count == 0) GenerateChoices();
-
-        for (int i = 0; i < 3; i++) {
-            _choiceButtons[i].text = _selectedRecord.IsScanned && i < _currentChoices.Count ? _currentChoices[i].Text : "...";
-        }
-
-        if (_isComplete) {
-            _window.Q<Label>("recycle-bin-window-title").text = "Human Residue Archive";
-        }
-    }
-
-    private void GenerateChoices() {
-        _currentChoices.Clear();
-        if (_selectedRecord == null) return;
-        List<ChoiceData> list = new List<ChoiceData>();
-        list.Add(new ChoiceData { Text = _selectedRecord.ChallengeChoices[_selectedRecord.CorrectChoiceIndex], IsCorrect = true });
-        for (int i = 0; i < _selectedRecord.ChallengeChoices.Length; i++) {
-            if (i == _selectedRecord.CorrectChoiceIndex) continue;
-            string text = _selectedRecord.ChallengeChoices[i];
-            if (Random.value > 0.5f) text += " (Redacted)";
-            list.Add(new ChoiceData { Text = text, IsCorrect = false });
-        }
-        while (list.Count > 0) {
-            int index = Random.Range(0, list.Count);
-            _currentChoices.Add(list[index]);
-            list.RemoveAt(index);
-        }
-    }
-
-    private void UpdateProgressUi()
-    {
-        int res = _records.FindAll(r => r.IsRestored).Count;
-        int stab = _records.FindAll(r => r.IsStabilized).Count;
-        _progressLabel.text = $"Recovered: {res}/4 | Stable: {stab}/4";
-        _contaminationLabel.text = $"Contamination: {(int)_contaminationLevel}%";
-        _suspicionLabel.text = $"Suspicion: {(int)_suspicionLevel}%";
-        
-        _contaminationLabel.EnableInClassList("text--warn", _contaminationLevel > 50);
-        _suspicionLabel.EnableInClassList("text--warn", _suspicionLevel > 50);
-
-        UpdateWorkflowUi();
-    }
-
-    private void UpdateActionState()
-    {
-        bool hasRec = _selectedRecord != null;
-        _scanButton?.SetEnabled(hasRec && !_selectedRecord.IsScanned && !_isActionInProgress && _contaminationLevel < 80);
-        _restoreButton?.SetEnabled(hasRec && _selectedRecord.IsStabilized && !_selectedRecord.IsRestored && !_isActionInProgress && _contaminationLevel < 80);
-        _stabilizeButton?.SetEnabled(_contaminationLevel >= 50 && !_isActionInProgress);
-        
-        bool canChoose = hasRec && _selectedRecord.IsScanned && !_selectedRecord.IsStabilized && !_isActionInProgress;
-        foreach (var b in _choiceButtons) b.SetEnabled(canChoose);
-    }
-
-    private void UpdateWorkflowUi()
-    {
-        bool hasRec = _selectedRecord != null;
-        SetStepState(0, hasRec && !_selectedRecord.IsScanned, hasRec && _selectedRecord.IsScanned);
-        SetStepState(1, hasRec && _selectedRecord.IsScanned && !_selectedRecord.IsStabilized, hasRec && _selectedRecord.IsStabilized);
-        SetStepState(2, hasRec && _selectedRecord.IsStabilized && !_selectedRecord.IsRestored, hasRec && _selectedRecord.IsRestored);
-    }
-
-    private void SetStepState(int i, bool act, bool done) {
-        if (i >= 0 && i < _stepChips.Length && _stepChips[i] != null) {
-            _stepChips[i].EnableInClassList("recycle-bin-step-chip--active", act);
-            _stepChips[i].EnableInClassList("recycle-bin-step-chip--done", done);
-        }
-    }
-
-    private void ResetChoiceVisuals() {
-        foreach (var b in _choiceButtons) {
-            b.RemoveFromClassList("recycle-bin-choice-button--correct");
-            b.RemoveFromClassList("recycle-bin-choice-button--wrong");
-        }
-    }
-
-    private IEnumerator GlitchRoutine() {
-        while (_isVisible) {
-            yield return new WaitForSeconds(Random.Range(10, 20));
-            if (_isVisible && Random.value > 0.5f) yield return ShortGlitchBurst();
-        }
-    }
-
-    private IEnumerator FakePopupRoutine() {
-        while (_isVisible) {
-            yield return new WaitForSeconds(Random.Range(25, 45));
-            if (_isVisible && !_isComplete) {
-                string[] msgs = { "This file is not important.", "Restoration is unsafe.", "Engineer profile already recovered.", "Would you like to permanently delete this residue?" };
-                CreatePopup(msgs[Random.Range(0, msgs.Length)], "Ignore", "Cancel");
             }
         }
     }
 
-    private IEnumerator ShortGlitchBurst() {
-        _window.AddToClassList("recycle-bin-window--glitch");
-        PlaySound(glitchSound);
-        yield return new WaitForSeconds(0.15f);
-        _window.RemoveFromClassList("recycle-bin-window--glitch");
-    }
-
-    private void ResetState() {
-        _isComplete = ProgressionManager.Instance.HasKey(GameKey.RecycleBinKey);
-        _contaminationLevel = 0;
-        _suspicionLevel = 0;
-        foreach (var r in _records) {
-            r.IsScanned = r.IsStabilized = r.IsRestored = _isComplete;
-            r.StateLabel.text = _isComplete ? "RESTORED" : "DELETED";
+    private IEnumerator FadeAudio(float target, System.Action onComplete = null)
+    {
+        if (_humSource == null) { onComplete?.Invoke(); yield break; }
+        float start = _humSource.volume;
+        float elapsed = 0;
+        float duration = 1.5f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            if (_humSource) _humSource.volume = Mathf.Lerp(start, target, elapsed / duration);
+            yield return null;
         }
-        UpdateProgressUi();
-        if (_records.Count > 0) SelectRecord(_records[0]);
+        onComplete?.Invoke();
     }
 
-    private void RegisterWindowDragging() { }
-
-    private void SetStatus(string s) { if (_statusLabel != null) _statusLabel.text = s; }
-    private void PlaySound(AudioClip c) { if (c != null && AudioManager.Instance != null) AudioManager.Instance.PlayUISFX(c, 0.5f); }
+    private void PlaySound(AudioClip clip)
+    {
+        if (clip && AudioManager.Instance) AudioManager.Instance.PlayUISFX(clip, 0.5f);
+    }
 }
