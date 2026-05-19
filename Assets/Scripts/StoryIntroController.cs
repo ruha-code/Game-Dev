@@ -52,7 +52,7 @@ public class StoryIntroController : MonoBehaviour
     "Project: AeroOS",
     "Lead Engineers Missing: 5",
     "Final Active Employee:",
-    "YOU"
+    "???"
     };
 
 

@@ -41,9 +41,6 @@ MonoBehaviour:
   - m_enabled: 1
     m_path: Assets/Scenes/Park.unity
     m_guid: d4443414edbd67c4da0d50022364c8ef
-  - m_enabled: 1
-    m_path: Assets/Scenes/TreeScene.unity
-    m_guid: 4900b320159025740bc6569da22ba0d5
   m_HasScriptingDefines: 0
   m_ScriptingDefines: []
   m_PlayerSettingsYaml:
