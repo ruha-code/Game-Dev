@@ -111,7 +111,7 @@ public class TetrisController : MonoBehaviour
     private bool _isPaused = true;
     private bool _sessionRewardTriggered;
 
-    private const int BonusRewardLineTarget = 5;
+    private const int BonusRewardLineTarget = 1;
     private bool _isDraggingWindow;
     private Vector2 _dragPointerOffset;
 

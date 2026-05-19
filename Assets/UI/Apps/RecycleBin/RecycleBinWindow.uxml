@@ -64,8 +64,17 @@
             </ui:VisualElement>
         </ui:VisualElement>
 
+        <ui:VisualElement name="terminal-overlay" class="terminal-overlay hidden" picking-mode="Position">
+<ui:VisualElement class="terminal-content">
+                <ui:ScrollView mode="Vertical" class="terminal-scroll" no-vertical-scroller="true">
+                    <ui:Label name="terminal-text" text="" class="terminal-text" />
+                </ui:ScrollView>
+                <ui:Button name="terminal-continue-button" text="[CONTINUE]" class="terminal-continue-button hidden" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
         <ui:VisualElement name="recycle-bin-completion-popup" class="recycle-bin-completion-popup hidden">
-            <ui:Label text="ARCHIVE RESTORED" class="recycle-bin-completion-title" />
+<ui:Label text="ARCHIVE RESTORED" class="recycle-bin-completion-title" />
             <ui:Label name="recycle-bin-final-summary" text="The memory fragments have been reassembled. The truth is surfacing." class="recycle-bin-completion-body" />
             <ui:Button name="recycle-bin-complete-button" text="Return to Desktop" class="recycle-bin-complete-button" />
         </ui:VisualElement>

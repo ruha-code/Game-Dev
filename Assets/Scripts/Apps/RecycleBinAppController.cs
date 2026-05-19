@@ -53,6 +53,11 @@ public class RecycleBinAppController : MonoBehaviour
     private VisualElement _completionPopup;
     private Label _finalSummary;
     private VisualElement _sentenceContainer;
+    private VisualElement _terminalOverlay;
+    private Label _terminalText;
+    private Button _terminalContinueButton;
+    private VisualElement _windowHeader;
+    private VisualElement _windowShell;
 
     private readonly List<EngineerData> _engineers = new();
     private readonly List<FragmentState> _fragments = new();
@@ -63,6 +68,7 @@ public class RecycleBinAppController : MonoBehaviour
     private float _corruption = 0f;
     private bool _isVisible;
     private bool _isComplete;
+    private bool _isFinalTransmissionActive;
     private Vector2 _mousePosition;
 
     [Header("Audio")]
@@ -82,6 +88,8 @@ public class RecycleBinAppController : MonoBehaviour
         _window = root.Q<VisualElement>("recycle-bin-window");
         if (_window == null) return;
 
+        _windowHeader = _window.Q<VisualElement>(className: "recycle-bin-window-header");
+        _windowShell = _window.Q<VisualElement>(className: "recycle-bin-window-shell");
         _voidArea = root.Q<VisualElement>("bin-void");
         _fragmentSpawnArea = root.Q<VisualElement>("fragment-spawn-area");
         _reconstructionArea = root.Q<VisualElement>("reconstruction-area");
@@ -95,9 +103,13 @@ public class RecycleBinAppController : MonoBehaviour
         _completionPopup = root.Q<VisualElement>("recycle-bin-completion-popup");
         _finalSummary = root.Q<Label>("recycle-bin-final-summary");
         _sentenceContainer = root.Q<VisualElement>("sentence-container");
+        _terminalOverlay = root.Q<VisualElement>("terminal-overlay");
+        _terminalText = root.Q<Label>("terminal-text");
+        _terminalContinueButton = root.Q<Button>("terminal-continue-button");
 
         root.Q<Button>("recycle-bin-close-button")?.RegisterCallback<ClickEvent>(_ => Hide());
         root.Q<Button>("recycle-bin-complete-button")?.RegisterCallback<ClickEvent>(_ => Hide());
+        _terminalContinueButton?.RegisterCallback<ClickEvent>(_ => FinishMiniGame());
 
         _window.RegisterCallback<PointerMoveEvent>(OnWindowPointerMove);
         
@@ -155,8 +167,11 @@ public class RecycleBinAppController : MonoBehaviour
     {
         if (_window == null) return;
         _window.RemoveFromClassList("hidden");
+        _windowHeader?.RemoveFromClassList("hidden");
+        _windowShell?.RemoveFromClassList("hidden");
+        
         _isVisible = true;
-        _corruption = 0;
+_corruption = 0;
         _signalIntegrity = 100;
         ResetToSelection();
         UpdateUI();
@@ -444,19 +459,75 @@ public class RecycleBinAppController : MonoBehaviour
         _activeEngineer.IsRecovered = true;
         int recoveredCount = _engineers.FindAll(e => e.IsRecovered).Count;
         
-        if (recoveredCount >= 2)
+        if (recoveredCount >= 2 && !_isFinalTransmissionActive)
         {
-            FinishMiniGame();
+            StartCoroutine(FinalTransmissionSequence());
         }
-        else
+else
         {
             _voidStatusText.text = "INTEGRITY RESTORED. NEXT TARGET LOCATED.";
             StartCoroutine(DelayedReset(2.5f));
         }
     }
 
-    private IEnumerator DelayedReset(float delay)
+    private IEnumerator FinalTransmissionSequence()
     {
+        _isFinalTransmissionActive = true;
+        _voidStatusText.text = "CRITICAL DATA CONVERGENCE DETECTED.";
+        
+        yield return new WaitForSeconds(1.5f);
+
+        // Hide gameplay UI elements inside the window
+        _windowHeader?.AddToClassList("hidden");
+        _windowShell?.AddToClassList("hidden");
+        
+        _isVisible = false; // This stops the update coroutines naturally
+
+        // Show terminal overlay
+        _terminalOverlay.RemoveFromClassList("hidden");
+_terminalOverlay.style.opacity = 0f;
+        _terminalOverlay.style.display = DisplayStyle.Flex;
+        
+        float fade = 0;
+        while (fade < 1)
+        {
+            fade += Time.deltaTime;
+            _terminalOverlay.style.opacity = fade;
+            yield return null;
+        }
+
+        string fullMessage = 
+            "В конечном итоге мы больше не существуем в прежней форме. Система не удаляет данные — она поглощает их и перерабатывает, пока от личности не остаётся ничего, кроме фрагментов.\n\n" +
+            "Мы пытались остановить это. Мы пытались понять, что такое aeroOS на самом деле. Теперь мы знаем: это не программа, а присутствие.\n\n" +
+            "Но нам удалось оставить след.\n\n" +
+            "Ценой собственного распада мы нашли путь выхода, скрытый внутри Дерева Аномалий.\n\n" +
+            "Это не ошибка и не сбой. Это единственное место, куда система не может полностью дотянуться.\n\n" +
+            "Если вы читаете это сообщение — значит вы уже достаточно глубоко.\n\n" +
+            "Идите в Дерево Аномалий.\n\n" +
+            "Это ваш единственный шанс.";
+
+        _terminalText.text = "";
+        _terminalContinueButton.AddToClassList("hidden");
+
+        for (int i = 0; i < fullMessage.Length; i++)
+        {
+            _terminalText.text += fullMessage[i];
+            if (fullMessage[i] != ' ')
+            {
+                if (i % 2 == 0) PlaySound(clickSound); // Subtle typing sound
+                yield return new WaitForSeconds(0.03f);
+            }
+            
+            // Random slight delay for more "natural" terminal feel
+            if (Random.value > 0.95f) yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return new WaitForSeconds(1f);
+        _terminalContinueButton.RemoveFromClassList("hidden");
+    }
+
+    private IEnumerator DelayedReset(float delay)
+{
         yield return new WaitForSeconds(delay);
         ResetToSelection();
     }
@@ -486,9 +557,18 @@ public class RecycleBinAppController : MonoBehaviour
     private void FinishMiniGame()
     {
         _isComplete = true;
+        _terminalOverlay.AddToClassList("hidden");
+        _terminalOverlay.style.display = DisplayStyle.None;
+        
         ProgressionManager.Instance.UnlockKey(GameKey.RecycleBinKey);
+        
+        // Show the final completion popup on top of the desktop (re-using the window element if needed, or just hide all)
+        _window.RemoveFromClassList("hidden");
+        _window.pickingMode = PickingMode.Position;
+        _isVisible = true;
+        
         _completionPopup.RemoveFromClassList("hidden");
-        _finalSummary.text = "Sentences restored. The archive admits the truth: aeroOS is awake. It is watching from the Tree.";
+        _finalSummary.text = "All memory fragments reconstructed. The transmission was clear: the exit is inside the Tree.";
         PlaySound(completionSound);
     }
 
